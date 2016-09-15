@@ -33,6 +33,7 @@ void gen_solve(int N, double* v) {
 
     // Initial conditions
     f_tilde[1] = f[1];
+    cout << "f1 = " << f[1] << endl;
     b_tilde[1] = b[1];
 
     // Decomposition and forward substitution
@@ -110,7 +111,6 @@ int main(int argc, char* argv[])
     double timeused = ((finish - start)/double(CLOCKS_PER_SEC));
     cout << setiosflags(ios::showpoint | ios::uppercase);
     cout << setprecision(10) << setw(20) << "Time used = " << timeused << endl;
-
 
     // open file and write results to file
     ofile.open(outfilename);
