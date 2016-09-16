@@ -14,10 +14,10 @@ void gen_solve(int N, double* v) {
     // Declaration of variables
     double *a = new double[N+2];
     double *b = new double[N+2];
-    double *b_tilde = new double[N+2];
+    //double *b_tilde = new double[N+2];
     double *c = new double[N+2];
     double *f = new double[N+2];
-    double *f_tilde = new double[N+2];
+    //double *f_tilde = new double[N+2];
     double *x = new double[N+2];
     double h = 1.0/(N+1);
 
@@ -32,20 +32,20 @@ void gen_solve(int N, double* v) {
     }
 
     // Initial conditions
-    f_tilde[1] = f[1];
-    cout << "f1 = " << f[1] << endl;
-    b_tilde[1] = b[1];
+    //f_tilde[1] = f[1];
+    //b_tilde[1] = b[1];
 
     // Decomposition and forward substitution
     for (int i = 2; i < N+1; i++) {
-        b_tilde[i] = b[i] - a[i-1]*c[i-1]/b_tilde[i-1]; // new diagonal elements
-        f_tilde[i] = f[i] - (a[i-1]*f_tilde[i-1])/b_tilde[i-1];
+        b[i] = b[i] - a[i-1]*c[i-1]/b[i-1]; // new diagonal elements
+        f[i] = f[i] - (a[i-1]*f[i-1])/b[i-1];
     }
-    v[N] = f_tilde[N]/b_tilde[N];
+
+    v[N] = f[N]/b[N];
 
     // Backward substitution
     for (int i = N-1; i >= 1; i--) {
-        v[i] = (f_tilde[i]-c[i]*v[i+1])/b_tilde[i];
+        v[i] = (f[i]-c[i]*v[i+1])/b[i];
     }
 }   // End gen_solve
 
@@ -96,14 +96,14 @@ int main(int argc, char* argv[])
     // Declaring variables
     string outfilename = string(argv[1]) + "-" + string(argv[2]) + ".txt"; // first command line argument
     int N = atoi(argv[2]); // second command line argument
-    double* v = new double[N];
+    double* v = new double[N+2];
     clock_t start, finish;
 
     // Start clock
     start = clock();
 
     // Call solver
-    gen_solve(N,v);
+    special_solve(N,v);
 
     finish = clock();
     // End clock
@@ -115,6 +115,7 @@ int main(int argc, char* argv[])
     // open file and write results to file
     ofile.open(outfilename);
     for (int i = 0; i < N+2; i++) {
+        cout << v[i] << endl;
         ofile << setw(15) << setprecision(8) << v[i] << endl;
     }
     ofile.close();
