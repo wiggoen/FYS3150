@@ -11,13 +11,12 @@ ofstream ofile;
 
 void gen_solve(int N, double* v) {
     // Start gen_solve
+
     // Declaration of variables
     double *a = new double[N+2];
     double *b = new double[N+2];
-    //double *b_tilde = new double[N+2];
     double *c = new double[N+2];
     double *f = new double[N+2];
-    //double *f_tilde = new double[N+2];
     double *x = new double[N+2];
     double h = 1.0/(N+1);
 
@@ -31,10 +30,6 @@ void gen_solve(int N, double* v) {
         v[i] = 0.0;
     }
 
-    // Initial conditions
-    //f_tilde[1] = f[1];
-    //b_tilde[1] = b[1];
-
     // Decomposition and forward substitution
     for (int i = 2; i < N+1; i++) {
         b[i] = b[i] - a[i-1]*c[i-1]/b[i-1]; // new diagonal elements
@@ -47,41 +42,42 @@ void gen_solve(int N, double* v) {
     for (int i = N-1; i >= 1; i--) {
         v[i] = (f[i]-c[i]*v[i+1])/b[i];
     }
+
 }   // End gen_solve
 
 void special_solve(int N, double* v) {
     // Start special_solve
+    // Declaration of variables
     double *b = new double[N+2];
-    double *b_tilde = new double[N+2];
     double *f = new double[N+2];
-    double *f_tilde = new double[N+2];
     double *x = new double[N+2];
     double *z = new double[N+2];
     double h = 1.0/(N+1);
 
     // initialize elements
     for (int i = 0; i < N+2; i++) {
-        b[i] = 2.0;
         x[i] = i*h;
         f[i] = pow(h, 2)*100*exp(-10*x[i]);
         v[i] = 0.0;
     }
-    // Initial conditions
-    f_tilde[1] = f[1];
-    b_tilde[1] = b[1];
+
+    for (int i = 1; i < N+2; i++) {
+        b[i] = (i+1.0)/i; // b_tilde; new diagonal elements, 1.0 to avoid integer division
+        z[i] = (i-1.0)/i;
+    }
 
     // decomposition and forward substitution
     for (int i = 2; i < N+1; i++) {
-        z[i] = (i-1.0)/i;
-        b_tilde[i] = (i+1.0)/i; // new diagonal elements, 1.0 to avoid integer division
-        f_tilde[i] = f[i] - z[i]*f[i-1];
+        f[i] = f[i] + z[i]*f[i-1]; // f_tilde
     }
-    v[N] = f_tilde[N]/b_tilde[N];
+
+    v[N] = f[N]/b[N]; // f_tilde / b_tilde
 
     // backward substitution
     for (int i = N-1; i >= 1; i--) {
-        v[i-1] = z[i]*(f_tilde[i-1]-v[i]);
+        v[i] = (f[i]+v[i+1])/b[i]; // f = f_tilde
     }
+
 }   // End special_solve
 
 int main(int argc, char* argv[])
