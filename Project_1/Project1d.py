@@ -13,6 +13,7 @@ def F(x):
     return x, v, u
 
 x, v, u = F(x)
+h, epsilon, 
 
 figure(1)
 plot(x, u, '-b', x, v, 'or')

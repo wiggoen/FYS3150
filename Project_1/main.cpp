@@ -9,7 +9,7 @@
 using namespace std;
 ofstream ofile;
 
-void gen_solve(int N, double* v) {
+double general_solve(int N, double* v) {
     // Start gen_solve
 
     // Declaration of variables
@@ -30,6 +30,10 @@ void gen_solve(int N, double* v) {
         v[i] = 0.0;
     }
 
+    clock_t start, finish;
+    // Start clock
+    start = clock();
+
     // Decomposition and forward substitution
     for (int i = 2; i < N+1; i++) {
         b[i] = b[i] - a[i-1]*c[i-1]/b[i-1]; // new diagonal elements
@@ -43,9 +47,15 @@ void gen_solve(int N, double* v) {
         v[i] = (f[i]-c[i]*v[i+1])/b[i];
     }
 
+    finish = clock();
+    // End clock
+    double timeused_general = ((finish - start)/double(CLOCKS_PER_SEC));
+    cout << setiosflags(ios::showpoint | ios::uppercase);
+    //cout << setprecision(10) << setw(20) << "Time used, gen_solve = " << timeused << endl;
+    return timeused_general;
 }   // End gen_solve
 
-void special_solve(int N, double* v) {
+double special_solve(int N, double* v) {
     // Start special_solve
     // Declaration of variables
     double *b = new double[N+2];
@@ -63,12 +73,17 @@ void special_solve(int N, double* v) {
 
     for (int i = 1; i < N+2; i++) {
         b[i] = (i+1.0)/i; // b_tilde; new diagonal elements, 1.0 to avoid integer division
-        z[i] = (i-1.0)/i;
+        //z[i] = (i-1.0)/i;
     }
+
+    clock_t start, finish;
+    // Start clock
+    start = clock();
 
     // decomposition and forward substitution
     for (int i = 2; i < N+1; i++) {
-        f[i] = f[i] + z[i]*f[i-1]; // f_tilde
+        //f[i] = f[i] + z[i]*f[i-1]; // f_tilde
+        f[i] = f[i] + f[i-1]/b[i-1]; // f_tilde
     }
 
     v[N] = f[N]/b[N]; // f_tilde / b_tilde
@@ -78,6 +93,12 @@ void special_solve(int N, double* v) {
         v[i] = (f[i]+v[i+1])/b[i]; // f = f_tilde
     }
 
+    finish = clock();
+    // End clock
+    double timeused_special = ((finish - start)/double(CLOCKS_PER_SEC));
+    cout << setiosflags(ios::showpoint | ios::uppercase);
+    //cout << setprecision(10) << setw(20) << "Time used, special_solve = " << timeused << endl;
+    return timeused_special;
 }   // End special_solve
 
 int main(int argc, char* argv[])
@@ -93,27 +114,18 @@ int main(int argc, char* argv[])
     string outfilename = string(argv[1]) + "-" + string(argv[2]) + ".txt"; // first command line argument
     int N = atoi(argv[2]); // second command line argument
     double* v = new double[N+2];
-    clock_t start, finish;
-
-    // Start clock
-    start = clock();
+    //double timeused;
 
     // Call solver
-    special_solve(N,v);
+    double t = general_solve(N,v);
 
-    finish = clock();
-    // End clock
-
-    double timeused = ((finish - start)/double(CLOCKS_PER_SEC));
-    cout << setiosflags(ios::showpoint | ios::uppercase);
-    cout << setprecision(10) << setw(20) << "Time used = " << timeused << endl;
 
     // open file and write results to file
     ofile.open(outfilename);
     for (int i = 0; i < N+2; i++) {
-        cout << v[i] << endl;
         ofile << setw(15) << setprecision(8) << v[i] << endl;
     }
+    ofile << setw(15) << setprecision(8) << "Time used for gen_solve = " << t << " s" << endl;
     ofile.close();
 
     return 0;
