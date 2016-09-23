@@ -32,7 +32,7 @@ int main()//(int argc, char *argv[])
     vec omega_r = { 0.01, 0.5, 1.0, 5.0 };
 
     System *A_matrix = new System(N);
-    mat A = A_matrix->init(N, rho_max, potential, omega_r(0));
+    mat A = A_matrix->init(N, rho_max, potential, omega_r(1));
     //cout << "A-matrix:" << endl;
     //cout << A << endl;
 

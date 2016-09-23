@@ -23,8 +23,7 @@ mat System::init(int N, double rho_max, string potential, double omega_r) {
     for (int i = 0; i < N; i++) {
         if (potential == "HO") {
             A(i, i) = 2.0*ei + V->HarmonicOscillator((i+1)*h);
-        }
-        if (potential == "CO") {
+        } else if (potential == "CO") {
             A(i, i) = 2.0*ei + V->Coulomb(omega_r, (i+1)*h);
         }
         if (i < N-1) {
