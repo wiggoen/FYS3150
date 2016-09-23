@@ -2,7 +2,9 @@
 #include "potential.h"
 #include <armadillo>
 #include <cmath>
+#include <string>
 
+using namespace std;
 using namespace arma;
 
 System::System(int size)
@@ -10,16 +12,21 @@ System::System(int size)
     N = size;
 }
 
-mat System::init(int N, double rho_max) {
+mat System::init(int N, double rho_max, string potential, double omega_r) {
     Potential* V = new Potential();
-
+    cout << omega_r << endl;
     mat A = zeros<mat>(N, N);
 
     double h = rho_max/N;
     double ei = 1.0/(h*h);
 
     for (int i = 0; i < N; i++) {
-        A(i, i) = 2.0*ei + V->HarmonicOscillator((i+1)*h);
+        if (potential == "HO") {
+            A(i, i) = 2.0*ei + V->HarmonicOscillator((i+1)*h);
+        }
+        if (potential == "CO") {
+            A(i, i) = 2.0*ei + V->Coulomb(omega_r, (i+1)*h);
+        }
         if (i < N-1) {
             A(i, i+1) = -ei;
             A(i+1, i) = -ei;

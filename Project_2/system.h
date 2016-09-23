@@ -1,4 +1,5 @@
 #include <armadillo>
+#include <string>
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
@@ -9,7 +10,7 @@ private:
     int N;
 public:
     System(int size);
-    arma::mat init(int N, double rho_max);
+    arma::mat init(int N, double rho_max, std::string potential, double omega_r);
     arma::mat Jacobi_method(arma::mat A, int N);
     double maxOffDiag(arma::mat A, int &k, int &l, int N);
     void rotate(arma::mat &A, arma::mat Z, int k, int l, int N);
