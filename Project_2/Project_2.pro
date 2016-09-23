@@ -5,11 +5,14 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     potential.cpp \
-    system.cpp
+    system.cpp \
+    unit_test.cpp
 
 HEADERS += \
     potential.h \
-    system.h
+    system.h \
+    catch.hpp \
+    unit_test.h
 
 INCLUDEPATH += /usr/local/include
 
