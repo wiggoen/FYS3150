@@ -1,6 +1,4 @@
 # FYS3150
 Computational Physics
 
-Tester ved å legge til litt mer tekst.
-Mer tekst.
-Nytt vedlegg. 
+This repository contains material for FYS3150, a course at the University of Oslo. 
