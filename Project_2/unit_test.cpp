@@ -22,7 +22,9 @@ TEST_CASE( "Find max value", "Approximation" ) {
     double max_value = offdiag->maxOffDiag(test_mat, k, l, N);
 
     // testing the matrix for different values, checking that it rotates
+    cout << test_mat(1,2) << endl;
     REQUIRE(max_value == Approx(6));
+    cout << "k = " << k << ", " << "l = " << l << endl;
 
     test_mat(k,l) = 0; test_mat(l,k) = 0;
     max_value = offdiag->maxOffDiag(test_mat, k, l, N);
