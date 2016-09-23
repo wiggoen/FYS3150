@@ -70,7 +70,7 @@ double System::maxOffDiag(mat A, int &k, int &l, int N) {
     return max;
 }
 
-void System::rotate(mat &A, mat Z, int k, int l, int N) {
+void System::rotate(mat &A, mat &Z, int k, int l, int N) {
     double s, c;
     if (A(k, l) != 0.0) {
         double t, tau;
