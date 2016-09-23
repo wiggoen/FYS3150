@@ -2,6 +2,7 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 CONFIG -= qt
+DEFINES += CATCH_CONFIG_MAIN
 
 SOURCES += main.cpp \
     potential.cpp \
@@ -11,8 +12,7 @@ SOURCES += main.cpp \
 HEADERS += \
     potential.h \
     system.h \
-    catch.hpp \
-    unit_test.h
+    catch.hpp
 
 INCLUDEPATH += /usr/local/include
 

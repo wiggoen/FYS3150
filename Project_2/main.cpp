@@ -1,3 +1,5 @@
+
+#ifndef CATCH_CONFIG_MAIN
 #include <iostream>
 #include <cstdlib> // use of atoi
 #include <armadillo>
@@ -58,4 +60,4 @@ main() {
     cout << k << endl; // 1000
 }*/
 
-
+#endif

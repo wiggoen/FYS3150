@@ -12,7 +12,7 @@ MAKEFILE      = Makefile
 
 CC            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
 CXX           = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
-DEFINES       = -DQT_QML_DEBUG
+DEFINES       = -DCATCH_CONFIG_MAIN -DQT_QML_DEBUG
 CFLAGS        = -pipe -g -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.8 -Wall -W -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -stdlib=libc++ -g -std=gnu++11 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk -mmacosx-version-min=10.8 -Wall -W -fPIC $(DEFINES)
 INCPATH       = -I../Project_2 -I. -isystem /usr/local/include -I../../../../Qt5.7.0/5.7/clang_64/mkspecs/macx-clang
@@ -50,10 +50,12 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../Project_2/main.cpp \
 		../Project_2/potential.cpp \
-		../Project_2/system.cpp 
+		../Project_2/system.cpp \
+		../Project_2/unit_test.cpp 
 OBJECTS       = main.o \
 		potential.o \
-		system.o
+		system.o \
+		unit_test.o
 DIST          = ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/qdevice.pri \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/device_config.prf \
@@ -204,9 +206,11 @@ DIST          = ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/yacc.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/lex.prf \
 		../Project_2/Project_2.pro potential.h \
-		system.h ../Project_2/main.cpp \
+		system.h \
+		catch.hpp ../Project_2/main.cpp \
 		../Project_2/potential.cpp \
-		../Project_2/system.cpp
+		../Project_2/system.cpp \
+		../Project_2/unit_test.cpp
 QMAKE_TARGET  = Project_2
 DESTDIR       = 
 TARGET        = Project_2
@@ -564,14 +568,19 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../Project_2/main.cpp ../Project_2/potential.h
+main.o: ../Project_2/main.cpp ../Project_2/potential.h \
+		../Project_2/System.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../Project_2/main.cpp
 
 potential.o: ../Project_2/potential.cpp ../Project_2/potential.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o potential.o ../Project_2/potential.cpp
 
-system.o: ../Project_2/system.cpp ../Project_2/system.h
+system.o: ../Project_2/system.cpp ../Project_2/System.h \
+		../Project_2/potential.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o system.o ../Project_2/system.cpp
+
+unit_test.o: ../Project_2/unit_test.cpp ../Project_2/catch.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o unit_test.o ../Project_2/unit_test.cpp
 
 ####### Install
 
