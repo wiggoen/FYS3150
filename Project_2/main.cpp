@@ -1,4 +1,3 @@
-
 #ifndef CATCH_CONFIG_MAIN
 #include <iostream>
 #include <cstdlib> // use of atoi
@@ -25,7 +24,7 @@ int main()//(int argc, char *argv[])
     //int N = atoi(argv[1]); // first command line argument
     */
     int N = 100;
-    string potential = string("CO"); // HO or CO
+    string potential = string("HO"); // HO or CO
     cout << potential << endl;
     double rho_max = 3.6;
 
