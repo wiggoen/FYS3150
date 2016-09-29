@@ -152,6 +152,8 @@ void System::rotate(mat &A, mat &Z) {
 //        }
 //    return LowestIndex;
 //}
+
+/*
 int System::FindLowestIndex(mat &A) {
     int LowestIndex = 0;
     int LowestIndex2 = 0;
@@ -190,3 +192,4 @@ int System::FindLowestIndex(mat &A) {
     cout << "LA2:" << LowestA2 << endl;
     return LowestIndex;
 }
+*/

@@ -39,13 +39,17 @@ int main()//(int argc, char *argv[])
     // Setting up the eigenvector matrix
     mat Z = eye<mat>(n, n);
     system->Jacobi_method(A, Z);
-    int LowestIndex = system->FindLowestIndex(A);
+    //int LowestIndex = system->FindLowestIndex(A);
     //cout << "LI:" << A(LowestIndex, LowestIndex) << endl;
 
     vec eigvals = zeros<vec>(n);
     for (int i = 0; i < n; i++) {
         eigvals(i) = A(i, i);
     }
+
+    uvec indices = sort_index(eigvals);
+    //cout << indices << endl;
+
     eigvals = sort(eigvals);
     for (int i = 0; i < 3; i++) {
         cout << setprecision(8) << "Lambda_" << i << " = " << eigvals(i) << endl;
@@ -60,11 +64,11 @@ int main()//(int argc, char *argv[])
     }
     ofile.close();
 
-
-
     ofile.open("Eigenvectors.txt");
     for (int i = 0; i < n; i++) {
-        ofile << setprecision(8) << Z(i, LowestIndex) << endl;
+        ofile << setw(15) << setprecision(8) << Z(i, indices(0));
+        ofile << setw(15) << setprecision(8) << Z(i, indices(1));
+        ofile << setw(15) << setprecision(8) << Z(i, indices(2)) << endl;
     }
     ofile.close();
 

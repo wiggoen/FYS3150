@@ -15,7 +15,7 @@ public:
     void Jacobi_method(arma::mat &A, arma::mat &Z);
     double maxOffDiag(arma::mat A);
     void rotate(arma::mat &A, arma::mat &Z);
-    int FindLowestIndex(arma::mat &A);
+    //int FindLowestIndex(arma::mat &A);
 };
 
 #endif // SYSTEM_H
