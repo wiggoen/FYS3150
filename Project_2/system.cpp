@@ -62,7 +62,7 @@ void System::Jacobi_method(mat &A, mat &Z) {
     // Time used
     double runtime_JM = ((finish - start)/double(CLOCKS_PER_SEC));
     cout << setiosflags(ios::showpoint | ios::uppercase);
-    cout << setprecision(25) << setw(15) << "Runtime of Jacobi method = " << runtime_JM << endl;
+    cout << setprecision(25) << setw(15) << "Runtime of Jacobi method = " << runtime_JM << " s" << endl;
 
 }
 
@@ -125,71 +125,3 @@ void System::rotate(mat &A, mat &Z) {
         Z(i, l) = c*r_il + s*r_ik;
     }
 }
-
-//int System::FindLowestIndex(mat &A) {
-//    int LowestIndex = 0;
-//    int LowestIndex2 = 0;
-//    int LowestIndex3 = 0;
-//    //vec LowestIndex = { 0, 0, 0 };
-//    double LowestA = A(0, 0);
-//    double LowestA2 = A(1, 1);
-//    double LowestA3 = A(2, 2);
-//    //vec LowestA = { A(0, 0), A(1, 1), A(2, 2) };
-
-//    for (int i = 1; i < N; i++) {
-//        if (A(i, i) < LowestA) {
-//            LowestIndex = i;
-//            cout << "LI:" << LowestIndex << endl;
-//            LowestA = A(i, i);
-//        } else if (A(i, i) < LowestA2) {// && A(i, i) != LowestA) {
-//                LowestIndex2 = i;
-//                cout << "LI2:" << LowestIndex2 << endl;
-//                LowestA2 = A(i, i);
-//            }
-//            //if (A(i, i) <  && A(i, i) != LowestA) {
-
-
-//        }
-//    return LowestIndex;
-//}
-
-/*
-int System::FindLowestIndex(mat &A) {
-    int LowestIndex = 0;
-    int LowestIndex2 = 0;
-    int LowestIndex3 = 0;
-    //vec LowestIndex = { 0, 0, 0 };
-    double LowestA = A(0, 0);
-    cout << "LowestA = " << LowestA << endl;
-    //cout << index(A, (0,0)) << endl;
-    double LowestA2 = A(1, 1);
-    double LowestA3 = A(2, 2);
-    //vec LowestA = { A(0, 0), A(1, 1), A(2, 2) };
-
-    for (int i = 1; i < N; i++) {
-        if (A(i, i) < LowestA) {
-            LowestIndex = i;
-            cout << "LI:" << LowestIndex << endl;
-            LowestA = A(i, i);
-            cout << "LA:" << LowestA << endl;
-        }
-    }
-    for (int i = 1; i < N; i++) {
-        if (A(i, i) < LowestA2 && i != LowestIndex) {// && A(i, i) != LowestA) {
-                LowestIndex2 = i;
-                cout << "LI2:" << LowestIndex2 << endl;
-                LowestA2 = A(i, i);
-                cout << "LA2:" << LowestA2 << endl;
-        }
-            //if (A(i, i) <  && A(i, i) != LowestA) {
-
-
-        }
-    cout << "----------" << endl;
-    cout << "LI:" << LowestIndex << endl;
-    cout << "LA:" << LowestA << endl;
-    cout << "LI2:" << LowestIndex2 << endl;
-    cout << "LA2:" << LowestA2 << endl;
-    return LowestIndex;
-}
-*/

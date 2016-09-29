@@ -26,21 +26,22 @@ int main()//(int argc, char *argv[])
     char potential =  argv[1]; // first command line argument
     //int N = atoi(argv[1]); // first command line argument
     */
-    int n = 100;
-    string potential = string("HO"); // HO or CO
+
+    int w = 0; // Choose index of omega_r
+    string potential = string("CO"); // Choose HO or CO
     cout << potential << endl;
-    double rho_max = 5;
+
+    int n = 500;
+    double rho_max = 50;
 
     vec omega_r = { 0.01, 0.5, 1.0, 5.0 };
 
     System *system = new System(n);
-    mat A = system->init(rho_max, potential, omega_r(1));
+    mat A = system->init(rho_max, potential, omega_r(w));
 
     // Setting up the eigenvector matrix
     mat Z = eye<mat>(n, n);
     system->Jacobi_method(A, Z);
-    //int LowestIndex = system->FindLowestIndex(A);
-    //cout << "LI:" << A(LowestIndex, LowestIndex) << endl;
 
     vec eigvals = zeros<vec>(n);
     for (int i = 0; i < n; i++) {
@@ -48,23 +49,29 @@ int main()//(int argc, char *argv[])
     }
 
     uvec indices = sort_index(eigvals);
-    //cout << indices << endl;
 
     eigvals = sort(eigvals);
     for (int i = 0; i < 3; i++) {
         cout << setprecision(8) << "Lambda_" << i << " = " << eigvals(i) << endl;
     }
-    //cout << "Lambda_0 = " << eigvals(0) << endl;
 
     ofstream ofile;
-    ofile.open("Eigenvalues.txt");
-    //ofile << "Eigenvalues: " << endl;
+    string w_val = to_string(omega_r(w));
+    if (potential == "HO") {
+        ofile.open("../Project_2/outputs/Eigenvalues-" + potential + ".txt");
+    } else if (potential == "CO") {
+        ofile.open("../Project_2/outputs/Eigenvalues-" + potential + "-" + "w_" + w_val + ".txt");
+    }
     for (int i = 0; i < n; i++) {
         ofile << setprecision(8) << eigvals(i) << endl;
     }
     ofile.close();
 
-    ofile.open("Eigenvectors.txt");
+    if (potential == "HO") {
+        ofile.open("../Project_2/outputs/Eigenvectors-" + potential + ".txt");
+    } else if (potential == "CO") {
+        ofile.open("../Project_2/outputs/Eigenvectors-" + potential + "-" + "w_" + w_val + ".txt");
+    }
     for (int i = 0; i < n; i++) {
         ofile << setw(15) << setprecision(8) << Z(i, indices(0));
         ofile << setw(15) << setprecision(8) << Z(i, indices(1));
@@ -72,18 +79,7 @@ int main()//(int argc, char *argv[])
     }
     ofile.close();
 
-
     return 0;
 }
-
-/*
-main() {
-    void f(int &k) {
-        k = 10000;
-    }
-    int k = 9;
-    f(k);
-    cout << k << endl; // 1000
-}*/
 
 #endif
