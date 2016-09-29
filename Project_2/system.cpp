@@ -3,18 +3,21 @@
 #include <armadillo>
 #include <cmath>
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <iomanip>
 
 using namespace std;
 using namespace arma;
 
-System::System(int size)
-{
+System::System(int size) {
     N = size;
 }
 
-mat System::init(int N, double rho_max, string potential, double omega_r) {
+// Constructing the matrix A
+mat System::init(double rho_max, string potential, double omega_r) {
     Potential* V = new Potential();
-    cout << omega_r << endl;
+    //cout << omega_r << endl;
     mat A = zeros<mat>(N, N);
 
     double h = rho_max/N;
@@ -34,43 +37,53 @@ mat System::init(int N, double rho_max, string potential, double omega_r) {
     return A;
 }
 
-mat System::Jacobi_method(mat A, int N) {
-    // Setting up the eigenvector matrix
-    mat Z = zeros<mat>(N, N);
-    for (int i = 0; i < N; i++) {
-        Z(i, i) = 1.0;
-    }
-    int k, l;
+// Jacobi's method for finding eigenvalues and eigenvectors of the symmetric matrix A
+void System::Jacobi_method(mat &A, mat &Z) {
     double epsilon = 1.0e-8;
     double max_number_iterations = (double) N * (double) N * (double) N;
     int iterations = 0;
-    double max_OffDiag = maxOffDiag(A, k, l, N);
+    double max_OffDiag = maxOffDiag(A);
+
+    // Runtime for the Jacobi method
+    clock_t start, finish;
+    // Start clock
+    start = clock();
 
     while (fabs(max_OffDiag) > epsilon && (double) iterations < max_number_iterations) {
-        max_OffDiag = maxOffDiag(A, k, l, N);
-        rotate(A, Z, k, l, N);
+        max_OffDiag = maxOffDiag(A);
+        rotate(A, Z);
         iterations++;
     }
+    // End clock
+    finish = clock();
+
     std::cout << "Number of iterations: " << iterations << "\n";
-    return A;
+
+    // Time used
+    double runtime_JM = ((finish - start)/double(CLOCKS_PER_SEC));
+    cout << setiosflags(ios::showpoint | ios::uppercase);
+    cout << setprecision(25) << setw(15) << "Runtime of Jacobi method = " << runtime_JM << endl;
+
 }
 
-double System::maxOffDiag(mat A, int &k, int &l, int N) {
+// Function to find the maximum matrix element
+double System::maxOffDiag(mat A) {
     double max = 0.0;
 
     for (int i = 0; i < N; i++) {
         for (int j = i + 1; j < N; j++) {
             if (fabs(A(i, j)) > max) {
                 max = fabs(A(i, j));
-                l = i;
-                k = j;
+                this->l = i;
+                this->k = j;
             }
         }
     }
     return max;
 }
 
-void System::rotate(mat &A, mat &Z, int k, int l, int N) {
+// Function to find the values of cos and sin
+void System::rotate(mat &A, mat &Z) {
     double s, c;
     if (A(k, l) != 0.0) {
         double t, tau;
@@ -113,3 +126,65 @@ void System::rotate(mat &A, mat &Z, int k, int l, int N) {
     }
 }
 
+//int System::FindLowestIndex(mat &A) {
+//    int LowestIndex = 0;
+//    int LowestIndex2 = 0;
+//    int LowestIndex3 = 0;
+//    //vec LowestIndex = { 0, 0, 0 };
+//    double LowestA = A(0, 0);
+//    double LowestA2 = A(1, 1);
+//    double LowestA3 = A(2, 2);
+//    //vec LowestA = { A(0, 0), A(1, 1), A(2, 2) };
+
+//    for (int i = 1; i < N; i++) {
+//        if (A(i, i) < LowestA) {
+//            LowestIndex = i;
+//            cout << "LI:" << LowestIndex << endl;
+//            LowestA = A(i, i);
+//        } else if (A(i, i) < LowestA2) {// && A(i, i) != LowestA) {
+//                LowestIndex2 = i;
+//                cout << "LI2:" << LowestIndex2 << endl;
+//                LowestA2 = A(i, i);
+//            }
+//            //if (A(i, i) <  && A(i, i) != LowestA) {
+
+
+//        }
+//    return LowestIndex;
+//}
+int System::FindLowestIndex(mat &A) {
+    int LowestIndex = 0;
+    int LowestIndex2 = 0;
+    int LowestIndex3 = 0;
+    //vec LowestIndex = { 0, 0, 0 };
+    double LowestA = A(0, 0);
+    cout << "LowestA = " << LowestA << endl;
+    //cout << index(A, (0,0)) << endl;
+    double LowestA2 = A(1, 1);
+    double LowestA3 = A(2, 2);
+    //vec LowestA = { A(0, 0), A(1, 1), A(2, 2) };
+
+    for (int i = 1; i < N; i++) {
+        if (A(i, i) < LowestA) {
+            LowestIndex = i;
+            cout << "LI:" << LowestIndex << endl;
+            LowestA = A(i, i);
+            cout << "LA:" << LowestA << endl;
+        }
+        if (A(i, i) < LowestA2 && LowestA2 != LowestA) {// && A(i, i) != LowestA) {
+                LowestIndex2 = i;
+                cout << "LI2:" << LowestIndex2 << endl;
+                LowestA2 = A(i, i);
+                cout << "LA2:" << LowestA2 << endl;
+        }
+            //if (A(i, i) <  && A(i, i) != LowestA) {
+
+
+        }
+    cout << "----------" << endl;
+    cout << "LI:" << LowestIndex << endl;
+    cout << "LA:" << LowestA << endl;
+    cout << "LI2:" << LowestIndex2 << endl;
+    cout << "LA2:" << LowestA2 << endl;
+    return LowestIndex;
+}

@@ -5,6 +5,9 @@
 #include "potential.h"
 #include "System.h"
 #include <string>
+#include "time.h"
+#include <fstream>
+#include <iomanip>
 
 using namespace std;
 using namespace arma;
@@ -23,38 +26,47 @@ int main()//(int argc, char *argv[])
     char potential =  argv[1]; // first command line argument
     //int N = atoi(argv[1]); // first command line argument
     */
-    int N = 100;
+    int n = 100;
     string potential = string("HO"); // HO or CO
     cout << potential << endl;
-    double rho_max = 3.6;
+    double rho_max = 5;
 
     vec omega_r = { 0.01, 0.5, 1.0, 5.0 };
 
-    System *A_matrix = new System(N);
-    mat A = A_matrix->init(N, rho_max, potential, omega_r(1));
-    //cout << "A-matrix:" << endl;
-    //cout << A << endl;
+    System *system = new System(n);
+    mat A = system->init(rho_max, potential, omega_r(1));
 
-    mat B = A_matrix->Jacobi_method(A, N);
-    //cout << "Diagonal matrix:" << endl;
-    //cout << B << endl;
+    // Setting up the eigenvector matrix
+    mat Z = eye<mat>(n, n);
+    system->Jacobi_method(A, Z);
+    int LowestIndex = system->FindLowestIndex(A);
+    //cout << "LI:" << A(LowestIndex, LowestIndex) << endl;
 
-    /*int k, l;
-    System *offD = new System(N);
-    double X = offD->maxOffDiag(A, k, l, N);
-    cout << "max: " << X << endl;
-    cout << "k: " << k << endl;
-    cout << "l: " << l << endl;
-    */
-    vec eigvals = zeros<vec>(N);
-    for (int i = 0; i < N; i++) {
-        eigvals(i) = B(i, i);
+    vec eigvals = zeros<vec>(n);
+    for (int i = 0; i < n; i++) {
+        eigvals(i) = A(i, i);
     }
     eigvals = sort(eigvals);
     for (int i = 0; i < 3; i++) {
-        cout << "Lambda_" << i << " = " << eigvals(i) << endl;
+        cout << setprecision(8) << "Lambda_" << i << " = " << eigvals(i) << endl;
     }
     //cout << "Lambda_0 = " << eigvals(0) << endl;
+
+    ofstream ofile;
+    ofile.open("Eigenvalues.txt");
+    //ofile << "Eigenvalues: " << endl;
+    for (int i = 0; i < n; i++) {
+        ofile << setprecision(8) << eigvals(i) << endl;
+    }
+    ofile.close();
+
+
+
+    ofile.open("Eigenvectors.txt");
+    for (int i = 0; i < n; i++) {
+        ofile << setprecision(8) << Z(i, LowestIndex) << endl;
+    }
+    ofile.close();
 
 
     return 0;
