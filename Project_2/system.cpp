@@ -171,7 +171,9 @@ int System::FindLowestIndex(mat &A) {
             LowestA = A(i, i);
             cout << "LA:" << LowestA << endl;
         }
-        if (A(i, i) < LowestA2 && LowestA2 != LowestA) {// && A(i, i) != LowestA) {
+    }
+    for (int i = 1; i < N; i++) {
+        if (A(i, i) < LowestA2 && i != LowestIndex) {// && A(i, i) != LowestA) {
                 LowestIndex2 = i;
                 cout << "LI2:" << LowestIndex2 << endl;
                 LowestA2 = A(i, i);
