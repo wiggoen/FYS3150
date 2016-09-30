@@ -1,11 +1,12 @@
 #include "System.h"
 #include "potential.h"
+#include "time.h"
 #include <armadillo>
 #include <cmath>
-#include <string>
 #include <fstream>
-#include <iostream>
 #include <iomanip>
+#include <iostream>
+#include <string>
 
 using namespace std;
 using namespace arma;
@@ -28,8 +29,9 @@ mat System::init(double rho_max, string potential, double omega_r) {
             A(i, i) = 2.0*ei + V->HarmonicOscillator((i+1)*h);
         } else if (potential == "CO") {
             A(i, i) = 2.0*ei + V->Coulomb(omega_r, (i+1)*h);
-        }
-        if (i < N-1) {
+        } else if (potential == "HO_2e") {
+            A(i, i) = 2.0*ei + V->HO_2e(omega_r, (i+1)*h);
+        } if (i < N-1) {
             A(i, i+1) = -ei;
             A(i+1, i) = -ei;
         }
@@ -62,7 +64,7 @@ void System::Jacobi_method(mat &A, mat &Z) {
     // Time used
     double runtime_JM = ((finish - start)/double(CLOCKS_PER_SEC));
     cout << setiosflags(ios::showpoint | ios::uppercase);
-    cout << setprecision(25) << setw(15) << "Runtime of Jacobi method = " << runtime_JM << " s" << endl;
+    cout << setprecision(8) << setw(15) << "Runtime of Jacobi method = " << runtime_JM << " s" << endl;
 
 }
 
@@ -124,4 +126,25 @@ void System::rotate(mat &A, mat &Z) {
         Z(i, k) = c*r_ik - s*r_il;
         Z(i, l) = c*r_il + s*r_ik;
     }
+}
+
+void System::eig_symmetric(mat &A) {
+    // Calculate computation time and eigenvectors with standard Armadillo library
+    clock_t start_arma, finish_arma;
+    start_arma = clock();
+    mat eigvec;
+    vec eigval;
+
+    //
+    eig_sym(eigval, eigvec, A);
+    finish_arma = clock();
+
+    // Time used
+    double runtime_arma = (finish_arma - start_arma)/(double)CLOCKS_PER_SEC;
+    cout << setiosflags(ios::showpoint | ios::uppercase);
+    cout << setprecision(8) << setw(15) << "Runtime of eig_sym = " << runtime_arma << " s" << endl;
+
+    cout << "eig_symmetric: Lambda_0 = " << eigval(0) << endl;
+    cout << "eig_symmetric: Lambda_1 = " << eigval(1) << endl;
+    cout << "eig_symmetric: Lambda_2 = " << eigval(2) << endl;
 }
