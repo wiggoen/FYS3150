@@ -28,12 +28,12 @@ int main()//(int argc, char *argv[])
     //int N = atoi(argv[1]); // first command line argument
     */
 
-    int w = 3; // Choose index of omega_r
-    string potential = string("CO"); // Choose HO or CO or HO_2e
+    int w = 0; // Choose index of omega_r
+    string potential = string("HO"); // Choose HO or CO or HO_2e
     cout << potential << endl;
 
     int n = 350;
-    double rho_max = 2;
+    double rho_max = 5;
 
     vec omega_r = { 0.01, 0.5, 1.0, 5.0 };
     cout << "omega_r = " << omega_r(w) << endl;

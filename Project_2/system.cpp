@@ -101,16 +101,20 @@ void System::rotate(mat &A, mat &Z) {
         c = 1.0;
         s = 0.0;
     }
+    // Rotation of the matrix
     double a_kk, a_ll, a_ik, a_il, r_ik, r_il;
     a_kk = A(k, k);
     a_ll = A(l, l);
-    // changing the matrix elements with indices k and l
+
+    // Changing the matrix elements with indices k and l
     A(k, k) = c*c*a_kk - 2.0*c*s*A(k, l) + s*s*a_ll;
     A(l, l) = s*s*a_kk + 2.0*c*s*A(k, l) + c*c*a_ll;
-    // hard-coding zeros
+
+    // Hard coding zeros
     A(k, l) = 0.0;
     A(l, k) = 0.0;
-    // change the remaining elements
+
+    // Change the remaining elements
     for (int i = 0; i < N; i++) {
         if (i != k && i != l) {
             a_ik = A(i, k);
@@ -120,7 +124,7 @@ void System::rotate(mat &A, mat &Z) {
             A(i, l) = c*a_il + s*a_ik;
             A(l, i) = A(i, l);
         }
-        // compute the new eigenvectors
+        // Computing the new eigenvectors
         r_ik = Z(i, k);
         r_il = Z(i, l);
         Z(i, k) = c*r_ik - s*r_il;
@@ -128,15 +132,21 @@ void System::rotate(mat &A, mat &Z) {
     }
 }
 
+// Calculate computation time and eigenvectors with standard Armadillo library
 void System::eig_symmetric(mat &A) {
-    // Calculate computation time and eigenvectors with standard Armadillo library
+    // Runtime for the standard Armadillo function eig_sym
     clock_t start_arma, finish_arma;
+
+    // Start clock
     start_arma = clock();
+
     mat eigvec;
     vec eigval;
 
-    //
+    // Finding eigenvalues and eigenvectors for a symmetric matrix A
     eig_sym(eigval, eigvec, A);
+
+    // End clock
     finish_arma = clock();
 
     // Time used
