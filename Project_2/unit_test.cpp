@@ -17,69 +17,66 @@ TEST_CASE( "Find max value", "Approximation" ) {
                      {2, 6, 7} };
 
     // getting max value from maxOffDiag
-    System *offdiag = new System(N);
-    int k, l;
-    double max_value = offdiag->maxOffDiag(test_mat, k, l, N);
+    System* system = new System(N);
+    double max_value = system->maxOffDiag(test_mat);
+    int &l = system->l;
+    int &k = system->k;
 
-    // testing the matrix for different values
-    //cout << test_mat(1,2) << endl;
+    // testing that the matrix gets the correct largest non-diagonal elements in upper triangle
     REQUIRE(max_value == Approx(6));
-    //cout << "k = " << k << ", " << "l = " << l << endl;
-    //cout << test_mat << endl;
 
-    // hard coding elements to zero and testing for the next values
-    test_mat(k,l) = 0; test_mat(l,k) = 0;
-    max_value = offdiag->maxOffDiag(test_mat, k, l, N);
+    // hard coding elements to zero and testing for the next elements
+    test_mat(k, l) = 0; test_mat(l, k) = 0;
+    max_value = system->maxOffDiag(test_mat);
     REQUIRE(max_value == Approx(3));
-    //cout << test_mat << endl;
 
-    test_mat(k,l) = 0; test_mat(l,k) = 0;
-    max_value = offdiag->maxOffDiag(test_mat, k, l, N);
+    test_mat(k, l) = 0; test_mat(l, k) = 0;
+    max_value = system->maxOffDiag(test_mat);
     REQUIRE(max_value == Approx(2));
-    //cout << test_mat << endl;
 
-    test_mat(k,l) = 0; test_mat(l,k) = 0;
-    max_value = offdiag->maxOffDiag(test_mat, k, l, N);
+    test_mat(k, l) = 0; test_mat(l, k) = 0;
+    max_value = system->maxOffDiag(test_mat);
     REQUIRE(max_value == Approx(0));
-    //cout << test_mat << endl;
 }
 
 TEST_CASE( "Testing eigenvalues", "Approximation" ) {
     int N = 5;
+
+    // test matrix
     mat test_mat = { {1, 2, 3, 4, 5},
                      {2, 1, 2, 3, 4},
                      {3, 2, 1, 2, 3},
                      {4, 3, 2, 1, 2},
                      {5, 4, 3, 2, 1} };
+
+    // setting up the rotation matrix
+    mat test_mat_Z = eye<mat>(N, N);
+
+    // known eigenvalues from test matrix
     double lambda_0 = -5.236067977499790;
     double lambda_1 = -1.635237730041817;
     double lambda_2 = -0.763932022500212;
     double lambda_3 = -0.556294915312374;
     double lambda_4 = 13.191532645354183;
 
+    // using Jacobi method to find the eigenvalues
     System *test_matrix = new System(N);
-    mat B = test_matrix->Jacobi_method(test_mat, N);
+    test_matrix->Jacobi_method(test_mat, test_mat_Z);
+
+    // setting up the eigenvalue vector
     vec eigvals = zeros<vec>(N);
     for (int i = 0; i < N; i++) {
-        eigvals(i) = B(i, i);
+        eigvals(i) = test_mat(i, i);
     }
+    // sorting the eigenvalues
     eigvals = sort(eigvals);
-    /*for (int i = 0; i < N; i++) {
-        cout << "Lambda_" << i << " = " << eigvals(i) << endl;
-    }*/
+
+    // testing that the eigenvalues are correct
     REQUIRE(eigvals(0) == Approx(lambda_0));
     REQUIRE(eigvals(1) == Approx(lambda_1));
     REQUIRE(eigvals(2) == Approx(lambda_2));
     REQUIRE(eigvals(3) == Approx(lambda_3));
     REQUIRE(eigvals(4) == Approx(lambda_4));
-}
-TEST_CASE( "Testing conservation of inner product", "Approximation" ) {
-    mat test_X = { {1, 0, 1, 0, 1},
-                   {0, 1, 0, 1, 0} };
-    mat test_Y = { {0, 1, 0, 1, 0},
-                   {1, 0, 1, 0, 1} };
-    double dot_product = dot(test_X, trans(test_X));
-    cout << dot_product << endl;
 }
 
 #endif

@@ -42,7 +42,7 @@ int main()//(int argc, char *argv[])
     System *system = new System(n);
     mat A = system->init(rho_max, potential, omega_r(w));
 
-    // Setting up the eigenvector matrix
+    // Setting up the rotation matrix
     mat Z = eye<mat>(n, n);
     system->Jacobi_method(A, Z);
 
