@@ -13,30 +13,43 @@
 using namespace std;
 using namespace arma;
 
-int main()//(int argc, char *argv[])
-{
-    // check that we have 1 argument (number of elements N for the symmetric matrix)
-   /* if (argc <= 1) {
-        cout << "Bad usage: " << argv[0] << endl;
-        cout << "Choose potential HO (harmonic oscillator) or CO (coulomb)!" << endl;
-        //cout << "You need to specify the number of N elements for the matrix in command line!" << endl;
-        exit(1);
-        }
+/* PLEASE READ THIS BEFORE USING THE PROGRAM!
 
-    // Declaring variables
-    char potential =  argv[1]; // first command line argument
-    //int N = atoi(argv[1]); // first command line argument
-    */
+   To use unit_test.cpp you need to uncomment DEFINES += CATCH_CONFIG_MAIN
+   in Project_2.pro. This will comment out everything in main.cpp.
+   After this you have to rebuild.
+   Also, when going back to the main program you need to comment out
+   DEFINES += CATCH_CONFIG_MAIN and then rebuild again.
 
-    int w = 0; // Choose index of omega_r
-    string potential = string("HO"); // Choose HO or CO or HO_2e
-    cout << potential << endl;
+   ----------
 
-    int n = 350;
-    double rho_max = 5;
+   How the program works:
+   This could have been automated by using command line arguments,
+   but we didn't do it - sorry!
+   Before running this program you have to set up a few parameters:
 
+   - First, choose what potential you want to use: HO, CO or HO_2e,
+     where HO is the harmonic oscillator potential using one electron,
+     CO is the Coulomb potential using two electrons and HO_2e is the
+     harmonic oscillator potential using two electrons.
+   - Choose your value of rho_max.
+   - Choose your value of n.
+   - Then, if you are using CO or HO_2e, choose the index w for the
+     omega_r value you want:
+     ( w = 0 -> omega_r = 0.01, w = 1 -> omega_r = 0.5,
+     w = 2 -> omega_r = 1.0, w = 3 -> omega_r = 5.0 ).
+     If you are using potential HO, then it does not matter what
+     index w stands on in the range [0, 3] because it's not in use.
+*/
+
+int main() {
+    string potential = string("HO"); // Choose HO, CO or HO_2e
+    double rho_max = 5;              // Choose rho_max
+    int n = 350;                     // Choose the value n
+    int w = 0;                       // Choose index of omega_r
+
+    // Omega_r values chosen by index w
     vec omega_r = { 0.01, 0.5, 1.0, 5.0 };
-    cout << "omega_r = " << omega_r(w) << endl;
 
     // Naming the matrix made in the class System
     System *system = new System(n);
