@@ -10,7 +10,7 @@ using namespace arma;
 int main()//int argc, char *argv[])
 {
     int N = 365;
-    double h = 0.001/N;
+    double h = 1.0/N; // (t_final - t_0)/N
     double pi = M_PI;
 
     // Position and velocity vectors
@@ -22,8 +22,8 @@ int main()//int argc, char *argv[])
     // Initial conditions
     x(0) = 1.0; // 1 AU
     y(0) = 0.0;
-    v_x(0) = -3.851159854117840E-03; // AU/day
-    v_y(0) = 1.677807321756382E-02; // AU/day
+    v_x(0) = -3.851159854117840E-03*365.0; // AU/yr
+    v_y(0) = 1.677807321756382E-02*365.0; // AU/yr
 
     double r, R;
     // Eulers method
@@ -35,7 +35,6 @@ int main()//int argc, char *argv[])
         x(i+1) = x(i) + h*v_x(i);
         v_y(i+1) = v_y(i) - h*((4*pi*pi)/R)*y(i);
         y(i+1) = y(i) + h*v_y(i);
-
     }
     // Write to file
     ofstream ofile;
