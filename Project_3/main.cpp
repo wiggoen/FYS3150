@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int numArguments, char **arguments)
 {
-    int numTimesteps = 250000;
+    int numTimesteps = 1200;
     if(numArguments >= 2) numTimesteps = atoi(arguments[1]);
 
     SolarSystem solarSystem;
@@ -25,7 +25,7 @@ int main(int numArguments, char **arguments)
     solarSystem.createCelestialBody( vec3(9.819128739328793E-01, 2.104822076393571E-01, -1.756137106591000E-04),
                                      vec3(-3.851159854117840E-03, 1.677807321756382E-02, -7.444403689401816E-07)*365.0,
                                      3.0e-6);
-    // Jupiter
+/*    // Jupiter
     solarSystem.createCelestialBody( vec3(-5.433468170028908E+00, -3.819061221110369E-01, 1.231004384238452E-01),
                                      vec3(4.425651679847022E-04, -7.171108917491057E-03, 1.992744446163222E-05)*365.0,
                                      9.5e-4);
@@ -58,7 +58,7 @@ int main(int numArguments, char **arguments)
     solarSystem.createCelestialBody( vec3(-1.388351215994794E-01, 2.874076124640064E-01, 3.611730762400382E-02),
                                      vec3(-3.081033504804020E-02, -1.153752302730325E-02, 1.883146626624065E-03)*365.0,
                                      1.2e-7);
-
+*/
     // To get a list (a reference, not copy) of all the bodies in the solar system, we use the .bodies() function
     vector<CelestialBody> &bodies = solarSystem.bodies();
 
@@ -72,10 +72,11 @@ int main(int numArguments, char **arguments)
     Verlet integrator(dt);
     for(int timestep = 0; timestep < numTimesteps; timestep++) {
         integrator.integrateOneStep(solarSystem);
-        //solarSystem.writeToFile("../solar-system/outputs/positions.xyz"); // Writes all timesteps
-        if (timestep % 500 == 0) {
-            solarSystem.writeToFile("../solar-system/outputs/positions.xyz");
+        solarSystem.writeToFile("../Project_3/outputs/positions.xyz"); // Writes all timesteps
+/*        if (timestep % 500 == 0) {
+            solarSystem.writeToFile("../Project_3/outputs/positions.xyz");
         }
+*/
     }
 
     cout << "I just created my first solar system that has " << solarSystem.bodies().size() << " objects." << endl;
