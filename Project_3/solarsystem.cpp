@@ -2,6 +2,8 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include "verlet.h"
+#include "euler.h"
 
 using namespace std;
 
@@ -66,7 +68,7 @@ double SolarSystem::kineticEnergy() const
     return m_kineticEnergy;
 }
 
-void SolarSystem::writeToFile(string filename)
+void SolarSystem::writeToFile(string filename, string mode)
 {
     if(!m_file.good()) {
         m_file.open(filename.c_str(), ofstream::out);
@@ -77,18 +79,16 @@ void SolarSystem::writeToFile(string filename)
     }
     //m_bodies.at(i).position
 
-    // Choose "Ovito" or "Python" for writing to the file
-    string write = "Ovito";
-
-    if (write == "Ovito") {
+    if (mode == "Ovito") {
         // Writing file to use with Ovito
         m_file << numberOfBodies() << endl;
         m_file << "The rows are the celestial bodies stacked, and the columns are x, y and z positions." << endl;
         for(CelestialBody &body : m_bodies) {
             m_file << "1 " << body.position.x() << " " << body.position.y() << " " << body.position.z() << "\n";
         }
-    } else if (write == "python") {
-        // Writing file to use with matplotlib.pyplot
+
+    } else if (mode == "Python") {
+        // Writing file to use with Python
         for(CelestialBody &body : m_bodies) {
             m_file << setw(25) << body.position.x() << setw(25) << body.position.y() << setw(25) << body.position.z() << "\n";
         }
@@ -106,3 +106,54 @@ std::vector<CelestialBody> &SolarSystem::bodies()
 {
     return m_bodies;
 }
+
+void SolarSystem::setNumTimesteps(int numTimesteps) {
+    m_numTimesteps = numTimesteps;
+}
+
+void SolarSystem::setDt(double dt) {
+    m_dt = dt;
+}
+
+void SolarSystem::setOutputmode(string outputmode) {
+    m_outputmode = outputmode;
+}
+
+void SolarSystem::setOutfilename(string outfilename) {
+    m_outfilename = outfilename;
+}
+
+void SolarSystem::setIntegrator(string integrator) {
+    m_integrator = integrator;
+}
+
+void SolarSystem::integrate() {
+    if (m_integrator == "Verlet") {
+        Verlet integrator(m_dt);
+        for (int i=0; i<m_numTimesteps; i++) {
+            integrator.integrateOneStep(*this);
+            this->writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode); // Writes all timesteps
+            /*        if (timestep % 500 == 0) {
+            solarSystem.writeToFile("../Project_3/outputs/positions.xyz");
+            }
+            */
+        }
+    }
+    if (m_integrator == "Euler") {
+        Euler integrator(m_dt);
+        for (int i=0; i<m_numTimesteps; i++) {
+            integrator.integrateOneStep(*this);
+            this->writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode); // Writes all timesteps
+            /*        if (timestep % 500 == 0) {
+            solarSystem.writeToFile("../Project_3/outputs/positions.xyz");
+            }
+            */
+        }
+    }
+
+    cout << "I just created my first solar system that has " << this->bodies().size() << " objects" << endl;
+    cout << "using the " << m_integrator << " integrator and wrote to the file " << m_outfilename << " that I can read from " << m_outputmode << "." << endl;
+}
+
+
+

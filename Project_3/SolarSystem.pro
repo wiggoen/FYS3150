@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     vec3.cpp \
     euler.cpp \
     unit_test.cpp \
-    verlet.cpp
+    verlet.cpp \
+    examples.cpp
 
 HEADERS += \
     celestialbody.h \
@@ -18,5 +19,6 @@ HEADERS += \
     vec3.h \
     euler.h \
     catch.hpp \
-    verlet.h
+    verlet.h \
+    examples.h
 
