@@ -122,14 +122,24 @@ void SolarSystem::calculateForcesAndEnergyGr() {
         double dr;
         for(int j=i+1; j<numberOfBodies(); j++) {
             CelestialBody &body2 = m_bodies[j];
-            vec3 deltaRVector = body1.position - body2.position;
-            dr = deltaRVector.length();
+            if (body1.name == "Sun" && body2.name == "Mercury") {
+                vec3 deltaRVector = body1.position - body2.position;
+                dr = deltaRVector.length();
 
-            // Calculate the force and potential energy here
-            vec3 l = body2.position.cross(body2.velocity); //(1.0/body2.mass)*
-            vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized() * (1 + 3*l.lengthSquared()/(dr*dr*m_c*m_c));
-            body1.force -= force;
-            body2.force += force;
+                // Calculate the force and potential energy here
+                vec3 l = body2.position.cross(body2.velocity); //(1.0/body2.mass)*
+                vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized() * (1 + 3*l.lengthSquared()/(dr*dr*m_c*m_c));
+                body1.force -= force;
+                body2.force += force;
+            } else {
+                vec3 deltaRVector = body1.position - body2.position;
+                dr = deltaRVector.length();
+
+                // Calculate the force and potential energy here
+                vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized();
+                body1.force -= force;
+                body2.force += force;
+            }
         }
 
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
@@ -172,11 +182,9 @@ void SolarSystem::integrate(int printEvery, bool withGr) {
         Euler integrator(m_dt);
         for (int i=0; i<m_numTimesteps; i++) {
             integrator.integrateOneStep(*this, withGr);
-            writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode); // Writes all timesteps
-            /*        if (timestep % 500 == 0) {
-            solarSystem.writeToFile("../Project_3/outputs/positions.xyz");
+            if (m_numTimesteps % printEvery == 0) {
+                writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode);
             }
-            */
         }
     }
 
