@@ -1,3 +1,4 @@
+from itertools import *
 from os import *
 from pylab import *
 from matplotlib.pyplot import *
@@ -9,7 +10,7 @@ dt = 0.001
 outfilemode = "Python"          # Use "Ovito" or "Python" for writing to the file
 outfile = "positions.xyz"       # Name of output file
 integrator = "Verlet"           # Use "Verlet" or "Euler" for integrator
-systemstring = "System-with-GR"    # Use "Sun-Earth", "Planet-Escape", "Sun-Mercury", "System-without-GR" or "System-with-GR"
+systemstring = "Sun-Earth"      # Use "Sun-Earth", "Planet-Escape", "Sun-Mercury", "System-without-GR" or "System-with-GR"
 printEvery = 1                  # Prints every specified timestep to file (1 means all timesteps)
 optimization_flag = "-O0"       # Default is -O0, use -O3 for optimization
 
@@ -20,20 +21,20 @@ system("g++ *.cpp -o main.x " + optimization_flag + " -std=c++11")
 systemStr = "./main.x %d %f %s %s %s %s %d" % (numTimesteps, dt, outfilemode, outfile, integrator, systemstring, printEvery)
 system(systemStr)
 
-# Colors
-#           Sun,       
-#scolor = ["#FFBF00"]
-#           Earth,    Jupiter,   Venus,      Mars,     Saturn,    Uranus,    Neptune,    Pluto,    Mercury
-#colors = ["#0048BA", "#CC7722", "#81613C", "#C46210", "#CC9966", "#87CEEB", "#6495ED", "#996515", "#987654"]
-
 # Two body systems
 def Two_body(positions, systemstring):
     num = 2 # Number of Celestial bodies
     fig = figure()
+    if systemstring == "Sun-Earth" or systemstring == "Planet-Escape":
+        #                  Sun,      Earth
+        colors = cycle(["#FF0000", "#00008B"])
+    if systemstring == "Sun-Mercury":
+        #                  Sun,      Mercury
+        colors = cycle(["#FF0000", "#939393"])
     for i in range(num):
-        plot(positions[i::num][:, 0], positions[i::num][:, 1])
+        plot(positions[i::num][:, 0], positions[i::num][:, 1], color=next(colors))
         hold("on")
-    plot(0, 0, marker="o", color="b") # marks the spot of the Sun
+    plot(0, 0, marker="o", color="#FF0000") # Marks the spot of the Sun
     art = []
     if systemstring == "Sun-Earth":
         title("The "+systemstring+" system", fontsize = 18)
@@ -54,20 +55,17 @@ def Two_body(positions, systemstring):
     show()
     return "The system is calculated."
 
-#"System-without-GR" or "System-with-GR"
- #if systemstring == "System-without-GR" or systemstring == "System-with-GR": 
- #       num = 10 # Number of Celestial bodies
-
-# Two body systems
+# Ten body systems
 def Ten_body(positions, systemstring):
     num = 10 # Number of Celestial bodies
     fig = figure()
     ax = fig.add_subplot(111, projection="3d")
+    #                  Sun,     Mercury,    Venus,     Earth,     Mars,     Jupiter,    Saturn,    Uranus,   Neptune,    Pluto
+    colors = cycle(["#FFFF00", "#939393", "#FF6600", "#00008B", "#FF0000", "#FF9933", "#FF6600", "#00FFFF", "#0000FF", "#808080"])
     for i in range(num):
-        plot(positions[i::num][:, 0], positions[i::num][:, 1], positions[i::num][:, 2])
+        plot(positions[i::num][:, 0], positions[i::num][:, 1], positions[i::num][:, 2], color=next(colors))
         hold("on")
-    ax.scatter(0, 0, 0, marker="o", color="r")# =scolor[0])
-    #ax.scatter(x[0], y[0], z[0], marker="o", color="g")
+    ax.scatter(0, 0, 0, marker="o", color="#FFFF00")
     if systemstring == "System-without-GR":
         title("The solar system without GR", fontsize = 18)
     if systemstring == "System-with-GR":
@@ -76,8 +74,8 @@ def Ten_body(positions, systemstring):
     ax.set_ylabel("y direction [AU]", fontsize = 16, linespacing=2.5)
     ax.set_zlabel("z direction [AU]", fontsize = 16, linespacing=2.5)
     art = []
-    #lgd = legend(["Sun", "Earth orbit"],loc="upper left", bbox_to_anchor=(1, 1))
-    #art.append(lgd)
+    lgd = legend(["Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"],loc="upper left", bbox_to_anchor=(1, 1))
+    art.append(lgd)
     tick_params(labelsize=14, pad=100)
     savefig("plots/"+systemstring+".png", additional_artists=art, bbox_inches="tight")
     show()
@@ -91,6 +89,3 @@ if outfilemode == "Python":
         print Ten_body(positions, systemstring)
     else:
         print "Choose a system."
-
-
-
