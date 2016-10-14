@@ -13,8 +13,8 @@ SolarSystem::SolarSystem() :
 {
 }
 
-CelestialBody& SolarSystem::createCelestialBody(vec3 position, vec3 velocity, double mass) {
-    m_bodies.push_back( CelestialBody(position, velocity, mass) );
+CelestialBody& SolarSystem::createCelestialBody(vec3 position, vec3 velocity, double mass, string name) {
+    m_bodies.push_back( CelestialBody(position, velocity, mass, name) );
     return m_bodies.back(); // Return reference to the newest added celstial body
 }
 
@@ -31,20 +31,20 @@ void SolarSystem::calculateForcesAndEnergy()
 
     for(int i=0; i<numberOfBodies(); i++) {
         CelestialBody &body1 = m_bodies[i];
-        double dr, G;
+        double dr;
         for(int j=i+1; j<numberOfBodies(); j++) {
             CelestialBody &body2 = m_bodies[j];
             vec3 deltaRVector = body1.position - body2.position;
             dr = deltaRVector.length();
-            G = 4*M_PI*M_PI; // AU^3/(kg*yr^2)
+
             // Calculate the force and potential energy here
-            vec3 force = G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized();
+            vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized();
             body1.force -= force;
             body2.force += force;
         }
 
         m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
-        m_potentialEnergy -= G*body1.mass/dr;
+        m_potentialEnergy -= m_G*body1.mass/dr;
     }
 }
 
@@ -80,15 +80,15 @@ void SolarSystem::writeToFile(string filename, string mode)
     //m_bodies.at(i).position
 
     if (mode == "Ovito") {
-        // Writing file to use with Ovito
+        // Writing file to use with Ovito, (mode == "Ovito")
         m_file << numberOfBodies() << endl;
         m_file << "The rows are the celestial bodies stacked, and the columns are x, y and z positions." << endl;
         for(CelestialBody &body : m_bodies) {
-            m_file << "1 " << body.position.x() << " " << body.position.y() << " " << body.position.z() << "\n";
+            m_file << body.name << " " << body.position.x() << " " << body.position.y() << " " << body.position.z() << " " << body.radius() << "\n";
         }
 
     } else if (mode == "Python") {
-        // Writing file to use with Python
+        // Writing file to use with Python, (mode == "Python")
         for(CelestialBody &body : m_bodies) {
             m_file << setw(25) << body.position.x() << setw(25) << body.position.y() << setw(25) << body.position.z() << "\n";
         }
@@ -105,6 +105,36 @@ vec3 SolarSystem::angularMomentum() const
 std::vector<CelestialBody> &SolarSystem::bodies()
 {
     return m_bodies;
+}
+
+void SolarSystem::calculateForcesAndEnergyGr() {
+    m_kineticEnergy = 0;
+    m_potentialEnergy = 0;
+    m_angularMomentum.zeros();
+
+    for(CelestialBody &body : m_bodies) {
+        // Reset forces on all bodies
+        body.force.zeros();
+    }
+
+    for(int i=0; i<numberOfBodies(); i++) {
+        CelestialBody &body1 = m_bodies[i];
+        double dr;
+        for(int j=i+1; j<numberOfBodies(); j++) {
+            CelestialBody &body2 = m_bodies[j];
+            vec3 deltaRVector = body1.position - body2.position;
+            dr = deltaRVector.length();
+
+            // Calculate the force and potential energy here
+            vec3 l = body2.position.cross(body2.velocity); //(1.0/body2.mass)*
+            vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized() * (1 + 3*l.lengthSquared()/(dr*dr*m_c*m_c));
+            body1.force -= force;
+            body2.force += force;
+        }
+
+        m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
+        m_potentialEnergy -= m_G*body1.mass/dr;
+    }
 }
 
 void SolarSystem::setNumTimesteps(int numTimesteps) {
@@ -127,23 +157,22 @@ void SolarSystem::setIntegrator(string integrator) {
     m_integrator = integrator;
 }
 
-void SolarSystem::integrate() {
+// Writing every specified timestep to file
+void SolarSystem::integrate(int printEvery, bool withGr) {
     if (m_integrator == "Verlet") {
         Verlet integrator(m_dt);
         for (int i=0; i<m_numTimesteps; i++) {
-            integrator.integrateOneStep(*this);
-            this->writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode); // Writes all timesteps
-            /*        if (timestep % 500 == 0) {
-            solarSystem.writeToFile("../Project_3/outputs/positions.xyz");
+            integrator.integrateOneStep(*this, withGr);
+            if (m_numTimesteps % printEvery == 0) {
+                writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode);
             }
-            */
         }
     }
     if (m_integrator == "Euler") {
         Euler integrator(m_dt);
         for (int i=0; i<m_numTimesteps; i++) {
-            integrator.integrateOneStep(*this);
-            this->writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode); // Writes all timesteps
+            integrator.integrateOneStep(*this, withGr);
+            writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode); // Writes all timesteps
             /*        if (timestep % 500 == 0) {
             solarSystem.writeToFile("../Project_3/outputs/positions.xyz");
             }
@@ -151,7 +180,7 @@ void SolarSystem::integrate() {
         }
     }
 
-    cout << "I just created my first solar system that has " << this->bodies().size() << " objects" << endl;
+    cout << "I just created my first solar system that has " << bodies().size() << " objects" << endl;
     cout << "using the " << m_integrator << " integrator and wrote to the file " << m_outfilename << " that I can read from " << m_outputmode << "." << endl;
 }
 

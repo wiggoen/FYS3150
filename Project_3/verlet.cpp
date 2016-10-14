@@ -8,23 +8,42 @@ Verlet::Verlet(double dt) :
 }
 
 
-void Verlet::integrateOneStep(SolarSystem &system)
+void Verlet::integrateOneStep(SolarSystem &system, bool withGr)
 {
-    if (m_firstStep == true) {
-        system.calculateForcesAndEnergy(); // F(t)
-        m_firstStep = false;
-    }
+    if (withGr == false) {
+        if (m_firstStep == true) {
+            system.calculateForcesAndEnergy(); // F(t)
+            m_firstStep = false;
+        }
 
-    for(CelestialBody &body : system.bodies()) {
-        body.velocity += (body.force / body.mass) * m_dt/2.0;
-        body.position += body.velocity*m_dt;
+        for(CelestialBody &body : system.bodies()) {
+            body.velocity += (body.force / body.mass) * m_dt/2.0;
+            body.position += body.velocity*m_dt;
 
-    }
+        }
 
-    system.calculateForcesAndEnergy(); // F(t+dt)
+        system.calculateForcesAndEnergy(); // F(t+dt)
 
-    for(CelestialBody &body : system.bodies()) {
-        body.velocity += (body.force / body.mass) * m_dt/2.0;
+        for(CelestialBody &body : system.bodies()) {
+            body.velocity += (body.force / body.mass) * m_dt/2.0;
+        }
+    } else {
+        if (m_firstStep == true) {
+            system.calculateForcesAndEnergyGr(); // F(t)
+            m_firstStep = false;
+        }
+
+        for(CelestialBody &body : system.bodies()) {
+            body.velocity += (body.force / body.mass) * m_dt/2.0;
+            body.position += body.velocity*m_dt;
+
+        }
+
+        system.calculateForcesAndEnergyGr(); // F(t+dt)
+
+        for(CelestialBody &body : system.bodies()) {
+            body.velocity += (body.force / body.mass) * m_dt/2.0;
+        }
     }
 }
 

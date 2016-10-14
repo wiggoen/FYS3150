@@ -12,16 +12,20 @@ int main(int numArguments, char **arguments) {
     // Default if there is no command line arguments
     int numTimesteps = 1000;
     double dt = 0.001;
-    string outputmode = "Ovito"; // Choose "Ovito" or "Python" for writing to the file
+    string outputmode = "Ovito"; // Use "Ovito" or "Python" for writing to the file
     string outfilename = "positions.xyz";
-    string integr = "Verlet";
+    string integrator = "Verlet"; // Use "Verlet" or "Euler" for integrator
+    string system = "Sun-Mercury";//"Sun-Earth";
+    int printEvery = 1;
 
     // If command line arguments are defined
     if (numArguments >= 2) numTimesteps = atoi(arguments[1]);
     if (numArguments >= 3) dt = atof(arguments[2]);
     if (numArguments >= 4) outputmode = string(arguments[3]);
     if (numArguments >= 5) outfilename = string(arguments[4]);
-    if (numArguments >= 6) integr = string(arguments[5]);
+    if (numArguments >= 6) integrator = string(arguments[5]);
+    if (numArguments >= 7) system = string(arguments[6]);
+    if (numArguments >= 8) printEvery = atoi(arguments[7]);
 
     SolarSystem solarSystem;
     // We create new bodies like this. Note that the createCelestialBody function returns a reference to the newly created body
@@ -33,12 +37,21 @@ int main(int numArguments, char **arguments) {
     solarSystem.setDt(dt);
     solarSystem.setOutputmode(outputmode);
     solarSystem.setOutfilename(outfilename);
-    solarSystem.setIntegrator(integr);
+    solarSystem.setIntegrator(integrator);
 
-    //examples::newExample(&solarSystem);
-
-    examples::earth_sun(&solarSystem);
-    //examples::system_wo_mercury(numArguments, arguments);
+    // Call to different systems
+    if (system == "Sun-Earth") {
+        examples::earth_sun(solarSystem, printEvery);
+    }
+    if (system == "Planet-Escape") {
+        examples::planet_escape(solarSystem, printEvery);
+    }
+    if (system == "Solar-System") {
+        examples::system_wo_mercury(solarSystem, printEvery);
+    }
+    if (system == "Sun-Mercury") {
+        examples::system_with_mercury(solarSystem, printEvery);
+    }
 
     return 0;
 }

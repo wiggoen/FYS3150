@@ -7,7 +7,7 @@ class Verlet
 public:
     double m_dt;
     Verlet(double dt);
-    void integrateOneStep(class SolarSystem &system);
+    void integrateOneStep(class SolarSystem &system, bool withGr);
 private:
     bool m_firstStep = true;
 };

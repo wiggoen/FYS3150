@@ -7,12 +7,21 @@ Euler::Euler(double dt) :
 
 }
 
-void Euler::integrateOneStep(SolarSystem &system)
+void Euler::integrateOneStep(SolarSystem &system, bool withGr)
 {
-    system.calculateForcesAndEnergy();
+    if(!withGr) {
+        system.calculateForcesAndEnergy();
 
-    for(CelestialBody &body : system.bodies()) {
-        body.position += body.velocity*m_dt;
-        body.velocity += body.force / body.mass * m_dt;
+        for(CelestialBody &body : system.bodies()) {
+            body.position += body.velocity*m_dt;
+            body.velocity += body.force / body.mass * m_dt;
+        }
+    } else {
+        system.calculateForcesAndEnergyGr();
+
+        for(CelestialBody &body : system.bodies()) {
+            body.position += body.velocity*m_dt;
+            body.velocity += body.force / body.mass * m_dt;
+        }
     }
 }
