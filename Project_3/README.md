@@ -17,5 +17,5 @@ The systems:
 * "Planet-Escape" gives a planet in distance 1 AU (like the earth) having enough velocity to ecape from the suns gravity.
 * "Sun-Mercury" gives mercury orbiting the sun.
 * "Sun-Mercury-GR" gives mercury orbiting the sun by calculating general relativity.
-* "System-without-GR" gives the solar system (with Pluto) 
+* "System-without-GR" gives the solar system (with Pluto).
 * "System-with-GR" gives the solar system (with Pluto) by calculating general relativity for Mercury.
