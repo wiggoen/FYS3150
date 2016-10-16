@@ -10,7 +10,7 @@ Default setup:
 * outfilename = "positions.xyz"   (The output file name of your choice)
 * integrator = "Verlet"           (Use "Verlet" or "Euler")
 * system = "Sun-Earth"            (Use "Sun-Earth", "Planet-Escape", "Sun-Mercury", "Sun-Mercury-GR", "System-without-GR" or "System-with-GR")
-* printEvery = 1                  (Writes every number of steps of your choice)
+* printEvery = 1                  (Writes every number of steps of your choice. "1" means every timestep. If you use 100000 timesteps for i.e. "System-without-GR", the output file will be approximately 50 MB. GitHub does not recommend files going over 50 MB if you want to upload them. So if you want to use more than 100000 timesteps you should consider printing i.e. every 500 timesteps.)
 
 The systems:
 * "Sun-Earth" gives the earth orbiting the sun.
