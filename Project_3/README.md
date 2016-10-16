@@ -1,9 +1,21 @@
-FYS3150/FYS4150 - Project 3 class example
+FYS3150/FYS4150 - Project 3 Building a model for the solar system using ordinary differential equations
 ============
-This is a simple example implementing most classes you need in order to do project 3 in FYS3150/FYS4150. 
 
-You will need to implement the force calculation in solarsystem.cpp and a new class, the Velocity verlet integrator.
+By default, the program prints all positions every timestep to a file called positions.xyz. You can visualize this by using i.e. [Ovito](http://ovito.org/). 
 
-By default, the example prints all positions every timestep to a file called positions.xyz. You can visualize this by using i.e. [Ovito](http://ovito.org/).
+Default setup:
+numTimesteps = 1000             (Number of timesteps)
+dt = 0.001                      (Distance between timesteps)
+outputmode = "Ovito"            (Use "Ovito" or "Python" for wrinting to file)
+outfilename = "positions.xyz"   (The output file name of your choice)
+integrator = "Verlet"           (Use "Verlet" or "Euler")
+system = "Sun-Earth"            (Use "Sun-Earth", "Planet-Escape", "Sun-Mercury", "Sun-Mercury-GR", "System-without-GR" or "System-with-GR")
+printEvery = 1                  (Writes every number of steps of your choice)
 
-Good luck :D 
+The systems:
+* "Sun-Earth" gives the earth orbiting the sun.
+* "Planet-Escape" gives a planet in distance 1 AU (like the earth) having enough velocity to ecape from the suns gravity.
+* "Sun-Mercury" gives mercury orbiting the sun.
+* "Sun-Mercury-GR" gives mercury orbiting the sun by calculating general relativity.
+* "System-without-GR" gives the solar system (with Pluto) 
+* "System-with-GR" gives the solar system (with Pluto) by calculating general relativity for Mercury.
