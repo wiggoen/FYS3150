@@ -28,7 +28,7 @@ def Two_body(positions, systemstring):
     if systemstring == "Sun-Earth" or systemstring == "Planet-Escape":
         #                  Sun,      Earth
         colors = cycle(["#FF0000", "#00008B"])
-    if systemstring == "Sun-Mercury":
+    if systemstring == "Sun-Mercury" or systemstring == "Sun-Mercury-GR":
         #                  Sun,      Mercury
         colors = cycle(["#FF0000", "#939393"])
     for i in range(num):
@@ -37,13 +37,16 @@ def Two_body(positions, systemstring):
     plot(0, 0, marker="o", color="#FF0000") # Marks the spot of the Sun
     art = []
     if systemstring == "Sun-Earth":
-        title("The "+systemstring+" system", fontsize = 18)
+        title("The "+systemstring+" system, \n timesteps = %d" %numTimesteps, fontsize = 18)
         orbit = "Earth orbit"
     if systemstring == "Sun-Mercury":
-        title("The "+systemstring+" system", fontsize = 18)
+        title("The "+systemstring+" system, \n timesteps = %d" %numTimesteps, fontsize = 18)
+        orbit = "Mercury orbit"
+    if systemstring == "Sun-Mercury-GR":
+        title("The Sun-Mercury system with GR, \n timesteps = %d" %numTimesteps, fontsize = 18)
         orbit = "Mercury orbit"
     if systemstring == "Planet-Escape":
-        title("The planet escape system", fontsize = 18)
+        title("The planet escape system, \n timesteps = %d" %numTimesteps, fontsize = 18)
         orbit = "Planet escape"
     lgd = legend(["Sun", orbit],loc="upper left", bbox_to_anchor=(1, 1))
     xlabel("x direction [AU]", fontsize = 16)
@@ -67,9 +70,9 @@ def Ten_body(positions, systemstring):
         hold("on")
     ax.scatter(0, 0, 0, marker="o", color="#FFFF00")
     if systemstring == "System-without-GR":
-        title("The solar system without GR", fontsize = 18)
+        title("The solar system without GR, \n timesteps = %d" %numTimesteps, fontsize = 18)
     if systemstring == "System-with-GR":
-        title("The solar system with GR on Mercury", fontsize = 18)
+        title("The solar system with GR on Mercury, \n timesteps = %d" %numTimesteps, fontsize = 18)
     ax.set_xlabel("x direction [AU]", fontsize = 16, linespacing=2.5)
     ax.set_ylabel("y direction [AU]", fontsize = 16, linespacing=2.5)
     ax.set_zlabel("z direction [AU]", fontsize = 16, linespacing=2.5)
@@ -83,7 +86,7 @@ def Ten_body(positions, systemstring):
 
 if outfilemode == "Python":
     positions = loadtxt("outputs/"+outfile)
-    if systemstring == "Sun-Earth" or systemstring == "Planet-Escape" or systemstring == "Sun-Mercury":
+    if systemstring == "Sun-Earth" or systemstring == "Planet-Escape" or systemstring == "Sun-Mercury" or systemstring == "Sun-Mercury-GR":
         print Two_body(positions, systemstring)
     if systemstring == "System-without-GR" or systemstring == "System-with-GR":
         print Ten_body(positions, systemstring)
