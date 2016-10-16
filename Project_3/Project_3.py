@@ -10,7 +10,7 @@ dt = 0.001
 outfilemode = "Python"          # Use "Ovito" or "Python" for writing to the file
 outfile = "positions.xyz"       # Name of output file
 integrator = "Verlet"           # Use "Verlet" or "Euler" for integrator
-systemstring = "Sun-Earth"      # Use "Sun-Earth", "Planet-Escape", "Sun-Mercury", "System-without-GR" or "System-with-GR"
+systemstring = "Sun-Earth"      # Use "Sun-Earth", "Planet-Escape", "Sun-Mercury", "Sun-Mercury-GR", "System-without-GR" or "System-with-GR"
 printEvery = 1                  # Prints every specified timestep to file (1 means all timesteps)
 optimization_flag = "-O0"       # Default is -O0, use -O3 for optimization
 

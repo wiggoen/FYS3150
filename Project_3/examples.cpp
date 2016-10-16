@@ -84,6 +84,31 @@ int examples::sun_mercury(SolarSystem &solarSystem, int printEvery) {
     return 0;
 }
 
+int examples::sun_mercury_GR(SolarSystem &solarSystem, int printEvery) {
+    bool withGr = true;
+    // Sun
+    CelestialBody &sun = solarSystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0, "Sun" );
+
+    // We don't need to store the reference, but just call the function without a left hand side
+    // Mercury
+    solarSystem.createCelestialBody( vec3(-1.388351215994794E-01, 2.874076124640064E-01, 3.611730762400382E-02),
+                                     vec3(-3.081033504804020E-02, -1.153752302730325E-02, 1.883146626624065E-03)*365.0,
+                                     1.2e-7, "Mercury");
+
+    // To get a list (a reference, not copy) of all the bodies in the solar system, we use the .bodies() function
+    vector<CelestialBody> &bodies = solarSystem.bodies();
+
+    for(int i = 0; i < bodies.size(); i++) {
+        CelestialBody &body = bodies[i]; // Reference to this body
+        cout << "The position of this object is " << body.position << " with velocity " << body.velocity << endl;
+    }
+
+    solarSystem.integrate(printEvery, withGr);
+
+    return 0;
+}
+
+
 int examples::system_without_GR(SolarSystem &solarSystem, int printEvery) {
     bool withGr = false;
     // Sun
