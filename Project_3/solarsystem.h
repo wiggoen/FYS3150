@@ -41,7 +41,7 @@ private:
     std::string m_outfilename;
     std::string m_integrator;
     const double m_c = 63239.7263; // AU/yr
-    const double m_G = 4*M_PI*M_PI; // AU^3/(kg*yr^2)
+    const double m_G = 4*M_PI*M_PI; // AU^3/yr^2
 };
 
 #endif // SOLARSYSTEM_H

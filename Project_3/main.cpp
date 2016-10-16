@@ -12,11 +12,11 @@ int main(int numArguments, char **arguments) {
     // Default if there is no command line arguments
     int numTimesteps = 1000;
     double dt = 0.001;
-    string outputmode = "Ovito"; // Use "Ovito" or "Python" for writing to the file
+    string outputmode = "Ovito";            // Use "Ovito" or "Python" for writing to the file
     string outfilename = "positions.xyz";
-    string integrator = "Verlet"; // Use "Verlet" or "Euler" for integrator
-    string system = "Sun-Earth"; // "Sun-Earth", "Planet-Escape", "Sun-Mercury", "System-without-GR", "System-with-GR"
-    int printEvery = 1; // Prints every timestep to file
+    string integrator = "Verlet";           // Use "Verlet" or "Euler" for integrator
+    string system = "Sun-Earth";            // "Sun-Earth", "Planet-Escape", "Sun-Mercury", "System-without-GR", "System-with-GR"
+    int printEvery = 1;                     // Prints every timestep to file
 
     // If command line arguments are defined
     if (numArguments >= 2) numTimesteps = atoi(arguments[1]);

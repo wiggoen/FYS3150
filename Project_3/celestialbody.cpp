@@ -7,28 +7,28 @@ CelestialBody::CelestialBody(vec3 pos, vec3 vel, double mass_, std::string name_
     name = name_;
 }
 
-double CelestialBody::radius()
+double CelestialBody::radius() // (1 + log(R/R_Pluto))/10
 {
     if (name=="Sun") {
-        return 0.3658;
+        return 0.188;
     } if (name=="Mercury") {
-        return 0.086;
+        return 0.066;
     } if (name=="Venus") {
-        return 0.1315;
+        return 0.085;
     } if (name=="Earth") {
-        return 0.134;
+        return 0.086;
     } if (name=="Mars") {
-        return 0.1025;
+        return 0.073;
     } if (name=="Jupiter") {
-        return 0.254;
+        return 0.138;
     } if (name=="Saturn") {
-        return 0.2445;
+        return 0.134;
     } if (name=="Uranus") {
-        return 0.203;
+        return 0.116;
     } if (name=="Neptune") {
-        return 0.2015;
+        return 0.116;
     } if (name=="Pluto") {
-        return 0.05;
+        return 0.050;
     }
 
     return 1.0;
