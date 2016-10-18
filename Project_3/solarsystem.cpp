@@ -173,7 +173,7 @@ void SolarSystem::integrate(int printEvery, bool withGr) {
         Verlet integrator(m_dt);
         for (int i=0; i<m_numTimesteps; i++) {
             integrator.integrateOneStep(*this, withGr);
-            if (m_numTimesteps % printEvery == 0) {
+            if (i % printEvery == 0) {
                 writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode);
             }
         }
@@ -182,7 +182,7 @@ void SolarSystem::integrate(int printEvery, bool withGr) {
         Euler integrator(m_dt);
         for (int i=0; i<m_numTimesteps; i++) {
             integrator.integrateOneStep(*this, withGr);
-            if (m_numTimesteps % printEvery == 0) {
+            if (i % printEvery == 0) {
                 writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode);
             }
         }
