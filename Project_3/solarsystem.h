@@ -40,8 +40,8 @@ private:
     std::string m_outputmode;
     std::string m_outfilename;
     std::string m_integrator;
-    const double m_c = 63239.7263; // AU/yr
-    const double m_G = 4*M_PI*M_PI; // AU^3/yr^2
+    const double m_c = 63239.7263;  // Speed of light in AU/yr
+    const double m_G = 4*M_PI*M_PI; // Gravitational constant in AU^3/yr^2
 };
 
 #endif // SOLARSYSTEM_H

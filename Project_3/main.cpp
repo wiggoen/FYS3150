@@ -15,7 +15,7 @@ int main(int numArguments, char **arguments) {
     string outputmode = "Ovito";            // Use "Ovito" or "Python" for writing to the file
     string outfilename = "positions.xyz";
     string integrator = "Verlet";           // Use "Verlet" or "Euler" for integrator
-    string system = "Sun-Earth";            // "Sun-Earth", "Planet-Escape", "Sun-Mercury", "Sun-Mercury-GR", "System-without-GR", "System-with-GR"
+    string system = "Sun-Earth";            // "Sun-Earth", "Planet-Escape", "Sun-Mercury", "Sun-Mercury-GR", "Sun-Earth-Jupiter", "System-without-GR", "System-with-GR"
     int printEvery = 1;                     // Prints every timestep to file
 
     // If command line arguments are defined
@@ -52,6 +52,9 @@ int main(int numArguments, char **arguments) {
     }
     if (system == "Sun-Mercury-GR") {
         examples::sun_mercury_GR(solarSystem, printEvery);
+    }
+    if (system == "Sun-Earth-Jupiter") {
+        examples::sun_earth_jupiter(solarSystem, printEvery);
     }
     if (system == "System-without-GR") {
         examples::system_without_GR(solarSystem, printEvery);
