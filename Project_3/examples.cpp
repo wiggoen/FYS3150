@@ -1,9 +1,11 @@
 #include "examples.h"
 #include <iostream>
+#include <iomanip>
 #include <cmath>
 #include "solarsystem.h"
 #include "euler.h"
 #include "verlet.h"
+#include "time.h"
 
 using namespace std;
 
@@ -14,6 +16,11 @@ examples::examples()
 
 int examples::sun_earth(SolarSystem &solarSystem, int printEvery) {
     bool withGr = false;
+
+    // We create new bodies like this. Note that the createCelestialBody function returns a reference to the newly created body
+    // This can then be used to modify properties or print properties of the body if desired
+    // Use with: solarSystem.createCelestialBody( position, velocity, mass, name );
+
     // Sun
     CelestialBody &sun = solarSystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0, "Sun");
 
@@ -31,7 +38,21 @@ int examples::sun_earth(SolarSystem &solarSystem, int printEvery) {
         cout << "The position of this object is " << body.position << " with velocity " << body.velocity << endl;
     }
 
+    // Runtime for the Sun-Earth system
+    clock_t start, finish;
+
+    // Start clock
+    start = clock();
+
+    // Integrate
     solarSystem.integrate(printEvery, withGr);
+
+    // End clock
+    finish = clock();
+
+    double runtime = ((finish - start)/double(CLOCKS_PER_SEC));
+    cout << setiosflags(ios::showpoint | ios::uppercase);
+    cout << setprecision(8) << setw(15) << "Runtime for the Sun-Earth system = " << runtime << " s" << endl;
 
     return 0;
 }

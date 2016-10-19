@@ -2,9 +2,9 @@
 #include <iostream>
 #include <cmath>
 #include "solarsystem.h"
-#include "euler.h"
-#include "verlet.h"
 #include "examples.h"
+#include "verlet.h"
+#include "euler.h"
 
 using namespace std;
 
@@ -27,12 +27,10 @@ int main(int numArguments, char **arguments) {
     if (numArguments >= 7) system = string(arguments[6]);
     if (numArguments >= 8) printEvery = atoi(arguments[7]);
 
+    // Initialize SolarSystem
     SolarSystem solarSystem;
-    // We create new bodies like this. Note that the createCelestialBody function returns a reference to the newly created body
-    // This can then be used to modify properties or print properties of the body if desired
-    // Use with: solarSystem.createCelestialBody( position, velocity, mass );
 
-    // Setting integrator, dt, outfilename and outputmode
+    // Setting numTimesteps, dt, outputmode, outfilename and integrator
     solarSystem.setNumTimesteps(numTimesteps);
     solarSystem.setDt(dt);
     solarSystem.setOutputmode(outputmode);
