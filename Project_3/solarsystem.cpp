@@ -41,10 +41,11 @@ void SolarSystem::calculateForcesAndEnergy()
             vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized();
             body1.force -= force;
             body2.force += force;
-        }
 
-        m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
-        m_potentialEnergy -= m_G*body1.mass/dr;
+            m_kineticEnergy += 0.5*body2.mass*body2.velocity.lengthSquared();
+            m_potentialEnergy -= m_G*body2.mass/dr;
+            m_angularMomentum += body2.position.cross(body2.velocity);
+        }
     }
 }
 
@@ -139,11 +140,12 @@ void SolarSystem::calculateForcesAndEnergyGr() {
                 vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized();
                 body1.force -= force;
                 body2.force += force;
+
+                m_kineticEnergy += 0.5*body2.mass*body2.velocity.lengthSquared();
+                m_potentialEnergy -= m_G*body2.mass/dr;
+                m_angularMomentum += body2.position.cross(body2.velocity);
             }
         }
-
-        m_kineticEnergy += 0.5*body1.mass*body1.velocity.lengthSquared();
-        m_potentialEnergy -= m_G*body1.mass/dr;
     }
 }
 
@@ -191,6 +193,3 @@ void SolarSystem::integrate(int printEvery, bool withGr) {
     cout << "I just created my first solar system that has " << bodies().size() << " objects" << endl;
     cout << "using the " << m_integrator << " integrator and wrote to the file " << m_outfilename << " that I can read from " << m_outputmode << "." << endl;
 }
-
-
-

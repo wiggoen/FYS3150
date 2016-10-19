@@ -105,7 +105,7 @@ def Ten_body(positions, systemstring):
     art = []
     lgd = legend(["Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"],loc="upper left", bbox_to_anchor=(1, 1))
     art.append(lgd)
-    tick_params(labelsize=14, pad=100)
+    tick_params(labelsize=14)
     savefig("plots/"+systemstring+".png", additional_artists=art, bbox_inches="tight")
     show()
     return "The system is calculated."
