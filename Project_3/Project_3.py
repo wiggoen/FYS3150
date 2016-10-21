@@ -3,29 +3,33 @@ from os import *
 from pylab import *
 from matplotlib.pyplot import *
 from mpl_toolkits.mplot3d import Axes3D
+import time
+
+"""
+If you want to know how to use this program, read the README-file at
+https://github.com/wiggoen/FYS3150/blob/master/Project_3/README.md
+"""
 
 # System setup
-numTimesteps = 12000
+numTimesteps = 1100
 dt = 0.001
 outfilemode = "Python"          # Use "Ovito" or "Python" for writing to the file
-outfile = "sun-earth.txt"       # Name of output file
+outfilename = "positions.xyz"   # Name of output file
 integrator = "Verlet"           # Use "Verlet" or "Euler" for integrator
 systemstring = "Sun-Earth"      # Use "Sun-Earth", "Planet-Escape", "Sun-Mercury", "Sun-Mercury-GR", "Sun-Earth-Jupiter", "System-without-GR" or "System-with-GR"
-printEvery = 1                  # Prints every specified timestep to file (1 means all timesteps)
+printEvery = 1                  # Prints every specified timestep to file (1 means all timesteps), use 0 for runtime test
 optimization_flag = "-O0"       # Default is -O0, use -O3 for optimization
-numberOfLoops = 1               # Number of loops of the program
 
-def loopSystem(loops):
-    for i in range(loops):
-        # Compile C++ code first (all cpp-files)
-        system("g++ *.cpp -o main.x " + optimization_flag + " -std=c++11")
-        # Run program
-        systemStr = "./main.x %d %f %s %s %s %s %d" % (numTimesteps, dt, outfilemode, outfile, integrator, systemstring, printEvery)
-        system(systemStr)
-        print "Run nr. %d." %(i+1)
 
-# Run a loop of the program
-loopSystem(numberOfLoops)
+# Compile C++ code first (all cpp-files)
+system("g++ *.cpp -o main.x " + optimization_flag + " -std=c++11")
+
+# Command line argument
+systemStr = "./main.x %d %f %s %s %s %s %d" % (numTimesteps, dt, outfilemode, outfilename, integrator, systemstring, printEvery)
+
+# Run program
+system(systemStr)
+
 
 # Two body systems
 def Two_body(positions, systemstring):
@@ -117,12 +121,14 @@ def Ten_body(positions, systemstring):
     return "The system is calculated."
 
 if outfilemode == "Python":
-    positions = loadtxt("outputs/"+outfile)
+    positions = loadtxt("outputs/"+outfilename)
     if systemstring == "Sun-Earth" or systemstring == "Planet-Escape" or systemstring == "Sun-Mercury" or systemstring == "Sun-Mercury-GR":
         print Two_body(positions, systemstring)
-    if systemstring == "Sun-Earth-Jupiter":
+    elif systemstring == "Sun-Earth-Jupiter":
         print Three_body(positions, systemstring)
-    if systemstring == "System-without-GR" or systemstring == "System-with-GR":
+    elif systemstring == "System-without-GR" or systemstring == "System-with-GR":
         print Ten_body(positions, systemstring)
     else:
         print "Choose a system."
+else:
+    print "Choose a system and outfilemode 'Python' if you want to plot with Python."

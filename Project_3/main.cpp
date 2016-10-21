@@ -8,15 +8,17 @@
 
 using namespace std;
 
+// README: https://github.com/wiggoen/FYS3150/blob/master/Project_3/README.md
+
 int main(int numArguments, char **arguments) {
     // Default if there is no command line arguments
     int numTimesteps = 1000;
     double dt = 0.001;
-    string outputmode = "Ovito";            // Use "Ovito" or "Python" for writing to the file
+    string outputmode = "Ovito";
     string outfilename = "positions.xyz";
-    string integrator = "Verlet";           // Use "Verlet" or "Euler" for integrator
-    string system = "Sun-Earth";            // "Sun-Earth", "Planet-Escape", "Sun-Mercury", "Sun-Mercury-GR", "Sun-Earth-Jupiter", "System-without-GR", "System-with-GR"
-    int printEvery = 1;                     // Prints every timestep to file
+    string integrator = "Verlet";
+    string system = "System-runtime";//"Sun-Earth";
+    int printEvery = 1;
 
     // If command line arguments are defined
     if (numArguments >= 2) numTimesteps = atoi(arguments[1]);
@@ -59,6 +61,10 @@ int main(int numArguments, char **arguments) {
     }
     if (system == "System-with-GR") {
         examples::system_with_GR(solarSystem, printEvery);
+    }
+    // Testing the runtime of the system. Does not write to file. Use with Python program 'Project_3.py'.
+    if (system == "System-runtime") {
+        examples::system_runtime(solarSystem);
     }
 
     return 0;

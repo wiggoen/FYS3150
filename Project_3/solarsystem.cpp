@@ -189,7 +189,23 @@ void SolarSystem::integrate(int printEvery, bool withGr) {
             }
         }
     }
-
     cout << "I just created my first solar system that has " << bodies().size() << " objects" << endl;
     cout << "using the " << m_integrator << " integrator and wrote to the file " << m_outfilename << " that I can read from " << m_outputmode << "." << endl;
+}
+
+// Runtime test without writing to file, testing the algorithms time usage
+void SolarSystem::integrate_runtime() {
+    bool withGr = false;
+    if (m_integrator == "Verlet") {
+        Verlet integrator(m_dt);
+        for (int i=0; i<m_numTimesteps; i++) {
+            integrator.integrateOneStep(*this, withGr);
+        }
+    }
+    if (m_integrator == "Euler") {
+        Euler integrator(m_dt);
+        for (int i=0; i<m_numTimesteps; i++) {
+            integrator.integrateOneStep(*this, withGr);
+        }
+    }
 }

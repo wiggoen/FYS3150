@@ -27,6 +27,7 @@ public:
     void setOutfilename(std::string outfilename);
     void setIntegrator(std::string integrator);
     void calculateForcesAndEnergyGr();
+    void integrate_runtime();
 
 
 private:
