@@ -17,7 +17,7 @@ int main(int numArguments, char **arguments) {
     string outputmode = "Ovito";
     string outfilename = "positions.xyz";
     string integrator = "Verlet";
-    string system = "System-runtime";//"Sun-Earth";
+    string system = "Sun-Earth";
     int printEvery = 1;
 
     // If command line arguments are defined
