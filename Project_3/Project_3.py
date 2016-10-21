@@ -6,19 +6,18 @@ from mpl_toolkits.mplot3d import Axes3D
 import time
 
 """
-If you want to know how to use this program, read the README-file at
-https://github.com/wiggoen/FYS3150/blob/master/Project_3/README.md
+README: https://github.com/wiggoen/FYS3150/blob/master/Project_3/README.md
 """
 
 # System setup
-numTimesteps = 1100
+numTimesteps = 1000
 dt = 0.001
-outfilemode = "Python"          # Use "Ovito" or "Python" for writing to the file
-outfilename = "positions.xyz"   # Name of output file
-integrator = "Verlet"           # Use "Verlet" or "Euler" for integrator
-systemstring = "Sun-Earth"      # Use "Sun-Earth", "Planet-Escape", "Sun-Mercury", "Sun-Mercury-GR", "Sun-Earth-Jupiter", "System-without-GR" or "System-with-GR"
-printEvery = 1                  # Prints every specified timestep to file (1 means all timesteps), use 0 for runtime test
-optimization_flag = "-O0"       # Default is -O0, use -O3 for optimization
+outfilemode = "Python"
+outfilename = "positions.xyz"
+integrator = "Verlet"
+systemstring = "Sun-Earth"
+printEvery = 1
+optimization_flag = "-O0"
 
 
 # Compile C++ code first (all cpp-files)
