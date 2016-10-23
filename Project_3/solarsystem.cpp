@@ -37,7 +37,7 @@ void SolarSystem::calculateForcesAndEnergy()
             vec3 deltaRVector = body1.position - body2.position;
             dr = deltaRVector.length();
 
-            // Calculate the force and potential energy here
+            // Calculating the force, kinetic energy, potential energy and angular momentum
             vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized();
             body1.force -= force;
             body2.force += force;
@@ -78,7 +78,6 @@ void SolarSystem::writeToFile(string filename, string mode)
             terminate();
         }
     }
-    //m_bodies.at(i).position
 
     if (mode == "Ovito") {
         // Writing file to use with Ovito, (mode == "Ovito")
@@ -96,6 +95,8 @@ void SolarSystem::writeToFile(string filename, string mode)
     }
 }
 
+// This function should have been implemented with the writeToFile function,
+// but some if tests made it slow. So they became two functions.
 void SolarSystem::writeToFile_Gr(string filename, string mode)
 {
     if(!m_file.good()) {
@@ -105,13 +106,12 @@ void SolarSystem::writeToFile_Gr(string filename, string mode)
             terminate();
         }
     }
-    //m_bodies.at(i).position
 
     if (mode == "Ovito") {
         // Writing file to use with Ovito, (mode == "Ovito")
         double x = m_bodies[1].position[0]-m_bodies[0].position[0];
         double y = m_bodies[1].position[1]-m_bodies[0].position[1];
-        m_file << x << " " << y << " " << "\n";
+        m_file << x << " " << y << "\n";
     }
 }
 
@@ -140,31 +140,18 @@ void SolarSystem::calculateForcesAndEnergyGr() {
         double dr;
         for(int j=i+1; j<numberOfBodies(); j++) {
             CelestialBody &body2 = m_bodies[j];
-            //if (body1.name == "Sun" && body2.name == "Mercury") {
             vec3 deltaRVector = body1.position - body2.position;
-            //dr = deltaRVector.length();
             dr = 1.0/deltaRVector.length();
 
-            // Calculate the force and potential energy here
-            //vec3 l = body2.position.cross(body2.velocity); //(1.0/body2.mass)*
-            //vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized() * (1 + 3*l.lengthSquared()/(dr*dr*m_c*m_c));
+            // Calculating the force, kinetic energy, potential energy and angular momentum
             vec3 force = m_G*body1.mass*body2.mass * (dr*dr*dr) * deltaRVector * (1 + 3 * m_l2 * dr * dr * m_c2);
             body1.force -= force;
             body2.force += force;
-            /*} else {
-                vec3 deltaRVector = body1.position - body2.position;
-                dr = deltaRVector.length();
 
-                // Calculate the force and potential energy here
-                vec3 force = m_G*body1.mass*body2.mass / (dr*dr) * deltaRVector.normalized();
-                body1.force -= force;
-                body2.force += force;
-*/
             m_kineticEnergy += 0.5*body2.mass*body2.velocity.lengthSquared();
             m_potentialEnergy -= m_G*body2.mass/dr;
             m_angularMomentum += body2.position.cross(body2.velocity);
         }
-        //}
     }
 }
 
@@ -215,7 +202,8 @@ void SolarSystem::integrate(int printEvery, bool withGr)
     cout << "using the " << m_integrator << " integrator and wrote to the file " << m_outfilename << " that I can read from " << m_outputmode << "." << endl;
 }
 
-// Writing every specified timestep to file
+// This function should have been implemented with the integrade function,
+// but some if tests made it slow. So they became two functions.
 void SolarSystem::integrate_Gr(int printEvery, bool withGr)
 {
     if (m_integrator == "Verlet") {
@@ -232,8 +220,9 @@ void SolarSystem::integrate_Gr(int printEvery, bool withGr)
         Verlet integrator(m_dt);
         for (int i=0; i<m_numTimesteps; i++) {
             integrator.integrateOneStep(*this, withGr);
-            vec3 r = (m_bodies[1].position - m_bodies[0].position);
+            vec3 r = (m_bodies[1].position - m_bodies[0].position); // Mercury-Sun position vector.
             rCurrent = r.length();
+            // Checking if the previous time step was a minimum for the Mercury-Sun distance.
             if (rPrevious < rCurrent && rPrevious < rPreviousPrevious) {
                 theta[thetaCounter] = thetaPrevious;
                 thetaCounter++;
@@ -247,7 +236,7 @@ void SolarSystem::integrate_Gr(int printEvery, bool withGr)
                 writeToFile_Gr("../Project_3/outputs/"+m_outfilename, m_outputmode);
             }*/
         }
-        for (int i=0; i< thetaCounter; i++) {
+        for (int i=0; i<thetaCounter; i++) {
             cout << theta[i] << endl;
         }
 
