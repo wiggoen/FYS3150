@@ -98,7 +98,7 @@ def Ten_body(positions, systemstring):
     for i in range(num):
         plot(positions[i::num][:, 0], positions[i::num][:, 1], positions[i::num][:, 2], color=next(colors))
         hold("on")
-    ax.scatter(0, 0, 0, marker="o", color="#FFFF00")
+    ax.scatter(0, 0, 0, marker="o", color="#FFFF00") # Marks the spot of the Sun
     ax.set_xlabel("x direction [AU]", fontsize = 16, linespacing=2.5)
     ax.set_ylabel("y direction [AU]", fontsize = 16, linespacing=2.5)
     ax.set_zlabel("z direction [AU]", fontsize = 16, linespacing=2.5)
