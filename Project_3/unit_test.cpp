@@ -30,10 +30,10 @@ TEST_CASE( "Conservation of angular momentum and total energy", "Approximation" 
 
     // Adding celestial bodies to system
     // Sun
-    solarSystem.createCelestialBody(vec3(0,0,0), vec3(0,0,0), 1.0, "Sun");
+    solarSystem.createCelestialBody( vec3(0,0,0), vec3(0,0,0), 1.0, "Sun");
 
     // Earth
-    solarSystem.createCelestialBody(vec3(1.0, 0.0, 0.0), vec3(0.0, 2*M_PI, 0), 3.0e-6, "Earth");
+    solarSystem.createCelestialBody( vec3(1.0, 0.0, 0.0), vec3(0.0, 2*M_PI, 0), 3.0e-6, "Earth");
 
 
     // Integrate system
@@ -52,6 +52,7 @@ TEST_CASE( "Conservation of angular momentum and total energy", "Approximation" 
     double A_totalEnergy = A_kineticEnergy + A_potentialEnergy;
     // Length of angular momentum: |l| = ||r x v|| = 2*pi
     double A_LengthOfAngularMomentum = 2*M_PI;
+
 
     // Conservation of energy
     REQUIRE(totalEnergy == Approx(A_totalEnergy));

@@ -59,9 +59,6 @@ int main(int numArguments, char **arguments) {
     if (system == "System-without-GR") {
         examples::system_without_GR(solarSystem, printEvery);
     }
-    if (system == "System-with-GR") {
-        examples::system_with_GR(solarSystem, printEvery);
-    }
     // Testing the runtime of the system. Does not write to file. Use with Python program 'Project_3.py'.
     if (system == "System-runtime") {
         examples::system_runtime(solarSystem);

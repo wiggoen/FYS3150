@@ -17,7 +17,7 @@ outfilename = "positions.xyz"
 integrator = "Verlet"
 systemstring = "Sun-Earth"
 printEvery = 1
-optimization_flag = "-O0"
+optimization_flag = "-O3"
 
 
 # Compile C++ code first (all cpp-files)
@@ -46,16 +46,12 @@ def Two_body(positions, systemstring):
     plot(0, 0, marker="o", color="#FF0000") # Marks the spot of the Sun
     art = []
     if systemstring == "Sun-Earth":
-        title("The "+systemstring+" system, \n timesteps = %d, integrator: %s" %(numTimesteps, integrator), fontsize = 18)
         orbit = "Earth orbit"
     if systemstring == "Sun-Mercury":
-        title("The "+systemstring+" system, \n timesteps = %d" %numTimesteps, fontsize = 18)
         orbit = "Mercury orbit"
     if systemstring == "Sun-Mercury-GR":
-        title("The Sun-Mercury system with GR, \n timesteps = %d" %numTimesteps, fontsize = 18)
         orbit = "Mercury orbit"
     if systemstring == "Planet-Escape":
-        title("The planet escape system, \n timesteps = %d" %numTimesteps, fontsize = 18)
         orbit = "Planet escape"
     lgd = legend(["Sun", orbit], loc="upper left", bbox_to_anchor=(1, 1))
     xlabel("x direction [AU]", fontsize = 16)
@@ -80,7 +76,6 @@ def Three_body(positions, systemstring):
     plot(0, 0, marker="o", color="#FF0000") # Marks the spot of the Sun
     art = []
     if systemstring == "Sun-Earth-Jupiter":
-        title("The "+systemstring+" system, \n timesteps = %d" %numTimesteps, fontsize = 18)
         orbit1 = "Earth orbit"
         orbit2 = "Jupiter orbit"
     lgd = legend(["Sun", orbit1, orbit2], loc="upper left", bbox_to_anchor=(1, 1))
@@ -104,10 +99,6 @@ def Ten_body(positions, systemstring):
         plot(positions[i::num][:, 0], positions[i::num][:, 1], positions[i::num][:, 2], color=next(colors))
         hold("on")
     ax.scatter(0, 0, 0, marker="o", color="#FFFF00")
-    if systemstring == "System-without-GR":
-        title("The solar system without GR, \n timesteps = %d" %numTimesteps, fontsize = 18)
-    if systemstring == "System-with-GR":
-        title("The solar system with GR on Mercury, \n timesteps = %d" %numTimesteps, fontsize = 18)
     ax.set_xlabel("x direction [AU]", fontsize = 16, linespacing=2.5)
     ax.set_ylabel("y direction [AU]", fontsize = 16, linespacing=2.5)
     ax.set_zlabel("z direction [AU]", fontsize = 16, linespacing=2.5)

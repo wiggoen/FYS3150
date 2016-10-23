@@ -18,6 +18,7 @@ public:
     double potentialEnergy() const;
     double kineticEnergy() const;
     void writeToFile(std::string filename, std::__1::string mode);
+    void writeToFile_Gr(std::string filename, std::__1::string mode);
     vec3 angularMomentum() const;
     std::vector<CelestialBody> &bodies();
     void integrate(int printEvery, bool withGr);
@@ -28,6 +29,7 @@ public:
     void setIntegrator(std::string integrator);
     void calculateForcesAndEnergyGr();
     void integrate_runtime();
+    void integrate_Gr(int printEvery, bool withGr);
 
 
 private:
@@ -41,8 +43,10 @@ private:
     std::string m_outputmode;
     std::string m_outfilename;
     std::string m_integrator;
-    const double m_c = 63239.7263;  // Speed of light in AU/yr
+    //const double m_c = 63239.7263;  // Speed of light in AU/yr
+    const double m_c2 = (1.0/63239.7263)*(1.0/63239.7263); // (1/(Speed of light in AU/yr))^2
     const double m_G = 4*M_PI*M_PI; // Gravitational constant in AU^3/yr^2
+    double m_l2 = 0;
 };
 
 #endif // SOLARSYSTEM_H
