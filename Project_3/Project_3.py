@@ -17,7 +17,7 @@ outfilename = "positions.xyz"
 integrator = "Verlet"
 systemstring = "Sun-Earth"
 printEvery = 1
-optimization_flag = "-O3"
+optimization_flag = "-O0"
 
 
 # Compile C++ code first (all cpp-files)

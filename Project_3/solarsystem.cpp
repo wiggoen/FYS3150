@@ -109,17 +109,9 @@ void SolarSystem::writeToFile_Gr(string filename, string mode)
 
     if (mode == "Ovito") {
         // Writing file to use with Ovito, (mode == "Ovito")
-        m_file << numberOfBodies() << endl;
-        m_file << "The rows are the celestial bodies stacked, and the columns are x, y and z positions." << endl;
-        for(CelestialBody &body : m_bodies) {
-            m_file << body.name << " " << body.position.x() << " " << body.position.y() << " " << body.position.z() << " " << body.radius() << "\n";
-        }
-
-    } else if (mode == "Python") {
-        // Writing file to use with Python, (mode == "Python")
-        for(CelestialBody &body : m_bodies) {
-            m_file << setw(25) << setprecision(15) << body.position.x() << setw(25) << body.position.y() << setw(25) << body.position.z() << "\n";
-        }
+        double x = m_bodies[1].position[0]-m_bodies[0].position[0];
+        double y = m_bodies[1].position[1]-m_bodies[0].position[1];
+        m_file << x << " " << y << " " << "\n";
     }
 }
 
@@ -197,22 +189,25 @@ void SolarSystem::setIntegrator(string integrator) {
 }
 
 // Writing every specified timestep to file
-void SolarSystem::integrate(int printEvery, bool withGr) {
-    if (m_integrator == "Verlet") {
-        Verlet integrator(m_dt);
-        for (int i=0; i<m_numTimesteps; i++) {
-            integrator.integrateOneStep(*this, withGr);
-            if (i % printEvery == 0) {
-                writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode);
+void SolarSystem::integrate(int printEvery, bool withGr)
+{
+    if (withGr == false) {
+        if (m_integrator == "Verlet") {
+            Verlet integrator(m_dt);
+            for (int i=0; i<m_numTimesteps; i++) {
+                integrator.integrateOneStep(*this, withGr);
+                if (i % printEvery == 0) {
+                    writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode);
+                }
             }
         }
-    }
-    if (m_integrator == "Euler") {
-        Euler integrator(m_dt);
-        for (int i=0; i<m_numTimesteps; i++) {
-            integrator.integrateOneStep(*this, withGr);
-            if (i % printEvery == 0) {
-                writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode);
+        if (m_integrator == "Euler") {
+            Euler integrator(m_dt);
+            for (int i=0; i<m_numTimesteps; i++) {
+                integrator.integrateOneStep(*this, withGr);
+                if (i % printEvery == 0) {
+                    writeToFile("../Project_3/outputs/"+m_outfilename, m_outputmode);
+                }
             }
         }
     }
@@ -221,11 +216,12 @@ void SolarSystem::integrate(int printEvery, bool withGr) {
 }
 
 // Writing every specified timestep to file
-void SolarSystem::integrate_Gr(int printEvery, bool withGr) {
+void SolarSystem::integrate_Gr(int printEvery, bool withGr)
+{
     if (m_integrator == "Verlet") {
-        double rCurrent = 0;
-        double rPreviousPrevious = 0;
-        double rPrevious = 0;
+        double rPreviousPrevious = 0;   // Mercury-Sun-distance two times steps ago.
+        double rPrevious = 0;           // Mercury-Sun-distance of the previous time step.
+        double rCurrent = 0;            // Mercury-Sun-distance of the current time step.
         double thetaPrevious = 0;
         double thetaCurrent = 0;
         m_l2 = m_bodies[1].position.cross(m_bodies[1].velocity).lengthSquared();
@@ -238,7 +234,7 @@ void SolarSystem::integrate_Gr(int printEvery, bool withGr) {
             integrator.integrateOneStep(*this, withGr);
             vec3 r = (m_bodies[1].position - m_bodies[0].position);
             rCurrent = r.length();
-            if (rPrevious < rCurrent && rPreviousPrevious) {
+            if (rPrevious < rCurrent && rPrevious < rPreviousPrevious) {
                 theta[thetaCounter] = thetaPrevious;
                 thetaCounter++;
             }
@@ -248,7 +244,7 @@ void SolarSystem::integrate_Gr(int printEvery, bool withGr) {
             thetaCurrent = atan2(r.y(), r.x());
 
             /*if (i % printEvery == 0) {
-                writeToFile_GR("../Project_3/outputs/"+m_outfilename, m_outputmode);
+                writeToFile_Gr("../Project_3/outputs/"+m_outfilename, m_outputmode);
             }*/
         }
         for (int i=0; i< thetaCounter; i++) {

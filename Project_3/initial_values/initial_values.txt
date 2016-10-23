@@ -1,3 +1,12 @@
+We choose the center-of-mass position of the three-body system (Sun-Earth-Jupiter) 
+as origin rather than the position of the Sun. To make the total momentum of the 
+system exactly zero, we have to give the Sun the initial velocity:
+
+VX VY VZ
+-1.807129088062949E-06  6.966891994648284E-06  3.211262474229293E-08
+
+
+
 Initial values collected from NASA ( http://ssd.jpl.nasa.gov/horizons.cgi#top )
 
 Date: 2016-Oct-05
@@ -11,7 +20,7 @@ VX    VY    VZ
 
 Sun
 3.585100173357053E-03   3.341055486339009E-03 -1.601950107014929E-04
--1.907873665020832E-06  6.862862055939106E-06  3.825142570341908E-08
+Look in the top of the file. 
 
 Mercury
 -1.388351215994794E-01  2.874076124640064E-01  3.611730762400382E-02

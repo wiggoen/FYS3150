@@ -12,12 +12,16 @@ using namespace std;
 
 int main(int numArguments, char **arguments) {
     // Default if there is no command line arguments
-    int numTimesteps = 1000;
-    double dt = 0.001;
-    string outputmode = "Ovito";
-    string outfilename = "positions.xyz";
+    //int numTimesteps = 1000;
+    //double dt = 0.001;
+    int numTimesteps = 1e9;
+    double dt = 1e-7;
+    string outputmode = "Python";
+    //string outputmode = "Ovito";
+    string outfilename = "Perihelion_wo_GR.txt";
     string integrator = "Verlet";
-    string system = "Sun-Earth";
+    string system = "Sun-Mercury";
+    //string system = "Sun-Earth";
     int printEvery = 1;
 
     // If command line arguments are defined
