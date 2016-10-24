@@ -21,9 +21,9 @@ print "The ratio between perihelion precession with Newtonian force and with GR 
 t = arange(0, len(theta))
 
 figure(1)
-plot(t, theta, "-b", [0, t[-1]], [0.0002085, 0.0002085], "-r")
+plot(t, theta, "-b", t, theta_Newtonian, "-g", [0, t[-1]], [0.0002085, 0.0002085], "-r")
 art = []
-lgd = legend(["Perihelion angle", "Predicted 43'' per century"], loc="upper left", bbox_to_anchor=(1, 1))
+lgd = legend(["Perihelion angle (GR)", "Perihelion angle (Newtonian)", "Predicted 43'' per century"], loc="upper left", bbox_to_anchor=(1, 1))
 xlabel("Time [years on Mercury]", fontsize = 16)
 ylabel(r"$\theta_p$ [rad]", fontsize = 18)    
 art.append(lgd)
