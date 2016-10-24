@@ -236,6 +236,8 @@ void SolarSystem::integrate_Gr(int printEvery, bool withGr)
                 writeToFile_Gr("../Project_3/outputs/"+m_outfilename, m_outputmode);
             }*/
         }
+        // Theta should have been written to file to make it easier to plot.
+        // Now you have to copy and paste the values from the command window.
         for (int i=0; i<thetaCounter; i++) {
             cout << theta[i] << endl;
         }
