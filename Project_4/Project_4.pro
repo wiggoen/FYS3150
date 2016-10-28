@@ -4,7 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    metropolis.cpp
+    System.cpp
 
 HEADERS += \
-    metropolis.h
+    System.h
