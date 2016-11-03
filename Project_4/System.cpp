@@ -1,5 +1,6 @@
 #include "System.h"
 #include "time.h"
+#include <cmath>
 #include <iostream>
 #include <iomanip>
 
@@ -8,6 +9,7 @@ System::System(int L)
     m_L = L;
     m_spinMatrix = this->init();
     m_Energy = this->computeEnergy();
+    m_Magnetization = this->computeMagnetization();
 }
 
 int **System::init()
@@ -66,8 +68,15 @@ double System::computeEnergy() {
 }
 
 
-void System::computeMagnetization() {
-
+double System::computeMagnetization() {
+    double Magnetization = 0;
+    for (int i = 0; i < m_L; i++) {
+        for (int j = 0; j < m_L; j++) {
+            Magnetization += m_spinMatrix[i][j];
+        }
+    }
+    m_Magnetization = Magnetization; //std::abs(Magnetization);
+    return m_Magnetization;
 }
 
 
@@ -91,3 +100,4 @@ void System::printState() {
     }
     std::cout << std::endl;
 }
+

@@ -6,6 +6,7 @@
 
 using namespace std;
 
+
 int main() //int argc, char *argv[])
 {
     // Length of matrix
@@ -17,9 +18,8 @@ int main() //int argc, char *argv[])
     // Print state
     sys->printState();
 
-    cout << sys->computeEnergy() << endl;
-
-
+    cout << "Energy = " << sys->computeEnergy() << endl;
+    cout << "Magnetization = " << sys->computeMagnetization() << endl;
 
     return 0;
 }

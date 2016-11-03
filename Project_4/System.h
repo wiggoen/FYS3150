@@ -8,13 +8,14 @@ public:
     System(int L);
     int** init();
     double computeEnergy();
-    void computeMagnetization();
+    double computeMagnetization();
     void computeHeatCapacity();
     void computeSusceptibility();
     void printState();
 private:
     int m_L = 0;
     double m_Energy = 0;
+    double m_Magnetization = 0;
     int** m_spinMatrix;
 };
 
