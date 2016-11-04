@@ -7,11 +7,19 @@
 System::System(int L)
 {
     m_L = L;
-    m_spinMatrix = this->init();
-    m_Energy = this->computeEnergy();
-    m_Magnetization = this->computeMagnetization();
+    int N = L*L;
+    m_spinMatrix = init(); // Initialize random spin matrix
+    Metropolis(N);
+}
+/*
+double getMeanEnergy() {
+    return m_meanEnergy;
 }
 
+double getMeanMagnetization() {
+    return m_meanMagnetization;
+}
+*/
 int **System::init()
 {
     // Initialize m_spinMatrix by dynamic memory allocation
@@ -19,27 +27,10 @@ int **System::init()
     for (int i = 0; i < m_L; i++) {
         m_spinMatrix[i] = new int[m_L];
     }
-
-    // Initialize all m_spinMatrix elements to zero
-    for(int i = 0; i < m_L; i++) {
-        for(int j = 0; j < m_L; j++) {
-            m_spinMatrix[i][j] = 0;
-        }
-    }
-
-    // Initialize clock for random seeds
-    clock_t time;
-    time = clock();
-    long int seed = time; // random seed
-    //long int seed = 49; // static seed gives all spin down in 2x2 matrix
-
-    // Initialize random number generator
-    srand(seed);
-
     // Random numbers in m_spinMatrix
     for(int i = 0; i < m_L; i++) {
         for(int j = 0; j < m_L; j++) {
-            //      (condition) ? (if_true) : (if_false)
+            //                            (condition) ? (if_true) : (if_false)
             int r = (rand()/((double)RAND_MAX)) > 0.5 ? 1 : -1;
             m_spinMatrix[i][j] = r;
         }
@@ -47,13 +38,103 @@ int **System::init()
     return m_spinMatrix;
 }
 
+void System::Metropolis(int N)
+{
+    double Esum = 0;
+    double Msum = 0;
+
+    double currentEnergy = computeEnergy();
+    for (int i = 0; i < N; i++) {
+        // Find random position
+        int x = (rand()/((double)RAND_MAX))*m_L;
+        int y = (rand()/((double)RAND_MAX))*m_L;
+
+        std::cout << "- - - - - - - - - - - - - - - - - - - -" << std::endl;
+        std::cout << "Current state: " << std::endl;
+        printState();
+        std::cout << "currentEnergy = " << currentEnergy << std::endl;
+        std::cout << "Flip spin at: x = " << x << " and y = " << y << std::endl;
+
+        // Flip a random spin
+        m_spinMatrix[x][y] *= -1;
+
+        printState();
+        double newEnergy = computeEnergy();
+        std::cout << "newEnergy = " << newEnergy << std::endl;
+
+        double DeltaE = newEnergy - currentEnergy;
+
+        std::cout << " " << std::endl;
+        std::cout << "-DeltaE = " << -DeltaE << std::endl;
+        std::cout << " " << std::endl;
+        //std::cout << "exp(-DeltaE) = " << exp(-DeltaE) << std::endl;
+        double test = (rand()/((double)RAND_MAX));
+
+        if (DeltaE < 0) {
+            std::cout << "DeltaE = " << DeltaE << " < 0" << std::endl;
+        } else {
+            std::cout << "DeltaE = " << DeltaE << " > 0" << std::endl;
+        }
+        if (test < exp(-DeltaE)) {
+            std::cout << "Random = " << test << " < " << exp(-DeltaE) << " = exp(-DeltaE)" << std::endl;
+        } if (test > exp(-DeltaE)) {
+            std::cout << "Random = " << test << " > " << exp(-DeltaE) << " = exp(-DeltaE)" << std::endl;
+        }
+        std::cout << " " << std::endl;
+        //std::cout << "Random: " << (rand()/((double)RAND_MAX)) << std::endl;
+
+
+        // Metropolis test (accept if test fails)
+        //if (!(DeltaE < 0) || !((rand()/((double)RAND_MAX)) < exp(-DeltaE)))
+/*
+        std::cout << "dE > 0 ? is " << (DeltaE > 0) << "  -- or --  r > exp(-dE) is : " << (test > exp(-DeltaE)) << std::endl;
+        if ((DeltaE > 0) || (test > exp(-DeltaE))) // if (!(DeltaE > 0) || !(test < exp(-DeltaE)))
+        {
+            m_spinMatrix[x][y] *= -1;
+        } else {
+            currentEnergy = newEnergy;
+            std::cout << "New state: " << std::endl;
+            printState();
+        }
+*/
+
+        std::cout << "Metropolis test:" << std::endl;
+        // Metropolis test
+        if (DeltaE < 0) {
+            currentEnergy = newEnergy;
+            std::cout << "Accepted: DeltaE < 0." << std::endl;
+            printState();
+            std::cout << "Current Energy = " << currentEnergy << std::endl;
+        } else if (test < exp(-DeltaE)) {
+            currentEnergy = newEnergy;
+            std::cout << "Accepted: r < exp(-DeltaE)." << std::endl;
+            printState();
+            std::cout << "Current Energy = " << currentEnergy << std::endl;
+        } else {
+            m_spinMatrix[x][y] *= -1;
+            std::cout << "Not accepted: Flipped back!" << std::endl;
+            printState();
+            std::cout << "Current Energy = " << currentEnergy << std::endl;
+        }
+        std::cout << "- - - - - - - - - - - - - - - - - - - -" << std::endl;
+        std::cout << " " << std::endl;
+
+        // Update Energy and Magnetization
+        Esum += computeEnergy();
+        Msum += computeMagnetization();
+    }
+    m_meanEnergy = Esum/N;
+    m_meanMagnetization = Msum/N;
+}
+
 
 double System::computeEnergy() {
-    int Energy = 0;
+    double Energy = 0;
+    // Loop over all spins
     for (int i = 0; i < m_L; i++) {
         for (int j = 0; j < m_L; j++) {
-            //               (condition) ? (if_true) : (if_false)
-            int i_previous = ((i == 0) ? m_L-1 : i - 1);
+            //            (condition) ? (if_true) : (if_false)
+            int i_previous = (i == 0) ? m_L-1 : i - 1;
             int i_next = (i == m_L-1) ? 0 : i + 1;
             int j_previous = (j == 0) ? m_L-1 : j - 1;
             int j_next = (j == m_L-1) ? 0 : j + 1;
@@ -63,8 +144,7 @@ double System::computeEnergy() {
                                             m_spinMatrix[i][j_next]);
         }
     }
-    m_Energy = -Energy/2.0;
-    return m_Energy;
+    return -Energy/2.0;
 }
 
 
@@ -75,9 +155,10 @@ double System::computeMagnetization() {
             Magnetization += m_spinMatrix[i][j];
         }
     }
-    m_Magnetization = Magnetization; //std::abs(Magnetization);
+    m_Magnetization = std::abs(Magnetization);
     return m_Magnetization;
 }
+
 
 
 void System::computeHeatCapacity() {

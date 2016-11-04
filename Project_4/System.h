@@ -6,9 +6,12 @@ class System
 {
 public:
     System(int L);
-    int** init();
+    int **init();
+    void Metropolis(int N);
     double computeEnergy();
+    double getMeanEnergy();
     double computeMagnetization();
+    double getMeanMagnetization();
     void computeHeatCapacity();
     void computeSusceptibility();
     void printState();
@@ -16,6 +19,8 @@ private:
     int m_L = 0;
     double m_Energy = 0;
     double m_Magnetization = 0;
+    double m_meanEnergy = 0;
+    double m_meanMagnetization = 0;
     int** m_spinMatrix;
 };
 

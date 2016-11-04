@@ -9,7 +9,11 @@ SOURCES += main.cpp \
 HEADERS += \
     System.h
 
-INCLUDEPATH += /usr/local/bin/mpic++
+
+
+#INCLUDEPATH += /usr/include#/openmpi/ompi/mpi/cxx
+#LIBS += -L/usr/lib/ -lmpi #openmpi/
+#INCLUDEPATH += /usr/local/bin/mpic++
 
 # MPI Settings
 QMAKE_CXX = mpicxx
