@@ -18,8 +18,9 @@ int main() //int argc, char *argv[])
     srand(seed); // Initialize random number generator
 
     int L = 2; // Length of matrix
+    double T = 1.0; // Temperature
 
-    System* sys = new System(L); // Initialize random spin matrix
+    System* sys = new System(L, T); // Initialize random spin matrix
 
     // Print state
 //    sys->printState();

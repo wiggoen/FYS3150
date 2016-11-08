@@ -1,25 +1,26 @@
+#include <cmath>
+#include <iomanip>
+#include <iostream>
 #include "System.h"
 #include "time.h"
-#include <cmath>
-#include <iostream>
-#include <iomanip>
 
-System::System(int L)
+
+// Global variables
+double m_meanEnergy = 0;
+double m_meanMagnetization = 0;
+
+System::System(int L, double T)
 {
     m_L = L;
-    int N = L*L;
+    m_beta = 1.0/T;
+    int N = L*L; // MetropolisCycles
     m_spinMatrix = init(); // Initialize random spin matrix
     Metropolis(N);
-}
-/*
-double getMeanEnergy() {
-    return m_meanEnergy;
+    std::cout << m_meanEnergy << std::endl;
 }
 
-double getMeanMagnetization() {
-    return m_meanMagnetization;
-}
-*/
+
+
 int **System::init()
 {
     // Initialize m_spinMatrix by dynamic memory allocation
@@ -41,7 +42,9 @@ int **System::init()
 void System::Metropolis(int N)
 {
     double Esum = 0;
+    double E2sum = 0;
     double Msum = 0;
+    double M2sum = 0;
 
     double currentEnergy = computeEnergy();
     for (int i = 0; i < N; i++) {
@@ -105,9 +108,9 @@ void System::Metropolis(int N)
             std::cout << "Accepted: DeltaE < 0." << std::endl;
             printState();
             std::cout << "Current Energy = " << currentEnergy << std::endl;
-        } else if (test < exp(-DeltaE)) {
+        } else if (test < exp(-m_beta*DeltaE)) {
             currentEnergy = newEnergy;
-            std::cout << "Accepted: r < exp(-DeltaE)." << std::endl;
+            std::cout << "Accepted: r < exp(-m_beta*DeltaE)." << std::endl;
             printState();
             std::cout << "Current Energy = " << currentEnergy << std::endl;
         } else {
@@ -121,10 +124,16 @@ void System::Metropolis(int N)
 
         // Update Energy and Magnetization
         Esum += computeEnergy();
+        E2sum += computeEnergy()*computeEnergy();
         Msum += computeMagnetization();
+        M2sum += computeMagnetization()*computeMagnetization();
     }
-    m_meanEnergy = Esum/N;
-    m_meanMagnetization = Msum/N;
+    // Update expectation values
+    double norm = 1.0/N;
+    m_meanEnergy = Esum*norm;
+    m_meanEnergy2 = E2sum*norm;
+    m_meanMagnetization = Msum*norm;
+    m_meanMagnetization2 = M2sum*norm;
 }
 
 
@@ -144,7 +153,8 @@ double System::computeEnergy() {
                                             m_spinMatrix[i][j_next]);
         }
     }
-    return -Energy/2.0;
+    m_Energy = -Energy/2.0;
+    return m_Energy;
 }
 
 
@@ -170,6 +180,13 @@ void System::computeSusceptibility() {
 
 }
 
+double getMeanEnergy() {
+    return m_meanEnergy;
+}
+
+double getMeanMagnetization() {
+    return m_meanMagnetization;
+}
 
 void System::printState() {
     std::cout << std::endl;
