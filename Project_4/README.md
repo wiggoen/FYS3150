@@ -2,7 +2,7 @@ FYS3150/FYS4150 - Project 4 Studies of phase transitions in magnetic systems
 ============
 
 Program to solve the two-dimensional Ising model with zero external field.
-* The coupling constant is put to J = 1. 
-* Boltzmann's constant is put to k = 1. 
+* The coupling constant is J = 1. 
+* Boltzmann's constant is k = 1. 
 * Temperature has dimension energy.
 * Metroplis sampling and periodic boundary conditions is used.
