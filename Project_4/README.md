@@ -6,3 +6,5 @@ Program to solve the two-dimensional Ising model with zero external field.
 * Boltzmann's constant is k = 1. 
 * Temperature has dimension energy.
 * Metroplis sampling and periodic boundary conditions is used.
+The initial system has a random spin matrix. If you want to use the ground state, 
+comment and uncomment the right line in the 'initialize()' funtion.
