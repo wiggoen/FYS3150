@@ -28,8 +28,8 @@ int main() {
 }
 
 void opB() {
-    string outfilename_average = "../Project_4_IsingModel/outputs/outfile_b_average.txt";
-    string outfilename_mcc = "../Project_4_IsingModel/outputs/outfile_b_mcc.txt";
+    string outfilename_average = "../Project_4/outputs/outfile_b_average.txt";
+    string outfilename_mcc = "../Project_4/outputs/outfile_b_mcc.txt";
 
     int L = 2;              // Lattice size
     double Tinitial = 1.0;  // Initial temperature
@@ -49,8 +49,8 @@ void opB() {
 }
 
 void opC() {
-    string outfilename_average = "../Project_4_IsingModel/outputs/outfile_c_average.txt";
-    string outfilename_mcc = "../Project_4_IsingModel/outputs/outfile_c_mcc.txt";
+    string outfilename_average = "../Project_4/outputs/outfile_c_average.txt";
+    string outfilename_mcc = "../Project_4/outputs/outfile_c_mcc.txt";
 
     int L = 20;             // Lattice size
     double Tinitial = 1.0;  // Initial temperature
@@ -70,8 +70,8 @@ void opC() {
 }
 
 void opD() {
-    string outfilename_average = "../Project_4_IsingModel/outputs/outfile_d_average.txt";
-    string outfilename_mcc = "../Project_4_IsingModel/outputs/outfile_d_mcc.txt";
+    string outfilename_average = "../Project_4/outputs/outfile_d_average.txt";
+    string outfilename_mcc = "../Project_4/outputs/outfile_d_mcc.txt";
 
     int L = 20;             // Lattice size
     double Tinitial = 1.0;  // Initial temperature
@@ -91,8 +91,8 @@ void opD() {
 }
 
 void opE() {
-    string outfilename_average = "../Project_4_IsingModel/outputs/outfile_e_average.txt";
-    string outfilename_mcc = "../Project_4_IsingModel/outputs/outfile_e_mcc.txt";
+    string outfilename_average = "../Project_4/outputs/outfile_e_average.txt";
+    string outfilename_mcc = "../Project_4/outputs/outfile_e_mcc.txt";
 
     int L = 20;             // Lattice size
     double Tinitial = 1.0;  // Initial temperature
@@ -112,8 +112,8 @@ void opE() {
 }
 
 void opF() {
-    string outfilename_average = "../Project_4_IsingModel/outputs/outfile_f_average.txt";
-    string outfilename_mcc = "../Project_4_IsingModel/outputs/outfile_f_mcc.txt";
+    string outfilename_average = "../Project_4/outputs/outfile_f_average.txt";
+    string outfilename_mcc = "../Project_4/outputs/outfile_f_mcc.txt";
 
     int L = 20;             // Lattice size
     double Tinitial = 1.0;  // Initial temperature
