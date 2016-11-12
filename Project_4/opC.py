@@ -1,49 +1,64 @@
 from pylab import *
 
-#source = loadtxt("outputs/outfile_b_states.txt")
-source = loadtxt("outputs/outfile_c_states.txt")
-#source2 = loadtxt("outputs/outfile_b_temp.txt")
+source_mcc = loadtxt("outputs/outfile_c_mcc.txt")
+#source_average = loadtxt("outputs/outfile_c_average.txt")
 
-MCC = 100000 # Monte Carlo Cycles
-L = 20 # Lattice size
+MCC = 1000000               # Monte Carlo Cycles
+L = 20                      # Lattice size
+N = L*L                     # Number of spins
 
+T = source_mcc[:,0]         # Temperature
+cycles = source_mcc[:,1]    # Monte Carlo Cycles
+E = source_mcc[:,2]         # Energy
+M = source_mcc[:,3]         # Magnetization
+absM = source_mcc[:,4]      # Absolute value of magnetization
+meanE = source_mcc[:,5]     # Current mean energy per cycle
+meanM = source_mcc[:,6]     # Current mean magnetization per cycle
+aC = source_mcc[:,7]        # Accepted configurations
 
-N = L*L # Number of spins
-
-temp = source[:,0]
-cycles = source[:,1]
-E = source[:,2]
-M = source[:,3]
-Mabs = source[:,4]
-meanE = source[:,5]
-meanM = source[:,6]
-accept = source[:,7]
-
-
-plot(cycles[0:MCC-1], meanE[0:MCC-1]/N, cycles[MCC:], meanE[MCC:]/N)
+skip = 100
+plot(cycles[0:MCC-1:skip], meanE[0:MCC-1:skip])
 #axis([0, cycles[-1], -10, 0])
-
-xlabel("cycles")
-ylabel("meanE")
-legend(["E: T = 1.0", "E: T = 2.4"])
+xlabel("Cycles")
+ylabel("Current mean energy per cycle")
+legend(["E: T = 1.0"])
 show()
+
+plot(cycles[MCC::skip], meanE[MCC::skip])
+xlabel("Cycles")
+ylabel("Current mean energy per cycle")
+legend(["E: T = 2.4"])
+show()
+
 
 #plot(cycles[0:MCC-1], meanM[0:MCC-1]/N, cycles[MCC:], meanM[MCC:]/N)
 #hold("on")
-plot(cycles[0:MCC-1], Mabs[0:MCC-1]/N, cycles[MCC:], Mabs[MCC:]/N)
+"""
+plot(cycles[0:MCC-1], abs(absM[0:MCC-1]/N))#, cycles[MCC:], abs(absM[MCC:]/N))
 xlabel("cycles")
-ylabel("Mabs")
+ylabel("absM")
 legend(["meanM: T = 1.0", "meanM: T = 2.4", "Mabs: T = 1.0", "Mabs: T = 2.4"])
 show()
+"""
 
-plot(temp[0:MCC-1], accept[0:MCC-1], temp[MCC:], accept[MCC:])
-xlabel("Temp")
-ylabel("Accept")
-legend(["T = 1.0", "T = 2.4"])
+"""
+plot(cycles[0:MCC-1], aC[0:MCC-1])#, T[MCC:], aC[MCC:])
+xlabel("Number of Monte Carlo cycles")
+ylabel("Accepted states")
+legend(["T = 1.0"])#, "T = 2.4"])
 show()
 
-hist(meanE[0:MCC-1], bins=50)
+plot(cycles[MCC:], aC[MCC:])#, T[MCC:], aC[MCC:])
+xlabel("Number of Monte Carlo cycles")
+ylabel("Accepted states")
+legend(["T = 2.4"])#, "T = 2.4"])
+show()
+"""
+
+"""
+hist(meanE[0:MCC-1], bins=25)
 show()
 
-hist(meanE[MCC:], bins=50)
+hist(meanE[MCC:], bins=25)
 show()
+"""

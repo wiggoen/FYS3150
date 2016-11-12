@@ -1,3 +1,4 @@
+#include <cmath>
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
@@ -46,6 +47,14 @@ void opB() {
     System* sys = new System(outfilename_average, outfilename_mcc, L, Tinitial,
                              Tfinal, Tstep, mcc, write_mcc, write_average, printStatus);
     //sys->printState();
+
+    // Exact mean values per spin
+    double exactMeanEnergyPerSpin = (-8.0*sinh(8.0)/(3.0 + cosh(8)))/4.0;
+    double exactMeanAbsoluteMagnetizationPerSpin = ((2.0*exp(8.0) + 4.0)/(3.0 + cosh(8)))/4.0;
+
+    cout << "Exact mean energy per spin = " << setprecision(8) << exactMeanEnergyPerSpin << endl;
+    cout << "Exact mean absolute magnetization per spin = " << setprecision(8) << exactMeanAbsoluteMagnetizationPerSpin << endl;
+    cout << endl;
 }
 
 void opC() {
@@ -61,7 +70,7 @@ void opC() {
 
     bool write_mcc= 1;      // Write Monte Carlo Cycles
     bool write_average = 1; // Write mean values
-    bool printStatus = 0;   // Print final status
+    bool printStatus = 1;   // Print final status
 
     // Initialize system
     System* sys = new System(outfilename_average, outfilename_mcc, L, Tinitial,
