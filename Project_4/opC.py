@@ -1,64 +1,81 @@
 from pylab import *
 
-source_mcc = loadtxt("outputs/outfile_c_mcc.txt")
-#source_average = loadtxt("outputs/outfile_c_average.txt")
+source_random = loadtxt("outputs/outfile_c_mcc_random.txt")
+source_ordered = loadtxt("outputs/outfile_c_mcc_ordered.txt")
 
-MCC = 1000000               # Monte Carlo Cycles
-L = 20                      # Lattice size
-N = L*L                     # Number of spins
+MCC = int(1e6)                   # Monte Carlo Cycles
 
-T = source_mcc[:,0]         # Temperature
-cycles = source_mcc[:,1]    # Monte Carlo Cycles
-E = source_mcc[:,2]         # Energy
-M = source_mcc[:,3]         # Magnetization
-absM = source_mcc[:,4]      # Absolute value of magnetization
-meanE = source_mcc[:,5]     # Current mean energy per cycle
-meanM = source_mcc[:,6]     # Current mean magnetization per cycle
-aC = source_mcc[:,7]        # Accepted configurations
+cycles = source_random[:,1]      # Monte Carlo Cycles
 
-skip = 100
-plot(cycles[0:MCC-1:skip], meanE[0:MCC-1:skip])
-#axis([0, cycles[-1], -10, 0])
-xlabel("Cycles")
-ylabel("Current mean energy per cycle")
-legend(["E: T = 1.0"])
+meanE_r = source_random[:,5]     # Current mean energy per cycle per spin
+meanM_r = source_random[:,6]     # Current mean magnetization per cycle per spin
+
+meanE_o = source_ordered[:,5]    # Current mean energy per cycle per spin
+meanM_o = source_ordered[:,6]    # Current mean magnetization per cycle per spin
+
+#aC = source_mcc[:,7]             # Accepted configurations
+
+
+# Random spins
+fig = figure(1)
+subplot(211)
+plot(cycles[:MCC-1], meanE_r[:MCC-1])       # Energy for T = 1.0
+hold("on")
+plot(cycles[MCC:], meanE_r[MCC:])           # Energy for T = 2.4
+axis([-10000, MCC+10000, -2.1, -0.5])       # xmin, xmax, ymin, ymax
+art = []
+lgd = legend([r"$T$ = 1.0", r"$T$ = 2.4"], loc="upper left", bbox_to_anchor=(1, 1))
+xlabel("Monte Carlo Cycles", fontsize = 16)
+ylabel(r"$\langle E \rangle$", fontsize = 18)    
+art.append(lgd)
+tick_params(labelsize=14)
+fig.set_tight_layout(True)
+
+subplot(212)
+plot(cycles[:MCC-1], abs(meanM_r[:MCC-1]))  # Magnetization for T = 1.0
+hold("on")
+plot(cycles[MCC:], abs(meanM_r[MCC:]))      # Magnetization for T = 2.4
+axis([-10000, MCC+10000, -0.1, 1.1])        # xmin, xmax, ymin, ymax
+art = []
+lgd = legend([r"$T$ = 1.0", r"$T$ = 2.4"], loc="upper left", bbox_to_anchor=(1, 1))
+xlabel("Monte Carlo Cycles", fontsize = 16)
+ylabel(r"$\langle |M| \rangle$", fontsize = 18)    
+art.append(lgd)
+tick_params(labelsize=14)
+fig.set_tight_layout(True)
+
+savefig("plots/MeansVSmccT124ran.png", additional_artists=art, bbox_inches="tight")
 show()
 
-plot(cycles[MCC::skip], meanE[MCC::skip])
-xlabel("Cycles")
-ylabel("Current mean energy per cycle")
-legend(["E: T = 2.4"])
+
+# Ordered spins
+fig = figure(2)
+subplot(211)
+plot(cycles[:MCC-1], meanE_o[:MCC-1])       # Energy for T = 1.0
+hold("on")
+plot(cycles[MCC:], meanE_o[MCC:])           # Energy for T = 2.4
+axis([-10000, MCC+10000, -2.1, -0.5])       # xmin, xmax, ymin, ymax
+art = []
+lgd = legend([r"$T$ = 1.0", r"$T$ = 2.4"], loc="upper left", bbox_to_anchor=(1, 1))
+xlabel("Monte Carlo Cycles", fontsize = 16)
+ylabel(r"$\langle E \rangle$", fontsize = 18)    
+art.append(lgd)
+tick_params(labelsize=14)
+fig.set_tight_layout(True)
+
+subplot(212)
+plot(cycles[:MCC-1], abs(meanM_o[:MCC-1]))  # Magnetization for T = 1.0
+hold("on")
+plot(cycles[MCC:], abs(meanM_o[MCC:]))      # Magnetization for T = 2.4
+axis([-10000, MCC+10000, -0.1, 1.1])        # xmin, xmax, ymin, ymax
+art = []
+lgd = legend([r"$T$ = 1.0", r"$T$ = 2.4"], loc="upper left", bbox_to_anchor=(1, 1))
+xlabel("Monte Carlo Cycles", fontsize = 16)
+ylabel(r"$\langle |M| \rangle$", fontsize = 18)    
+art.append(lgd)
+tick_params(labelsize=14)
+fig.set_tight_layout(True)
+
+savefig("plots/MeansVSmccT124ord.png", additional_artists=art, bbox_inches="tight")
 show()
 
-
-#plot(cycles[0:MCC-1], meanM[0:MCC-1]/N, cycles[MCC:], meanM[MCC:]/N)
-#hold("on")
-"""
-plot(cycles[0:MCC-1], abs(absM[0:MCC-1]/N))#, cycles[MCC:], abs(absM[MCC:]/N))
-xlabel("cycles")
-ylabel("absM")
-legend(["meanM: T = 1.0", "meanM: T = 2.4", "Mabs: T = 1.0", "Mabs: T = 2.4"])
-show()
-"""
-
-"""
-plot(cycles[0:MCC-1], aC[0:MCC-1])#, T[MCC:], aC[MCC:])
-xlabel("Number of Monte Carlo cycles")
-ylabel("Accepted states")
-legend(["T = 1.0"])#, "T = 2.4"])
-show()
-
-plot(cycles[MCC:], aC[MCC:])#, T[MCC:], aC[MCC:])
-xlabel("Number of Monte Carlo cycles")
-ylabel("Accepted states")
-legend(["T = 2.4"])#, "T = 2.4"])
-show()
-"""
-
-"""
-hist(meanE[0:MCC-1], bins=25)
-show()
-
-hist(meanE[MCC:], bins=25)
-show()
-"""

@@ -61,9 +61,9 @@ int **System::initialize()
 
 
 void System::computeTemperatures() {
-    m_E = 0;    // Initialize energy
-    m_M = 0;    // Initialize magnetization
     for (double temperature = m_Tinitial; temperature <= m_Tfinal; temperature += m_Tstep) {
+        m_E = 0;                                // Initialize energy
+        m_M = 0;                                // Initialize magnetization
         m_w = energyDifferences(temperature);   // Set up energy differences vector
         m_meanValues = meanValues();            // Set up mean values vector
         m_spinMatrix = initialize();            // Initialize spin matrix
@@ -216,14 +216,16 @@ void System::printState() // It is not recommended to print state for large latt
 
 void System::output_mcc(int &cycles, double &currentMeanEnergy, double &currentMeanMagnetization,
                         double &temperature) {
+    // All current expectation values are per spin
+    double norm2 = 1.0/((double) m_N);
     ofile1 << std::setiosflags(std::ios::showpoint | std::ios::uppercase);
     ofile1 << std::setw(15) << std::setprecision(8) << temperature;
     ofile1 << std::setw(15) << std::setprecision(8) << cycles;
     ofile1 << std::setw(15) << std::setprecision(8) << m_E;
     ofile1 << std::setw(15) << std::setprecision(8) << m_M;
     ofile1 << std::setw(15) << std::setprecision(8) << fabs(m_M);
-    ofile1 << std::setw(15) << std::setprecision(8) << currentMeanEnergy;
-    ofile1 << std::setw(15) << std::setprecision(8) << currentMeanMagnetization;
+    ofile1 << std::setw(15) << std::setprecision(8) << currentMeanEnergy*norm2;
+    ofile1 << std::setw(15) << std::setprecision(8) << currentMeanMagnetization*norm2;
     ofile1 << std::setw(15) << std::setprecision(8) << m_acceptedConfigurations << std::endl;
 }
 
@@ -242,7 +244,7 @@ void System::output_average(double &temperature)
     double Chi = (meanMagnetization2 - meanMagnetization*meanMagnetization)*invT*invT;
 
     // All expectation values are per spin
-    double norm2 = 1.0/((double) m_N); // use before print to file
+    double norm2 = 1.0/((double) m_N);
     double meanEnergyVariance = (meanEnergy2 - meanEnergy*meanEnergy)*norm2;
     double meanMagnetizationVariance = (meanMagnetization2 - mean_absMagnetization*mean_absMagnetization)*norm2;
 
