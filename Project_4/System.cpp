@@ -34,8 +34,7 @@ System::System(std::string outfilename_average, std::string outfilename_mcc, int
 }
 
 
-int **System::initialize()
-{
+int **System::initialize() {
     // Initialize the seed and call the Mersienne algorithm
     std::random_device rd;
     std::mt19937_64 gen(rd());
@@ -102,8 +101,7 @@ double *System::energyDifferences(double temperature) {
 }
 
 
-double *System::meanValues()
-{
+double *System::meanValues() {
     double *m_meanValues = new double[5];            // Initialize mean values vector by static memory allocation
     for (int i = 0; i < 5; i++) m_meanValues[i] = 0; // Setting all mean values to zero
     return m_meanValues;
@@ -140,6 +138,7 @@ double System::computeMagnetization() {
     return Magnetization;
 }
 
+
 void System::runMonteCarloCycles(double &temperature) {
     for (int cycles = 1; cycles <= m_mcc; cycles++) {
         Metropolis(); // Run Metropolis
@@ -159,8 +158,7 @@ void System::runMonteCarloCycles(double &temperature) {
 }
 
 
-void System::Metropolis()
-{
+void System::Metropolis() {
     // Initialize the seed and call the Mersienne algorithm
     std::random_device rd;
     std::mt19937_64 gen(rd());
@@ -229,8 +227,8 @@ void System::output_mcc(int &cycles, double &currentMeanEnergy, double &currentM
     ofile1 << std::setw(15) << std::setprecision(8) << m_acceptedConfigurations << std::endl;
 }
 
-void System::output_average(double &temperature)
-{
+
+void System::output_average(double &temperature) {
     // Normalize expectation values
     double norm = 1.0/((double) m_mcc);
     double meanEnergy = m_meanValues[0]*norm;
