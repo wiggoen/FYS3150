@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <iostream>
 #include <random>
+#include <mpi.h>
 #include "System.h"
 #include "time.h"
 
@@ -12,22 +13,45 @@ std::ofstream ofile2;
 
 System::System(std::string outfilename_average, std::string outfilename_mcc, int L,
                double Tinitial, double Tfinal, double Tstep, int mcc, bool write_mcc,
-               bool write_average, bool printStatus)
+               bool write_average, bool printStatus, int steadyState, bool useMPI)
 {
     // Declaring private variables
     m_write_mcc = write_mcc;
     m_write_average = write_average;
     m_printStatus = printStatus;
-    m_L = L;                // Lattice size
-    m_N = L*L;              // Number of spins
-    m_Tinitial = Tinitial;  // Initial temperature
-    m_Tfinal = Tfinal;      // Final temperature
-    m_Tstep = Tstep;        // Temperature step
-    m_mcc = mcc;            // Monte Carlo Cycles
+    m_L = L;                        // Lattice size
+    m_N = L*L;                      // Number of spins
+    m_Tinitial = Tinitial;          // Initial temperature
+    m_Tfinal = Tfinal;              // Final temperature
+    m_Tstep = Tstep;                // Temperature step
+    m_mcc = mcc;                    // Monte Carlo Cycles
+    m_steadyState = steadyState;    // Steady state
+    m_useMPI = useMPI;
 
-    // Open files for writing
-    if (m_write_mcc == 1) ofile1.open(outfilename_mcc);
-    if (m_write_average == 1) ofile2.open(outfilename_average);
+    if (m_useMPI == 1) {
+        // MPI initializations
+        MPI_Init(NULL, NULL);
+        MPI_Comm_size (MPI_COMM_WORLD, &m_numprocs);
+        MPI_Comm_rank (MPI_COMM_WORLD, &m_myRank);
+        if (m_myRank == 0) {
+            if (m_write_mcc == 1) ofile1.open(outfilename_mcc);
+            if (m_write_average == 1) ofile2.open(outfilename_average);
+        }
+        m_numIntervals = m_mcc/m_numprocs;              // Number of interval which are used by all processes
+        m_myLoopBegin = m_myRank*m_numIntervals + 1;    // Starting point on process m_myRank
+        m_myLoopEnd = (m_myRank+1)*m_numIntervals;      // End point for summation on process m_myRank
+        if ((m_myRank == m_numprocs-1) && (m_myLoopEnd < m_mcc)) m_myLoopEnd = m_mcc;
+
+        // Broadcast to all nodes common variables
+        MPI_Bcast (&m_N, 1, MPI_INT, 0, MPI_COMM_WORLD);
+        MPI_Bcast (&m_Tinitial, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Bcast (&m_Tfinal, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        MPI_Bcast (&m_Tstep, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    } else {
+        // Open files for writing
+        if (m_write_mcc == 1) ofile1.open(outfilename_mcc);
+        if (m_write_average == 1) ofile2.open(outfilename_average);
+    }
 
     // Running system
     computeTemperatures();
@@ -65,6 +89,7 @@ void System::computeTemperatures() {
         m_M = 0;                                // Initialize magnetization
         m_w = energyDifferences(temperature);   // Set up energy differences vector
         m_meanValues = meanValues();            // Set up mean values vector
+        for (int j = 0; j < 5; j++) m_meanTotal[j] = 0.0;  // Set up mean total vector
         m_spinMatrix = initialize();            // Initialize spin matrix
         m_E = computeEnergy();                  // Compute energy for initial state
         m_M = computeMagnetization();           // Compute magnetization for initial state
@@ -78,8 +103,19 @@ void System::computeTemperatures() {
         m_beta = 1.0/temperature;               // Computing beta
         runMonteCarloCycles(temperature);       // Start Monte Carlo Computation
 
-        if (m_write_average == 1) {
-            output_average(temperature);        // Write averages and temperatures to file
+        if (m_useMPI == 1) {
+            // Find total average
+            for (int i = 0; i < 5; i++){
+                MPI_Reduce(&m_meanValues[i], &m_meanTotal[i], 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            }
+            // Print results
+            if (m_myRank == 0) {
+                output_average(temperature);
+            }
+        } else {
+            if (m_write_average == 1) {
+                output_average(temperature);    // Write averages and temperatures to file
+            }
         }
     }
 
@@ -89,6 +125,7 @@ void System::computeTemperatures() {
 
     ofile1.close();  // Close output files
     ofile2.close();
+    if (m_useMPI == 1) MPI_Finalize ();
 }
 
 
@@ -106,7 +143,6 @@ double *System::meanValues() {
     for (int i = 0; i < 5; i++) m_meanValues[i] = 0; // Setting all mean values to zero
     return m_meanValues;
 }
-
 
 double System::computeEnergy() {
     double Energy = 0;
@@ -143,16 +179,18 @@ void System::runMonteCarloCycles(double &temperature) {
     for (int cycles = 1; cycles <= m_mcc; cycles++) {
         Metropolis(); // Run Metropolis
         // Update expectation values
-        m_meanValues[0] += m_E;
-        m_meanValues[1] += m_E*m_E;
-        m_meanValues[2] += m_M;
-        m_meanValues[3] += m_M*m_M;
-        m_meanValues[4] += std::fabs(m_M);
+        if (cycles >= m_steadyState) {
+            m_meanValues[0] += m_E;
+            m_meanValues[1] += m_E*m_E;
+            m_meanValues[2] += m_M;
+            m_meanValues[3] += m_M*m_M;
+            m_meanValues[4] += std::fabs(m_M);
 
-        if (m_write_mcc == 1) {
-            double currentMeanEnergy = m_meanValues[0] / cycles;
-            double currentMeanMagnetization = m_meanValues[2] / cycles;
-            output_mcc(cycles, currentMeanEnergy, currentMeanMagnetization, temperature); // Write to file
+            if (m_write_mcc == 1) {
+                double currentMeanEnergy = m_meanValues[0] / cycles;
+                double currentMeanMagnetization = m_meanValues[2] / cycles;
+                output_mcc(cycles, currentMeanEnergy, currentMeanMagnetization, temperature); // Write to file
+            }
         }
     }
 }
@@ -246,16 +284,27 @@ void System::output_average(double &temperature) {
     double meanEnergyVariance = (meanEnergy2 - meanEnergy*meanEnergy)*norm2;
     double meanMagnetizationVariance = (meanMagnetization2 - mean_absMagnetization*mean_absMagnetization)*norm2;
 
-    // Writing to file
-    ofile2 << std::setiosflags(std::ios::showpoint | std::ios::uppercase);
-    ofile2 << std::setw(15) << std::setprecision(8) << m_mcc;
-    ofile2 << std::setw(15) << std::setprecision(8) << temperature;
-    ofile2 << std::setw(15) << std::setprecision(8) << meanEnergy*norm2;
-    ofile2 << std::setw(15) << std::setprecision(8) << meanEnergyVariance*invT*invT;
-    ofile2 << std::setw(15) << std::setprecision(8) << meanMagnetization*norm2;
-    ofile2 << std::setw(15) << std::setprecision(8) << meanMagnetizationVariance*invT;
-    ofile2 << std::setw(15) << std::setprecision(8) << mean_absMagnetization*norm2;
-    ofile2 << std::setw(15) << std::setprecision(8) << m_acceptedConfigurations << std::endl;
+    if (m_useMPI == 1) {
+        ofile2 << std::setw(15) << std::setprecision(8) << m_N;
+        ofile2 << std::setw(15) << std::setprecision(8) << m_mcc;
+        ofile2 << std::setw(15) << std::setprecision(8) << temperature;
+        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[0];
+        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[1];
+        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[2];
+        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[3];
+        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[4] << std::endl;
+    } else {
+        // Writing to file
+        ofile2 << std::setiosflags(std::ios::showpoint | std::ios::uppercase);
+        ofile2 << std::setw(15) << std::setprecision(8) << m_mcc;
+        ofile2 << std::setw(15) << std::setprecision(8) << temperature;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanEnergy*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanEnergyVariance*invT*invT;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanMagnetization*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanMagnetizationVariance*invT;
+        ofile2 << std::setw(15) << std::setprecision(8) << mean_absMagnetization*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << m_acceptedConfigurations << std::endl;
+    }
 
     if (m_printStatus == 1) {
         std::cout << std::endl;
@@ -264,8 +313,8 @@ void System::output_average(double &temperature) {
         std::cout << "Mean energy per spin = " << meanEnergy*norm2 << std::endl;
         std::cout << "Mean absolute magnetization per spin = " << mean_absMagnetization*norm2 << std::endl;
         std::cout << "Accepted configurations = " << m_acceptedConfigurations << std::endl;
-        std::cout << "Mean energy variance per spin = " << meanEnergyVariance << std::endl;
-        std::cout << "Mean magnetization variance per spin = " << meanMagnetizationVariance << std::endl;
+        std::cout << "Mean energy variance per spin = " << meanEnergyVariance*invT*invT << std::endl;
+        std::cout << "Mean magnetization variance per spin = " << meanMagnetizationVariance*invT << std::endl;
         std::cout << "Heat capacity, Cv = " << Cv << std::endl;
         std::cout << "Susceptibility, Chi = " << Chi << std::endl;
         std::cout << std::endl;
