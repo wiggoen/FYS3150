@@ -156,9 +156,9 @@ double System::computeEnergy() {
             int j_previous = (j == 0) ? m_L-1 : j - 1;
             int j_next = (j == m_L-1) ? 0 : j + 1;
             Energy += (double) m_spinMatrix[i][j] * (m_spinMatrix[i_previous][j] +
-                                            m_spinMatrix[i_next][j] +
-                                            m_spinMatrix[i][j_previous] +
-                                            m_spinMatrix[i][j_next]);
+                                                     m_spinMatrix[i_next][j] +
+                                                     m_spinMatrix[i][j_previous] +
+                                                     m_spinMatrix[i][j_next]);
         }
     }
     return -Energy/2.0;
@@ -245,9 +245,9 @@ int System::computeDeltaE(int &i, int &j) {
     int j_previous = (j == 0) ? m_L-1 : j - 1;
     int j_next = (j == m_L-1) ? 0 : j + 1;
     int DeltaE = 2 * m_spinMatrix[i][j] * (m_spinMatrix[i_previous][j] +
-                                             m_spinMatrix[i_next][j] +
-                                             m_spinMatrix[i][j_previous] +
-                                             m_spinMatrix[i][j_next]);
+                                           m_spinMatrix[i_next][j] +
+                                           m_spinMatrix[i][j_previous] +
+                                           m_spinMatrix[i][j_next]);
     return DeltaE;
 }
 

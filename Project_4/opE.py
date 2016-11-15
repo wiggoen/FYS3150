@@ -13,13 +13,13 @@ def L40(L40_source):
     L40_norm1 = 1.0/(L40_MCC)
     L40_norm2 = 1.0/(L40_N)
     L40_T = L40_source[:,2]
-    L40_meanE = L40_source[:,3]*4
-    L40_meanE2 = L40_source[:,4]*4               # Mean energy
-    L40_meanM = L40_source[:,5]*4
-    L40_meanM2 = L40_source[:,6]*4
+    L40_meanE = L40_source[:,3]
+    L40_meanE2 = L40_source[:,4]               # Mean energy
+    L40_meanM = L40_source[:,5]
+    L40_meanM2 = L40_source[:,6]
     L40_mean_absM = L40_source[:,7]*4              # Mean absolute magnetization
-    L40_specificHeat = L40_source[:,8]/1600 #(L40_meanM2-L40_mean_absM**2)/L40_MCC/L40_T        # Heat capacity, Cv
-    L40_Susceptibility = L40_source[:,9]/1600       # Susceptibility, Chi, X
+    L40_specificHeat = L40_source[:,8] #(L40_meanM2-L40_mean_absM**2)/L40_MCC/L40_T        # Heat capacity, Cv
+    L40_Susceptibility = L40_source[:,9]       # Susceptibility, Chi, X
     return L40_T, L40_meanE, L40_mean_absM, L40_specificHeat, L40_Susceptibility
 """
 def L60(L60_source):
