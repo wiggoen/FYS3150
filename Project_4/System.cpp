@@ -287,11 +287,11 @@ void System::output_average(double &temperature) {
     double invT = 1.0/temperature;      // Divided by temperature
 
     if (m_useMPI == 1) {
-        double meanTotalEnergy = m_meanTotal[0]*norm/m_numprocs;
-        double meanTotalEnergy2 = m_meanTotal[1]*norm/m_numprocs;
-        double meanTotalMagnetization = m_meanTotal[2]*norm/m_numprocs;
-        double meanTotalMagnetization2 = m_meanTotal[3]*norm/m_numprocs;
-        double meanTotalAbsMagnetization = m_meanTotal[4]*norm/m_numprocs;
+        double meanTotalEnergy = m_meanTotal[0]*norm;
+        double meanTotalEnergy2 = m_meanTotal[1]*norm;
+        double meanTotalMagnetization = m_meanTotal[2]*norm;
+        double meanTotalMagnetization2 = m_meanTotal[3]*norm;
+        double meanTotalAbsMagnetization = m_meanTotal[4]*norm;
         // All expectation values are per spin
         double meanTotalEnergyVariance = (meanTotalEnergy2 - meanTotalEnergy*meanTotalEnergy)*norm2;
         double meanTotalMagnetizationVariance = (meanTotalMagnetization2 - meanTotalAbsMagnetization*meanTotalAbsMagnetization)*norm2;
