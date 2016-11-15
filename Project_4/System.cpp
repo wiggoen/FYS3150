@@ -176,20 +176,34 @@ double System::computeMagnetization() {
 
 
 void System::runMonteCarloCycles(double &temperature) {
-    for (int cycles = 1; cycles <= m_mcc; cycles++) {
-        Metropolis(); // Run Metropolis
-        // Update expectation values
-        if (cycles >= m_steadyState) {
-            m_meanValues[0] += m_E;
-            m_meanValues[1] += m_E*m_E;
-            m_meanValues[2] += m_M;
-            m_meanValues[3] += m_M*m_M;
-            m_meanValues[4] += std::fabs(m_M);
+    if (m_useMPI == 1) {
+        for (int cycles = m_myLoopBegin; cycles <= m_myLoopEnd; cycles++) {
+            Metropolis(); // Run Metropolis
+            // Update expectation values
+            if (cycles >= m_steadyState) {
+                m_meanValues[0] += m_E;
+                m_meanValues[1] += m_E*m_E;
+                m_meanValues[2] += m_M;
+                m_meanValues[3] += m_M*m_M;
+                m_meanValues[4] += std::fabs(m_M);
+            }
+        }
+    } else {
+        for (int cycles = 1; cycles <= m_mcc; cycles++) {
+            Metropolis(); // Run Metropolis
+            // Update expectation values
+            if (cycles >= m_steadyState) {
+                m_meanValues[0] += m_E;
+                m_meanValues[1] += m_E*m_E;
+                m_meanValues[2] += m_M;
+                m_meanValues[3] += m_M*m_M;
+                m_meanValues[4] += std::fabs(m_M);
 
-            if (m_write_mcc == 1) {
-                double currentMeanEnergy = m_meanValues[0] / cycles;
-                double currentMeanMagnetization = m_meanValues[2] / cycles;
-                output_mcc(cycles, currentMeanEnergy, currentMeanMagnetization, temperature); // Write to file
+                if (m_write_mcc == 1) {
+                    double currentMeanEnergy = m_meanValues[0] / cycles;
+                    double currentMeanMagnetization = m_meanValues[2] / cycles;
+                    output_mcc(cycles, currentMeanEnergy, currentMeanMagnetization, temperature); // Write to file
+                }
             }
         }
     }
@@ -214,10 +228,10 @@ void System::Metropolis() {
 
         // Metropolis test
         if (RandomNumberGenerator(gen) <= m_w[DeltaE+8]) {
-            m_spinMatrix[x][y] *= -1;               // Flip one spin
-            m_E += (double) DeltaE;                 // Update energy
-            m_M += (double) 2.0*m_spinMatrix[x][y];   // Update magnetization
-            m_acceptedConfigurations += 1;          // Accept new spin configuration
+            m_spinMatrix[x][y] *= -1;                // Flip one spin
+            m_E += (double) DeltaE;                  // Update energy
+            m_M += (double) 2.0*m_spinMatrix[x][y];  // Update magnetization
+            m_acceptedConfigurations += 1;           // Accept new spin configuration
         }
     }
 }

@@ -1,6 +1,6 @@
 from pylab import *
 
-L40_source = loadtxt("outputs/autotest_avg2.txt")
+L40_source = loadtxt("outputs/L40_avg.txt")
 #L60_source = loadtxt("outputs/MPI_e_L60.txt")
 #L100_source = loadtxt("outputs/MPI_e_L100.txt")
 #L140_source = loadtxt("outputs/MPI_e_L140.txt")
@@ -18,7 +18,7 @@ def L40(L40_source):
     L40_meanM = L40_source[:,5]
     L40_meanM2 = L40_source[:,6]
     L40_mean_absM = L40_source[:,7]              # Mean absolute magnetization
-    L40_specificHeat = abs(L40_meanM2 - L40_meanM2**2)*L40_norm1/(L40_T**2)         # Heat capacity, Cv
+    L40_specificHeat = (L40_meanM2-L40_mean_absM**2)/L40_MCC/L40_T        # Heat capacity, Cv
     L40_Susceptibility = L40_source[:,9]       # Susceptibility, Chi, X
     return L40_T, L40_meanE, L40_mean_absM, L40_specificHeat, L40_Susceptibility
 """
