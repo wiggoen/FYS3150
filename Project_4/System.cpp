@@ -293,6 +293,18 @@ void System::output_average(double &temperature) {
         ofile2 << std::setw(15) << std::setprecision(8) << meanTotalEnergyVariance*invT*invT;
         ofile2 << std::setw(15) << std::setprecision(8) << meanTotalMagnetizationVariance*invT;
         ofile2 << std::setw(15) << std::setprecision(8) << m_acceptedConfigurations << std::endl;
+
+        if (m_printStatus == 1) {
+            std::cout << std::endl;
+            std::cout << "Monte Carlo Cycles = " << m_mcc << std::endl;
+            std::cout << "Temperature = " << temperature << std::endl;
+            std::cout << "Mean energy per spin = " << meanTotalEnergy*norm2 << std::endl;
+            std::cout << "Mean absolute magnetization per spin = " << meanTotalAbsMagnetization*norm2 << std::endl;
+            std::cout << "Mean energy variance per spin = " << meanTotalEnergyVariance*invT*invT << std::endl;
+            std::cout << "Mean magnetization variance per spin = " << meanTotalMagnetizationVariance*invT << std::endl;
+            std::cout << "Accepted configurations = " << m_acceptedConfigurations << std::endl;
+            std::cout << std::endl;
+        }
     } else {
         double meanEnergy = m_meanValues[0]*norm;
         double meanEnergy2 = m_meanValues[1]*norm;
