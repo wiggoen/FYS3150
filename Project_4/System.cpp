@@ -204,7 +204,7 @@ void System::Metropolis() {
     std::uniform_real_distribution<double> RandomNumberGenerator(0.0, 1.0);
 
     // Loop over all spins
-    for (int i = 1; i < m_N; i++) {
+    for (int i = 0; i < m_N; i++) {
         // Find random position
         int x = (int) (RandomNumberGenerator(gen)*m_L);
         int y = (int) (RandomNumberGenerator(gen)*m_L);
@@ -216,7 +216,7 @@ void System::Metropolis() {
         if (RandomNumberGenerator(gen) <= m_w[DeltaE+8]) {
             m_spinMatrix[x][y] *= -1;               // Flip one spin
             m_E += (double) DeltaE;                 // Update energy
-            m_M += (double) 2*m_spinMatrix[x][y];   // Update magnetization
+            m_M += (double) 2.0*m_spinMatrix[x][y];   // Update magnetization
             m_acceptedConfigurations += 1;          // Accept new spin configuration
         }
     }
@@ -298,10 +298,10 @@ void System::output_average(double &temperature) {
             std::cout << std::endl;
             std::cout << "Monte Carlo Cycles = " << m_mcc << std::endl;
             std::cout << "Temperature = " << temperature << std::endl;
-            std::cout << "Mean energy per spin = " << meanTotalEnergy*norm2 << std::endl;
-            std::cout << "Mean absolute magnetization per spin = " << meanTotalAbsMagnetization*norm2 << std::endl;
-            std::cout << "Mean energy variance per spin = " << meanTotalEnergyVariance*invT*invT << std::endl;
-            std::cout << "Mean magnetization variance per spin = " << meanTotalMagnetizationVariance*invT << std::endl;
+            std::cout << "Mean total energy per spin = " << meanTotalEnergy*norm2 << std::endl;
+            std::cout << "Mean total magnetization per spin = " << meanTotalAbsMagnetization*norm2 << std::endl;
+            std::cout << "Mean total energy variance per spin = " << meanTotalEnergyVariance*invT*invT << std::endl;
+            std::cout << "Mean total magnetization variance per spin = " << meanTotalMagnetizationVariance*invT << std::endl;
             std::cout << "Accepted configurations = " << m_acceptedConfigurations << std::endl;
             std::cout << std::endl;
         }

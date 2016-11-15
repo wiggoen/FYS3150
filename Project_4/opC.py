@@ -1,7 +1,7 @@
 from pylab import *
 
-source_random = loadtxt("outputs/outfile_c_mcc_random.txt")
-source_ordered = loadtxt("outputs/outfile_c_mcc_ordered.txt")
+source_random = loadtxt("outputs/L20_mcc_random.txt")
+source_ordered = loadtxt("outputs/L20_mcc_ordered.txt")
 
 MCC = int(1e6)                   # Monte Carlo Cycles
 
@@ -76,7 +76,7 @@ art.append(lgd)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
 
-savefig("plots/MeansVSmccT124ran.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/MeansVSmccT124ran_NEW.png", additional_artists=art, bbox_inches="tight")
 show()
 
 
@@ -136,7 +136,7 @@ art.append(lgd)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
 
-savefig("plots/MeansVSmccT124ord.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/MeansVSmccT124ord_NEW.png", additional_artists=art, bbox_inches="tight")
 show()
 
 
@@ -170,6 +170,6 @@ art.append(lgd)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
 
-savefig("plots/AcceptVSmcc.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/AcceptVSmcc_NEW.png", additional_artists=art, bbox_inches="tight")
 show()
 
