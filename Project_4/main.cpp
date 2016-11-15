@@ -3,13 +3,12 @@
 #include <iomanip>
 #include <iostream>
 #include <random>
-//#include <mpi.h>
 #include "System.h"
 #include "time.h"
 
 using namespace std;
 
-int main(int numArguments, char **arguments) // Comment/uncomment to run different operations
+int main(int numArguments, char **arguments)
 {
     // Default if there is no command line arguments
     int L = 2;              // Lattice size
@@ -19,12 +18,12 @@ int main(int numArguments, char **arguments) // Comment/uncomment to run differe
 
     int mcc = 1e4;          // MonteCarloCycles
 
-    int write_mcc= 1;      // Write Monte Carlo Cycles
-    int write_average = 1; // Write mean values
-    int printStatus = 1;   // Print final status
+    int write_mcc= 1;       // Write Monte Carlo Cycles
+    int write_average = 1;  // Write mean values
+    int printStatus = 1;    // Print final status
 
     int steadyState = 1;    // Steady state, uses 1 for every cycle
-    int useMPI = 0;        // Use MPI
+    int useMPI = 0;         // Use MPI
 
     string Lsize = to_string(L);
     string outfilename_average = "../Project_4/outputs/average_L"+Lsize+".txt";
@@ -46,13 +45,13 @@ int main(int numArguments, char **arguments) // Comment/uncomment to run differe
     if (numArguments >= 12) useMPI = atoi(arguments[12]);
 
     clock_t start, finish;
-    start = clock();            // Start clock
+    start = clock();        // Start clock
 
     System* sys = new System(outfilename_average, outfilename_mcc, L, Tinitial,
                              Tfinal, Tstep, mcc, write_mcc, write_average, printStatus,
                              steadyState, useMPI);
 
-    finish = clock();           // End clock
+    finish = clock();       // End clock
 
     // Time used
     double runtime = ((finish - start)/double(CLOCKS_PER_SEC));

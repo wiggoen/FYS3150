@@ -85,23 +85,23 @@ int **System::initialize() {
 
 void System::computeTemperatures() {
     for (double temperature = m_Tinitial; temperature <= m_Tfinal; temperature += m_Tstep) {
-        m_E = 0.0;                                // Initialize energy
-        m_M = 0.0;                                // Initialize magnetization
-        m_w = energyDifferences(temperature);   // Set up energy differences vector
-        m_meanValues = meanValues();            // Set up mean values vector
-        for (int j = 0; j < 5; j++) m_meanTotal[j] = 0.0;  // Set up mean total vector
-        m_spinMatrix = initialize();            // Initialize spin matrix
-        m_E = computeEnergy();                  // Compute energy for initial state
-        m_M = computeMagnetization();           // Compute magnetization for initial state
+        m_E = 0.0;                                          // Initialize energy
+        m_M = 0.0;                                          // Initialize magnetization
+        m_w = energyDifferences(temperature);               // Set up energy differences vector
+        m_meanValues = meanValues();                        // Set up mean values vector
+        for (int j = 0; j < 5; j++) m_meanTotal[j] = 0.0;   // Set up mean total vector
+        m_spinMatrix = initialize();                        // Initialize spin matrix
+        m_E = computeEnergy();                              // Compute energy for initial state
+        m_M = computeMagnetization();                       // Compute magnetization for initial state
 
         //std::cout << std::endl;
         //std::cout << "Initial energy = " << m_E << "  and  magnetization = " << m_M << std::endl;
         //std::cout << "Initial state:" << std::endl;
         //printState();
 
-        m_acceptedConfigurations = 0;           // Restarting accepted configurations
-        m_beta = 1.0/temperature;               // Computing beta
-        runMonteCarloCycles(temperature);       // Start Monte Carlo Computation
+        m_acceptedConfigurations = 0;                       // Restarting accepted configurations
+        m_beta = 1.0/temperature;                           // Computing beta
+        runMonteCarloCycles(temperature);                   // Start Monte Carlo Computation
 
         if (m_useMPI == 1) {
             // Find total average
@@ -143,6 +143,7 @@ double *System::meanValues() {
     for (int i = 0; i < 5; i++) m_meanValues[i] = 0.0; // Setting all mean values to zero
     return m_meanValues;
 }
+
 
 double System::computeEnergy() {
     double Energy = 0.0;
@@ -243,7 +244,7 @@ int System::computeDeltaE(int &i, int &j) {
     int i_next = (i == m_L-1) ? 0 : i + 1;
     int j_previous = (j == 0) ? m_L-1 : j - 1;
     int j_next = (j == m_L-1) ? 0 : j + 1;
-    int DeltaE = 2.0 * m_spinMatrix[i][j] * (m_spinMatrix[i_previous][j] +
+    int DeltaE = 2 * m_spinMatrix[i][j] * (m_spinMatrix[i_previous][j] +
                                              m_spinMatrix[i_next][j] +
                                              m_spinMatrix[i][j_previous] +
                                              m_spinMatrix[i][j_next]);
@@ -313,7 +314,7 @@ void System::output_average(double &temperature) {
             std::cout << "Monte Carlo Cycles = " << m_mcc << std::endl;
             std::cout << "Temperature = " << temperature << std::endl;
             std::cout << "Mean total energy per spin = " << meanTotalEnergy*norm2 << std::endl;
-            std::cout << "Mean total magnetization per spin = " << meanTotalAbsMagnetization*norm2 << std::endl;
+            std::cout << "Mean total absolute magnetization per spin = " << meanTotalAbsMagnetization*norm2 << std::endl;
             std::cout << "Mean total energy variance per spin = " << meanTotalEnergyVariance*invT*invT << std::endl;
             std::cout << "Mean total magnetization variance per spin = " << meanTotalMagnetizationVariance*invT << std::endl;
             std::cout << "Accepted configurations = " << m_acceptedConfigurations << std::endl;
