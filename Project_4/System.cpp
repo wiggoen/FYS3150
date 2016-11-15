@@ -12,8 +12,8 @@ std::ofstream ofile2;
 
 
 System::System(std::string outfilename_average, std::string outfilename_mcc, int L,
-               double Tinitial, double Tfinal, double Tstep, int mcc, bool write_mcc,
-               bool write_average, bool printStatus, int steadyState, bool useMPI)
+               double Tinitial, double Tfinal, double Tstep, int mcc, int write_mcc,
+               int write_average, int printStatus, int steadyState, int useMPI)
 {
     // Declaring private variables
     m_write_mcc = write_mcc;
@@ -268,55 +268,64 @@ void System::output_mcc(int &cycles, double &currentMeanEnergy, double &currentM
 
 void System::output_average(double &temperature) {
     // Normalize expectation values
-    double norm = 1.0/((double) m_mcc);
-    double meanEnergy = m_meanValues[0]*norm;
-    double meanEnergy2 = m_meanValues[1]*norm;
-    double meanMagnetization = m_meanValues[2]*norm;
-    double meanMagnetization2 = m_meanValues[3]*norm;
-    double mean_absMagnetization = m_meanValues[4]*norm;
-
-    double invT = 1.0/temperature;
-    double Cv = (meanEnergy2 - meanEnergy*meanEnergy)*invT;
-    double Chi = (meanMagnetization2 - meanMagnetization*meanMagnetization)*invT*invT;
-
-    // All expectation values are per spin
-    double norm2 = 1.0/((double) m_N);
-    double meanEnergyVariance = (meanEnergy2 - meanEnergy*meanEnergy)*norm2;
-    double meanMagnetizationVariance = (meanMagnetization2 - mean_absMagnetization*mean_absMagnetization)*norm2;
+    double norm = 1.0/((double) m_mcc); // Divided by the total number of cycles
+    double norm2 = 1.0/((double) m_N);  // Divided by the total number of spins
+    double invT = 1.0/temperature;      // Divided by temperature
 
     if (m_useMPI == 1) {
+        double meanTotalEnergy = m_meanTotal[0]*norm/m_numprocs;
+        double meanTotalEnergy2 = m_meanTotal[1]*norm/m_numprocs;
+        double meanTotalMagnetization = m_meanTotal[2]*norm/m_numprocs;
+        double meanTotalMagnetization2 = m_meanTotal[3]*norm/m_numprocs;
+        double meanTotalAbsMagnetization = m_meanTotal[4]*norm/m_numprocs;
+        // All expectation values are per spin
+        double meanTotalEnergyVariance = (meanTotalEnergy2 - meanTotalEnergy*meanTotalEnergy)*norm2;
+        double meanTotalMagnetizationVariance = (meanTotalMagnetization2 - meanTotalAbsMagnetization*meanTotalAbsMagnetization)*norm2;
+        // Writing to file
         ofile2 << std::setw(15) << std::setprecision(8) << m_N;
         ofile2 << std::setw(15) << std::setprecision(8) << m_mcc;
         ofile2 << std::setw(15) << std::setprecision(8) << temperature;
-        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[0];
-        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[1];
-        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[2];
-        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[3];
-        ofile2 << std::setw(15) << std::setprecision(8) << m_meanTotal[4] << std::endl;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanTotalEnergy*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanTotalEnergy2*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanTotalMagnetization*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanTotalMagnetization2*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanTotalAbsMagnetization*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanTotalEnergyVariance*invT*invT;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanTotalMagnetizationVariance*invT;
+        ofile2 << std::setw(15) << std::setprecision(8) << m_acceptedConfigurations << std::endl;
     } else {
+        double meanEnergy = m_meanValues[0]*norm;
+        double meanEnergy2 = m_meanValues[1]*norm;
+        double meanMagnetization = m_meanValues[2]*norm;
+        double meanMagnetization2 = m_meanValues[3]*norm;
+        double meanAbsMagnetization = m_meanValues[4]*norm;
+        // All expectation values are per spin
+        double meanEnergyVariance = (meanEnergy2 - meanEnergy*meanEnergy)*norm2;
+        double meanMagnetizationVariance = (meanMagnetization2 - meanAbsMagnetization*meanAbsMagnetization)*norm2;
         // Writing to file
         ofile2 << std::setiosflags(std::ios::showpoint | std::ios::uppercase);
+        ofile2 << std::setw(15) << std::setprecision(8) << m_N;
         ofile2 << std::setw(15) << std::setprecision(8) << m_mcc;
         ofile2 << std::setw(15) << std::setprecision(8) << temperature;
         ofile2 << std::setw(15) << std::setprecision(8) << meanEnergy*norm2;
-        ofile2 << std::setw(15) << std::setprecision(8) << meanEnergyVariance*invT*invT;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanEnergy2*norm2;
         ofile2 << std::setw(15) << std::setprecision(8) << meanMagnetization*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanMagnetization2*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanAbsMagnetization*norm2;
+        ofile2 << std::setw(15) << std::setprecision(8) << meanEnergyVariance*invT*invT;
         ofile2 << std::setw(15) << std::setprecision(8) << meanMagnetizationVariance*invT;
-        ofile2 << std::setw(15) << std::setprecision(8) << mean_absMagnetization*norm2;
         ofile2 << std::setw(15) << std::setprecision(8) << m_acceptedConfigurations << std::endl;
-    }
 
-    if (m_printStatus == 1) {
-        std::cout << std::endl;
-        std::cout << "Monte Carlo Cycles = " << m_mcc << std::endl;
-        std::cout << "Temperature = " << temperature << std::endl;
-        std::cout << "Mean energy per spin = " << meanEnergy*norm2 << std::endl;
-        std::cout << "Mean absolute magnetization per spin = " << mean_absMagnetization*norm2 << std::endl;
-        std::cout << "Accepted configurations = " << m_acceptedConfigurations << std::endl;
-        std::cout << "Mean energy variance per spin = " << meanEnergyVariance*invT*invT << std::endl;
-        std::cout << "Mean magnetization variance per spin = " << meanMagnetizationVariance*invT << std::endl;
-        std::cout << "Heat capacity, Cv = " << Cv << std::endl;
-        std::cout << "Susceptibility, Chi = " << Chi << std::endl;
-        std::cout << std::endl;
+        if (m_printStatus == 1) {
+            std::cout << std::endl;
+            std::cout << "Monte Carlo Cycles = " << m_mcc << std::endl;
+            std::cout << "Temperature = " << temperature << std::endl;
+            std::cout << "Mean energy per spin = " << meanEnergy*norm2 << std::endl;
+            std::cout << "Mean absolute magnetization per spin = " << meanAbsMagnetization*norm2 << std::endl;
+            std::cout << "Mean energy variance per spin = " << meanEnergyVariance*invT*invT << std::endl;
+            std::cout << "Mean magnetization variance per spin = " << meanMagnetizationVariance*invT << std::endl;
+            std::cout << "Accepted configurations = " << m_acceptedConfigurations << std::endl;
+            std::cout << std::endl;
+        }
     }
 }

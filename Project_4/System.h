@@ -6,8 +6,8 @@ class System
 {
 public:
     System(std::string outfilename_average, std::string outfilename_mcc, int L,
-           double Tinitial, double Tfinal, double Tstep, int mcc, bool write_mcc,
-           bool write_average, bool printStatus, int steadyState, bool useMPI);
+           double Tinitial, double Tfinal, double Tstep, int mcc, int write_mcc,
+           int write_average, int printStatus, int steadyState, int useMPI);
     int **initialize();
     double *meanValues();
     double meanTotal();
@@ -37,11 +37,11 @@ private:
     double m_Tinitial;
     double m_Tfinal;
     double m_Tstep;
-    bool m_write_mcc;
-    bool m_write_average;
-    bool m_printStatus;
+    int m_write_mcc;
+    int m_write_average;
+    int m_printStatus;
     int m_steadyState;
-    bool m_useMPI;
+    int m_useMPI;
     int m_myRank;
     int m_numprocs;
     int m_numIntervals;
