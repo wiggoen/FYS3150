@@ -85,8 +85,8 @@ int **System::initialize() {
 
 void System::computeTemperatures() {
     for (double temperature = m_Tinitial; temperature <= m_Tfinal; temperature += m_Tstep) {
-        m_E = 0;                                // Initialize energy
-        m_M = 0;                                // Initialize magnetization
+        m_E = 0.0;                                // Initialize energy
+        m_M = 0.0;                                // Initialize magnetization
         m_w = energyDifferences(temperature);   // Set up energy differences vector
         m_meanValues = meanValues();            // Set up mean values vector
         for (int j = 0; j < 5; j++) m_meanTotal[j] = 0.0;  // Set up mean total vector
@@ -140,12 +140,12 @@ double *System::energyDifferences(double temperature) {
 
 double *System::meanValues() {
     double *m_meanValues = new double[5];            // Initialize mean values vector by static memory allocation
-    for (int i = 0; i < 5; i++) m_meanValues[i] = 0; // Setting all mean values to zero
+    for (int i = 0; i < 5; i++) m_meanValues[i] = 0.0; // Setting all mean values to zero
     return m_meanValues;
 }
 
 double System::computeEnergy() {
-    double Energy = 0;
+    double Energy = 0.0;
     // Loop over all spins
     for (int i = 0; i < m_L; i++) {
         for (int j = 0; j < m_L; j++) {
@@ -154,7 +154,7 @@ double System::computeEnergy() {
             int i_next = (i == m_L-1) ? 0 : i + 1;
             int j_previous = (j == 0) ? m_L-1 : j - 1;
             int j_next = (j == m_L-1) ? 0 : j + 1;
-            Energy += m_spinMatrix[i][j] * (m_spinMatrix[i_previous][j] +
+            Energy += (double) m_spinMatrix[i][j] * (m_spinMatrix[i_previous][j] +
                                             m_spinMatrix[i_next][j] +
                                             m_spinMatrix[i][j_previous] +
                                             m_spinMatrix[i][j_next]);
@@ -165,10 +165,10 @@ double System::computeEnergy() {
 
 
 double System::computeMagnetization() {
-    double Magnetization = 0;
+    double Magnetization = 0.0;
     for (int i = 0; i < m_L; i++) {
         for (int j = 0; j < m_L; j++) {
-            Magnetization += m_spinMatrix[i][j];
+            Magnetization += (double) m_spinMatrix[i][j];
         }
     }
     return Magnetization;
@@ -287,11 +287,11 @@ void System::output_average(double &temperature) {
     double invT = 1.0/temperature;      // Divided by temperature
 
     if (m_useMPI == 1) {
-        double meanTotalEnergy = m_meanTotal[0]*norm;
-        double meanTotalEnergy2 = m_meanTotal[1]*norm;
-        double meanTotalMagnetization = m_meanTotal[2]*norm;
-        double meanTotalMagnetization2 = m_meanTotal[3]*norm;
-        double meanTotalAbsMagnetization = m_meanTotal[4]*norm;
+        double meanTotalEnergy = m_meanTotal[0]*norm/m_numprocs;
+        double meanTotalEnergy2 = m_meanTotal[1]*norm/m_numprocs;
+        double meanTotalMagnetization = m_meanTotal[2]*norm/m_numprocs;
+        double meanTotalMagnetization2 = m_meanTotal[3]*norm/m_numprocs;
+        double meanTotalAbsMagnetization = m_meanTotal[4]*norm/m_numprocs;
         // All expectation values are per spin
         double meanTotalEnergyVariance = (meanTotalEnergy2 - meanTotalEnergy*meanTotalEnergy)*norm2;
         double meanTotalMagnetizationVariance = (meanTotalMagnetization2 - meanTotalAbsMagnetization*meanTotalAbsMagnetization)*norm2;
