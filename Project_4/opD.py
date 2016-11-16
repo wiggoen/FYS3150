@@ -34,5 +34,5 @@ ylabel(r"Probability, $P(E)$", fontsize = 16)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
 
-savefig("plots/Probability_NEW.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/Probability.png", additional_artists=art, bbox_inches="tight")
 show()

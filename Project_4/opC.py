@@ -44,7 +44,7 @@ axis([-250, stop2, -2.1, -0.5])                          # xmin, xmax, ymin, yma
 art = []
 lgd = legend([r"$T$ = 1.0", r"$T$ = 2.4"], loc="upper left", bbox_to_anchor=(1, 1))
 xlabel("Monte Carlo Cycles", fontsize = 16)
-ylabel(r"$\langle E/L^2 \rangle$", fontsize = 18)    
+ylabel(r"$\langle E \rangle/L^2$", fontsize = 18)    
 art.append(lgd)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
@@ -71,12 +71,12 @@ axis([-250, stop2, -0.1, 1.1])                               # xmin, xmax, ymin,
 art = []
 lgd = legend([r"$T$ = 1.0", r"$T$ = 2.4"], loc="upper left", bbox_to_anchor=(1, 1))
 xlabel("Monte Carlo Cycles", fontsize = 16)
-ylabel(r"$\langle |M|/L^2 \rangle$", fontsize = 18)    
+ylabel(r"$\langle |M| \rangle/L^2$", fontsize = 18)    
 art.append(lgd)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
 
-savefig("plots/MeansVSmccT124ran_NEW.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/MeansVSmccT124ran.png", additional_artists=art, bbox_inches="tight")
 show()
 
 
@@ -104,7 +104,7 @@ axis([-250, stop2, -2.1, -0.5])                          # xmin, xmax, ymin, yma
 art = []
 lgd = legend([r"$T$ = 1.0", r"$T$ = 2.4"], loc="upper left", bbox_to_anchor=(1, 1))
 xlabel("Monte Carlo Cycles", fontsize = 16)
-ylabel(r"$\langle E/L^2 \rangle$", fontsize = 18)    
+ylabel(r"$\langle E \rangle/L^2$", fontsize = 18)    
 art.append(lgd)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
@@ -131,12 +131,12 @@ axis([-250, stop2, -0.1, 1.1])                               # xmin, xmax, ymin,
 art = []
 lgd = legend([r"$T$ = 1.0", r"$T$ = 2.4"], loc="upper left", bbox_to_anchor=(1, 1))
 xlabel("Monte Carlo Cycles", fontsize = 16)
-ylabel(r"$\langle |M|/L^2 \rangle$", fontsize = 18)    
+ylabel(r"$\langle |M| \rangle/L^2$", fontsize = 18)    
 art.append(lgd)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
 
-savefig("plots/MeansVSmccT124ord_NEW.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/MeansVSmccT124ord.png", additional_artists=art, bbox_inches="tight")
 show()
 
 
@@ -170,6 +170,6 @@ art.append(lgd)
 tick_params(labelsize=14)
 fig.set_tight_layout(True)
 
-savefig("plots/AcceptVSmcc_NEW.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/AcceptVSmcc.png", additional_artists=art, bbox_inches="tight")
 show()
 

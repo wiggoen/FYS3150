@@ -2,14 +2,14 @@ from os import *
 import time
 
 # System setup
-outfilename_average = "L20_avg_random.txt"
-outfilename_mcc = "L20_mcc_random.txt"
-L = 2
+outfilename_average = "L20_avg_ordered.txt"
+outfilename_mcc = "L20_mcc_ordered.txt"
+L = 20
 Tinitial = 1.0
-Tfinal = 1.0
-Tstep = 1.0
-mcc = int(1e7)
-write_mcc = 0
+Tfinal = 2.4
+Tstep = 1.4
+mcc = int(1e6)
+write_mcc = 1
 write_average = 1
 printStatus = 1
 steadyState = 1
