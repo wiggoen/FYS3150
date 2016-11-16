@@ -10,4 +10,4 @@ Program to solve the two-dimensional Ising model with zero external field.
 The initial system has a random spin matrix. If you want to use the ground state, 
 comment and uncomment the right line in the 'initialize()' funtion in System.cpp.
 
-But I've struggled with the code a lot. But since the deadline approches, I have to write the report. 
+I've struggled with the code a lot. But since the deadline approches, I have to write the report. 

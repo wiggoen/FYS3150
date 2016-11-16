@@ -43,6 +43,7 @@ System::System(std::string outfilename_average, std::string outfilename_mcc, int
         if ((m_myRank == m_numprocs-1) && (m_myLoopEnd < m_mcc)) m_myLoopEnd = m_mcc;
 
         // Broadcast to all nodes common variables
+        MPI_Bcast (&m_L, 1, MPI_INT, 0, MPI_COMM_WORLD);
         MPI_Bcast (&m_N, 1, MPI_INT, 0, MPI_COMM_WORLD);
         MPI_Bcast (&m_Tinitial, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
         MPI_Bcast (&m_Tfinal, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
@@ -75,8 +76,8 @@ int **System::initialize() {
         for(int j = 0; j < m_L; j++) {
             int r = (int) (RandomNumberGenerator(gen)*2);
             //                (condition) ? (if_true) : (if_false)
-            m_spinMatrix[i][j] = (r == 0) ? -1 : r; // Random numbers
-            //m_spinMatrix[i][j] = 1;                 // Ground state
+            m_spinMatrix[i][j] = (r == 0) ? -1 : r;  // Random numbers
+            //m_spinMatrix[i][j] = 1;                  // Ground state
         }
     }
     return m_spinMatrix;
@@ -139,8 +140,8 @@ double *System::energyDifferences(double temperature) {
 
 
 double *System::meanValues() {
-    double *m_meanValues = new double[5];            // Initialize mean values vector by static memory allocation
-    for (int i = 0; i < 5; i++) m_meanValues[i] = 0.0; // Setting all mean values to zero
+    double *m_meanValues = new double[5];               // Initialize mean values vector by static memory allocation
+    for (int i = 0; i < 5; i++) m_meanValues[i] = 0.0;  // Setting all mean values to zero
     return m_meanValues;
 }
 
@@ -219,20 +220,23 @@ void System::Metropolis() {
     std::uniform_real_distribution<double> RandomNumberGenerator(0.0, 1.0);
 
     // Loop over all spins
-    for (int i = 0; i < m_N; i++) {
-        // Find random position
-        int x = (int) (RandomNumberGenerator(gen)*m_L);
-        int y = (int) (RandomNumberGenerator(gen)*m_L);
+    // for (int i = 0; i < m_N; i++)
+    for (int k = 0; k < m_L; k++) {
+        for (int l = 0; l < m_L; l++) {
+            // Find random position
+            int x = (int) (RandomNumberGenerator(gen)*m_L);
+            int y = (int) (RandomNumberGenerator(gen)*m_L);
 
-        // Compute DeltaE
-        int DeltaE = computeDeltaE(x, y);
+            // Compute DeltaE
+            int DeltaE = computeDeltaE(x, y);
 
-        // Metropolis test
-        if (RandomNumberGenerator(gen) <= m_w[DeltaE+8]) {
-            m_spinMatrix[x][y] *= -1;                // Flip one spin
-            m_E += (double) DeltaE;                  // Update energy
-            m_M += (double) 2.0*m_spinMatrix[x][y];  // Update magnetization
-            m_acceptedConfigurations += 1;           // Accept new spin configuration
+            // Metropolis test
+            if (RandomNumberGenerator(gen) <= m_w[DeltaE+8]) {
+                m_spinMatrix[x][y] *= -1;                // Flip one spin
+                m_E += (double) DeltaE;                  // Update energy
+                m_M += (double) 2.0*m_spinMatrix[x][y];  // Update magnetization
+                m_acceptedConfigurations += 1;           // Accept new spin configuration
+            }
         }
     }
 }

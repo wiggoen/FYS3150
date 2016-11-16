@@ -4,12 +4,12 @@ import time
 # System setup
 outfilename_average = "L20_avg_random.txt"
 outfilename_mcc = "L20_mcc_random.txt"
-L = 20
+L = 2
 Tinitial = 1.0
-Tfinal = 2.4
-Tstep = 1.4
-mcc = int(1e6)
-write_mcc = 1
+Tfinal = 1.0
+Tstep = 1.0
+mcc = int(1e7)
+write_mcc = 0
 write_average = 1
 printStatus = 1
 steadyState = 1
