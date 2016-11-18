@@ -31,18 +31,18 @@ int main(int numArguments, char **arguments)
 
 
     // If command line arguments are defined
-    if (numArguments >= 1) outfilename_average = string(arguments[1]);
-    if (numArguments >= 2) outfilename_mcc = string(arguments[2]);
-    if (numArguments >= 3) L = atoi(arguments[3]);
-    if (numArguments >= 4) Tinitial = atof(arguments[4]);
-    if (numArguments >= 5) Tfinal = atof(arguments[5]);
-    if (numArguments >= 6) Tstep = atof(arguments[6]);
-    if (numArguments >= 7) mcc = atoi(arguments[7]);
-    if (numArguments >= 8) write_mcc = atoi(arguments[8]);
-    if (numArguments >= 9) write_average = atoi(arguments[9]);
-    if (numArguments >= 10) printStatus = atoi(arguments[10]);
-    if (numArguments >= 11) steadyState = atoi(arguments[11]);
-    if (numArguments >= 12) useMPI = atoi(arguments[12]);
+    if (numArguments >= 2) outfilename_average = string(arguments[1]);
+    if (numArguments >= 3) outfilename_mcc = string(arguments[2]);
+    if (numArguments >= 4) L = atoi(arguments[3]);
+    if (numArguments >= 5) Tinitial = atof(arguments[4]);
+    if (numArguments >= 6) Tfinal = atof(arguments[5]);
+    if (numArguments >= 7) Tstep = atof(arguments[6]);
+    if (numArguments >= 8) mcc = atoi(arguments[7]);
+    if (numArguments >= 9) write_mcc = atoi(arguments[8]);
+    if (numArguments >= 10) write_average = atoi(arguments[9]);
+    if (numArguments >= 11) printStatus = atoi(arguments[10]);
+    if (numArguments >= 12) steadyState = atoi(arguments[11]);
+    if (numArguments >= 13) useMPI = atoi(arguments[12]);
 
     clock_t start, finish;
     start = clock();        // Start clock
