@@ -10,13 +10,14 @@ billOfAbundance = "noEqualityForFatCats.txt"
 
 # Load output file
 m = loadtxt("outputs/"+billOfAbundance)
-Delta_m = 50 # Number of bins
+Delta_m = 500 # Number of bins
 
 # Histogram
 fig1 = figure(1)
 #hist(source, bins=Delta_m, normed=1, facecolor='blue', alpha=0.75, label="m")
-hist(m, bins=Delta_m, facecolor='blue', label="m")
+#hist(m, bins=Delta_m, facecolor='blue', label="m")
 #xticks(rotation='vertical')
+hist(m, bins=500, facecolor='blue', label="m")
 grid(True)
 art = []
 lgd = legend(loc="upper left", bbox_to_anchor=(1, 1))
@@ -25,21 +26,21 @@ ylabel(r"Probability, $P(m)$", fontsize = 16)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True)
 
-savefig("plots/Histogram.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/Histogram_onerun.png", additional_artists=art, bbox_inches="tight")
 show()
 
 
 # Plot of log(m)
 fig2 = figure(2)
-t = arange(len(m))
-semilogy(t, m)
+agents = arange(len(m))
+semilogy(agents, m)
 #grid(True)
 art = []
-lgd = legend(r"$\log(m)$", loc="upper left", bbox_to_anchor=(1, 1))
-xlabel(r"$Agents$", fontsize = 16)
+lgd = legend([r"$\log(m)$"], loc="upper left", bbox_to_anchor=(1, 1))
+xlabel("Agents", fontsize = 16)
 ylabel(r"$\log(m)$", fontsize = 16)  
 tick_params(labelsize=14)
-fig1.set_tight_layout(True)
+fig2.set_tight_layout(True)
 
-savefig("plots/logOfm.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/logOfm_onerun.png", additional_artists=art, bbox_inches="tight")
 show()

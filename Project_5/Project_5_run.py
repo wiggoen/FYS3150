@@ -3,7 +3,7 @@ import time
 
 # System setup
 billOfAbundance = "noEqualityForFatCats.txt"
-N = 500
+N = 50
 m0 = 1e5
 transactions = 1e7
 runs = 10
@@ -12,6 +12,8 @@ lambda_ = 0.25
 
 # Compile C++ code first (all cpp-files)
 system("g++ *.cpp -o main.x -O3 -std=c++11")
+
+print "Starting to run the program."
 
 # Command line argument
 systemStr = "./main.x %s %d %f %d %d %f %f" % (billOfAbundance, N, m0, transactions, runs, alpha, lambda_)
