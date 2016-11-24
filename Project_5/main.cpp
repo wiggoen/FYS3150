@@ -133,6 +133,6 @@ void showMeTheMoney(vector<double> &money, int N) {
 }
 
 void printTheMoney(vector<double> &m, int N, int runs) {
-    normalize = 1.0/runs; // Normalize the money when writing to file
+    double normalize = 1.0/runs; // Normalize the money when writing to file
     for (int i = 0; i < N; i++) ofile << setw(15) << setprecision(8) << m.at(i) * normalize;
 }
