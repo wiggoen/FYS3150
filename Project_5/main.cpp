@@ -15,14 +15,15 @@ ofstream ofile;
 #define double long double
 
 // Declaration of functions
-void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int transactions, int &exchangeCounter);
-void moneyExchange(vector<double> &agents, int &i, int &j, double &epsilon, int &exchangeCounter);
+void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int transactions, double &lambda, int &exchangeCounter);
+void moneyExchange(vector<double> &agents, int &i, int &j, double &epsilon, double &lambda, int &exchangeCounter);
 void giveMeTheMoney(vector<double> &m, int N);
 void shareTheMoney(vector<double> &agents, int N, double m0);
 void stackTheMoney(vector<double> &agents, vector<double> &m, int N);
 void showMeTheMoney(vector<double> &money, int N);
 void printTheMoney(vector<double> &m, int N, int runs);
 bool compareTheMoney(double i, double j);
+
 
 int main(int numArguments, char **arguments)
 {
@@ -46,21 +47,14 @@ int main(int numArguments, char **arguments)
 
 
     // Initialize counter, money vector, open file for writing and start timer
-    int exchangeCounter = 0;        // Counts the number of exchanges
-
+    int exchangeCounter = 0;                    // Counts the number of exchanges
     vector<double> m;    giveMeTheMoney(m, N);  // Initialize money vector
+    ofile.open(billOfAbundance);                // Open file for writing
 
-    ofile.open(billOfAbundance);    // Open file for writing
+    MonteCarloSimulation(m, N, m0, runs, transactions, lambda, exchangeCounter);
 
-    //showMeTheMoney(m, N);
-
-    MonteCarloSimulation(m, N, m0, runs, transactions, exchangeCounter);
-
-    //showMeTheMoney(m, N);
-    //cout << "Money has been exchanged " << exchangeCounter << " times." << endl;
-
-    printTheMoney(m, N, runs);      // Writes m to file
-    ofile.close();                  // Close file
+    printTheMoney(m, N, runs);                  // Writes m to file
+    ofile.close();                              // Close file
 
     cout << endl; cout << "The program is finished running." << endl; cout << endl;
     return 0;
@@ -80,7 +74,7 @@ bool compareTheMoney(double i, double j) {
     return (int(i) > int(j));
 }
 
-void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int transactions, int &exchangeCounter) {
+void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int transactions, double &lambda, int &exchangeCounter) {
     random_device rd;                                                    // Initialize the seed
     mt19937_64 gen(rd());                                                // Call the Mersenne twister random number engine
     uniform_real_distribution<double> RandomNumberGenerator(0.0, 1.0);   // Set up the uniform distribution for x in [0, 1]
@@ -90,21 +84,22 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
             double epsilon = RandomNumberGenerator(gen);                 // Random number
             int i = RandomNumberGenerator(gen)*N;                        // Find a random pair of agents (i, j) to exchange money
             int j = RandomNumberGenerator(gen)*N;
-            if (i != j) moneyExchange(agents, i, j, epsilon, exchangeCounter);  // If i different from j; exchange money
+            if (i != j) moneyExchange(agents, i, j, epsilon, lambda, exchangeCounter);  // If i different from j; exchange money
         }
-        //showMeTheMoney(agents, N); cout << endl;
-
         stackTheMoney(agents, m, N); // Sort and stack the money in vector m
-
-        //cout << endl; showMeTheMoney(agents, N); cout << endl;
     }
 }
 
-void moneyExchange(vector<double> &agents, int &i, int &j, double &epsilon, int &exchangeCounter) {
-    double agents_i = agents.at(i);
-    //double agents_j = agents.at(j); // No need
-    agents.at(i) = epsilon*(agents.at(i) + agents.at(j));
-    agents.at(j) = (1 - epsilon)*(agents_i + agents.at(j));
+void moneyExchange(vector<double> &agents, int &i, int &j, double &epsilon, double &lambda, int &exchangeCounter) {
+    //double agents_i = agents.at(i);
+    ////double agents_j = agents.at(j); // No need
+    //agents.at(i) = epsilon*(agents.at(i) + agents.at(j));
+    //agents.at(j) = (1 - epsilon)*(agents_i + agents.at(j));
+
+    double dm = (1 - lambda)*(epsilon*agents.at(j) - (1 - epsilon)*agents.at(i));
+    agents.at(i) = agents.at(i) + dm;
+    agents.at(j) = agents.at(j) - dm;
+
 /*
     if ( (agents[i] + agents[j]) != (agents_i + agents_j) ) {
         //cout << agents[i] + agents[j] << endl;

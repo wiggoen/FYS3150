@@ -5,7 +5,11 @@ billOfAbundance = "noEqualityForFatCats.txt"
 m0 = 1e5
 runs = 1e4
 beta = 1.0/m0
+
 norm = 1.0/runs # remove norm when output is normalized
+
+agents = 500
+numbins = 2*runs/agents
 
 # Load output file
 m = loadtxt("outputs/"+billOfAbundance) * norm # remove norm when output is normalized
@@ -14,7 +18,7 @@ omega_m = beta * exp(-beta*m)
 
 # Histogram with Gibbs distribution
 fig1 = figure(1)
-hist(m, bins=50, normed=True, facecolor='blue', label=r"$P(m)$")
+hist(m, bins=numbins, normed=True, facecolor='blue', label=r"$P(m)$")
 grid(True)
 hold("on")
 plot(m, omega_m, "-r", label=r"$\omega_m$")
