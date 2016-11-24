@@ -21,13 +21,13 @@ void giveMeTheMoney(vector<double> &m, int N);
 void shareTheMoney(vector<double> &agents, int N, double m0);
 void stackTheMoney(vector<double> &agents, vector<double> &m, int N);
 void showMeTheMoney(vector<double> &money, int N);
-void printTheMoney(vector<double> &m, int N);
+void printTheMoney(vector<double> &m, int N, int runs);
 bool compareTheMoney(double i, double j);
 
 int main(int numArguments, char **arguments)
 {
     // Default if there is no command line arguments
-    string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats.txt";  // Output file
+    string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats_onerun.txt";  // Output file
     int N = 500;             // Number of agents
     double m0 = 1e5;         // Amount of money at start
     int transactions = 1e7;  // Number of transactions
@@ -59,7 +59,7 @@ int main(int numArguments, char **arguments)
     //showMeTheMoney(m, N);
     //cout << "Money has been exchanged " << exchangeCounter << " times." << endl;
 
-    printTheMoney(m, N);            // Writes m to file
+    printTheMoney(m, N, runs);      // Writes m to file
     ofile.close();                  // Close file
 
     cout << endl; cout << "The program is finished running." << endl; cout << endl;
@@ -132,6 +132,7 @@ void showMeTheMoney(vector<double> &money, int N) {
     for(int i = 0; i < N; i++) cout << money.at(i) << endl;
 }
 
-void printTheMoney(vector<double> &m, int N) {
-    for (int i = 0; i < N; i++) ofile << setw(15) << setprecision(8) << m.at(i);
+void printTheMoney(vector<double> &m, int N, int runs) {
+    normalize = 1.0/runs; // Normalize the money when writing to file
+    for (int i = 0; i < N; i++) ofile << setw(15) << setprecision(8) << m.at(i) * normalize;
 }

@@ -1,46 +1,41 @@
 from pylab import *
-"""
-x = linspace(0,500,501)
-y = exp(-0.0123 * x)
-semilogy(x,y)
-show()
-"""
 
 billOfAbundance = "noEqualityForFatCats.txt"
 
-# Load output file
-m = loadtxt("outputs/"+billOfAbundance)
-Delta_m = 500 # Number of bins
+m0 = 1e5
+runs = 1e4
+beta = 1.0/m0
+norm = 1.0/runs # remove norm when output is normalized
 
-# Histogram
+# Load output file
+m = loadtxt("outputs/"+billOfAbundance) * norm # remove norm when output is normalized
+omega_m = beta * exp(-beta*m)
+
+
+# Histogram with Gibbs distribution
 fig1 = figure(1)
-#hist(source, bins=Delta_m, normed=1, facecolor='blue', alpha=0.75, label="m")
-#hist(m, bins=Delta_m, facecolor='blue', label="m")
-#xticks(rotation='vertical')
-hist(m, bins=500, facecolor='blue', label="m")
+hist(m, bins=50, normed=True, facecolor='blue', label=r"$P(m)$")
 grid(True)
+hold("on")
+plot(m, omega_m, "-r", label=r"$\omega_m$")
 art = []
 lgd = legend(loc="upper left", bbox_to_anchor=(1, 1))
-xlabel("m", fontsize = 16)
+xlabel(r"Money, $m$", fontsize = 16)
 ylabel(r"Probability, $P(m)$", fontsize = 16)  
 tick_params(labelsize=14)
 fig1.set_tight_layout(True)
-
-savefig("plots/Histogram_onerun.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/histogram.png", additional_artists=art, bbox_inches="tight")
 show()
 
 
-# Plot of log(m)
+# log(omega_m)
 fig2 = figure(2)
-agents = arange(len(m))
-semilogy(agents, m)
-#grid(True)
+semilogy(m, omega_m)
 art = []
 lgd = legend([r"$\log(m)$"], loc="upper left", bbox_to_anchor=(1, 1))
-xlabel("Agents", fontsize = 16)
+xlabel(r"Money, $m$", fontsize = 16)
 ylabel(r"$\log(m)$", fontsize = 16)  
 tick_params(labelsize=14)
 fig2.set_tight_layout(True)
-
-savefig("plots/logOfm_onerun.png", additional_artists=art, bbox_inches="tight")
+savefig("plots/logOfomega_m.png", additional_artists=art, bbox_inches="tight")
 show()
