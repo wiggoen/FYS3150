@@ -30,11 +30,11 @@ int main(int numArguments, char **arguments)
     // Default if there is no command line arguments
     string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats_onerun.txt";  // Output file
     int N = 500;             // Number of agents
-    double m0 = 1e5;         // Amount of money at start
+    double m0 = 1.0;         // Amount of money at start
     int transactions = 1e7;  // Number of transactions
-    int runs = 1;//1e3;          // Monte Carlo cycles ([1e3, 1e4] runs)
+    int runs = 1e2;//1e3;          // Monte Carlo cycles ([1e3, 1e4] runs)
     double alpha = 1;        // [1, 2]
-    double lambda = 0.25;    // {0.25, 0.5, 0.9}
+    double lambda = 0.0;    // {0.25, 0.5, 0.9}
 
     // If command line arguments are defined
     if (numArguments >= 2) billOfAbundance = "../Project_5/outputs/"+string(arguments[1]);
@@ -96,7 +96,7 @@ void moneyExchange(vector<double> &agents, int &i, int &j, double &epsilon, doub
     //agents.at(i) = epsilon*(agents.at(i) + agents.at(j));
     //agents.at(j) = (1 - epsilon)*(agents_i + agents.at(j));
 
-    double dm = (1 - lambda)*(epsilon*agents.at(j) - (1 - epsilon)*agents.at(i));
+    double dm = (1.0 - lambda)*(epsilon*agents.at(j) - (1.0 - epsilon)*agents.at(i));
     agents.at(i) = agents.at(i) + dm;
     agents.at(j) = agents.at(j) - dm;
 
