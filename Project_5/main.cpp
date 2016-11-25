@@ -28,16 +28,18 @@ bool compareTheMoney(double i, double j);
 int main(int numArguments, char **arguments)
 {
     // Default if there is no command line arguments
-    string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats_onerun.txt";  // Output file
+    //string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats_onerun.txt";  // Output file
+    string billOfAbundance = "noEqualityForFatCats_mini_c_L0.txt";  // Output file
     int N = 500;             // Number of agents
     double m0 = 1.0;         // Amount of money at start
-    int transactions = 1e7;  // Number of transactions
+    int transactions = 1e6;//1e7;  // Number of transactions
     int runs = 1e2;//1e3;          // Monte Carlo cycles ([1e3, 1e4] runs)
     double alpha = 1;        // [1, 2]
-    double lambda = 0.0;    // {0.25, 0.5, 0.9}
+    double lambda = 0.0;    // {0.0, 0.25, 0.5, 0.9}
 
     // If command line arguments are defined
-    if (numArguments >= 2) billOfAbundance = "../Project_5/outputs/"+string(arguments[1]);
+    //if (numArguments >= 2) billOfAbundance = "../Project_5/outputs/"+string(arguments[1]);
+    if (numArguments >= 2) billOfAbundance = string(arguments[1]);
     if (numArguments >= 3) N = atoi(arguments[2]);
     if (numArguments >= 4) m0 = atof(arguments[3]);
     if (numArguments >= 5) transactions = atoi(arguments[4]);

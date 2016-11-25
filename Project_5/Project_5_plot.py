@@ -1,32 +1,32 @@
 from pylab import *
+from scipy import *
 
-billOfAbundance = "noEqualityForFatCats_onerun.txt"
+billOfAbundance = "noEqualityForFatCats_c_L0.txt"
 
-runs = 1e2
 agents = 500
 m0 = 1.0
-print m0
 beta = 1.0/m0
-print beta 
 numbins = agents/10
 
 # Load output file
 m = loadtxt("outputs/"+billOfAbundance)
-
+#print max(m)
 omega_m = beta * exp(-beta * m)
-print sum(m)#/agents
+#delta_m = 0.01
+print sum(m)#/agents #= m0
+
 
 # Histogram with Gibbs distribution
 fig1 = figure(1)
-hist(m, bins=numbins, normed=True, facecolor='blue', label=r"$\omega_m$")
+hist(m, bins=numbins, normed=True, label=r"$P(m)$")#, weights=omega_m*delta_m)
 grid(True)
 hold("on")
 plot(m, omega_m, "-r", label=r"$\omega_m$")
 art = []
 lgd = legend(loc="upper left", bbox_to_anchor=(1, 1))
 xlabel(r"Money, $m$", fontsize = 16)
-ylabel("Number of agents", fontsize = 16)  
-#ylabel(r"Probability, $P(m)$", fontsize = 16)  
+#ylabel("Number of agents", fontsize = 16)  # When not normed
+ylabel(r"Probability density, $P(m)$", fontsize = 16)  # When normed
 tick_params(labelsize=14)
 fig1.set_tight_layout(True)
 savefig("plots/histogram.png", additional_artists=art, bbox_inches="tight")
