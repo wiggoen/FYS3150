@@ -15,7 +15,7 @@ ofstream ofile;
 #define double long double
 
 // Declaration of functions
-void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int transactions, double &lambda, int &exchangeCounter);
+void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int transactions, double &lambda, double &alpha, double &gamma, int &exchangeCounter);
 void moneyExchange(vector<double> &agents, int &i, int &j, double &epsilon, double &lambda, int &exchangeCounter);
 void giveMeTheMoney(vector<double> &m, int N);
 void shareTheMoney(vector<double> &agents, int N, double m0);
@@ -29,13 +29,14 @@ int main(int numArguments, char **arguments)
 {
     // Default if there is no command line arguments
     //string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats_onerun.txt";  // Output file
-    string billOfAbundance = "noEqualityForFatCats_mini_c_L0.txt";  // Output file
+    string billOfAbundance = "noEqualityForFatCats_mini_c_L05_a15.txt";  // Output file
     int N = 500;             // Number of agents
     double m0 = 1.0;         // Amount of money at start
     int transactions = 1e6;//1e7;  // Number of transactions
     int runs = 1e2;//1e3;          // Monte Carlo cycles ([1e3, 1e4] runs)
-    double alpha = 1;        // [1, 2]
-    double lambda = 0.0;    // {0.0, 0.25, 0.5, 0.9}
+    double alpha = 1.5;        // [0.0, 0.5, 1.0, 1.5, 2.0]
+    double lambda = 0.5;    // {0.0, 0.25, 0.5, 0.9}
+    double gamma = 0.0;     // {0.0, 1.0, 2.0, 3.0, 4.0}
 
     // If command line arguments are defined
     //if (numArguments >= 2) billOfAbundance = "../Project_5/outputs/"+string(arguments[1]);
@@ -46,6 +47,7 @@ int main(int numArguments, char **arguments)
     if (numArguments >= 6) runs = atoi(arguments[5]);
     if (numArguments >= 7) alpha = atof(arguments[6]);
     if (numArguments >= 8) lambda = atof(arguments[7]);
+    if (numArguments >= 9) gamma = atof(arguments[8]);
 
 
     // Initialize counter, money vector, open file for writing and start timer
@@ -53,7 +55,7 @@ int main(int numArguments, char **arguments)
     vector<double> m;    giveMeTheMoney(m, N);  // Initialize money vector
     ofile.open(billOfAbundance);                // Open file for writing
 
-    MonteCarloSimulation(m, N, m0, runs, transactions, lambda, exchangeCounter);
+    MonteCarloSimulation(m, N, m0, runs, transactions, lambda, alpha, gamma, exchangeCounter);
 
     printTheMoney(m, N, runs);                  // Writes m to file
     ofile.close();                              // Close file
@@ -76,7 +78,7 @@ bool compareTheMoney(double i, double j) {
     return (int(i) > int(j));
 }
 
-void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int transactions, double &lambda, int &exchangeCounter) {
+void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int transactions, double &lambda, double &alpha, double &gamma, int &exchangeCounter) {
     random_device rd;                                                    // Initialize the seed
     mt19937_64 gen(rd());                                                // Call the Mersenne twister random number engine
     uniform_real_distribution<double> RandomNumberGenerator(0.0, 1.0);   // Set up the uniform distribution for x in [0, 1]
@@ -86,7 +88,9 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
             double epsilon = RandomNumberGenerator(gen);                 // Random number
             int i = RandomNumberGenerator(gen)*N;                        // Find a random pair of agents (i, j) to exchange money
             int j = RandomNumberGenerator(gen)*N;
-            if (i != j) moneyExchange(agents, i, j, epsilon, lambda, exchangeCounter);  // If i different from j; exchange money
+            double r = RandomNumberGenerator(gen);
+            double p = pow(fabs(agents.at(i)-agents.at(j)), -alpha);
+            if (i != j && r < p) moneyExchange(agents, i, j, epsilon, lambda, exchangeCounter);  // If i different from j; exchange money
         }
         stackTheMoney(agents, m, N); // Sort and stack the money in vector m
     }

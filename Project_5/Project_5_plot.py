@@ -1,5 +1,4 @@
 from pylab import *
-from scipy import *
 
 billOfAbundance = "noEqualityForFatCats_c_L0.txt"
 
@@ -7,53 +6,46 @@ agents = 500
 m0 = 1.0
 beta = 1.0/m0
 numbins = agents/10
+normalized = 1          # 0: not normalized, 1: normalized 
 
 # Load output file
 m = loadtxt("outputs/"+billOfAbundance)
 #print max(m)
 omega_m = beta * exp(-beta * m)
 #delta_m = 0.01
-print sum(m)#/agents #= m0
+#print sum(m)#/agents #= m0
 
 
 # Histogram with Gibbs distribution
 fig1 = figure(1)
-hist(m, bins=numbins, normed=True, label=r"$P(m)$")#, weights=omega_m*delta_m)
 grid(True)
-hold("on")
-plot(m, omega_m, "-r", label=r"$\omega_m$")
-art = []
-lgd = legend(loc="upper left", bbox_to_anchor=(1, 1))
+if normalized == 0:
+    hist(m, bins=numbins, normed=False) # Not normed
+    ylabel("Number of agents", fontsize = 16)  # When not normed
+if normalized == 1:
+    hist(m, bins=numbins, normed=True, label=r"$P(m)$") # Normed
+    hold("on")
+    plot(m, omega_m, "-r", label=r"$\omega_m$")
+    legend(loc=0)
+    ylabel(r"Probability density, $P(m)$", fontsize = 16)  # When normed
 xlabel(r"Money, $m$", fontsize = 16)
-#ylabel("Number of agents", fontsize = 16)  # When not normed
-ylabel(r"Probability density, $P(m)$", fontsize = 16)  # When normed
 tick_params(labelsize=14)
 fig1.set_tight_layout(True)
-savefig("plots/histogram.png", additional_artists=art, bbox_inches="tight")
+if normalized == 0:
+    savefig("plots/histogram_not_normed.png") # When not normed
+if normalized == 1:
+    savefig("plots/histogram_normed.png") # When normed
 show()
 
+if normalized == 1:
+    # log(omega_m)
+    fig2 = figure(2)
+    semilogy(m, omega_m)
+    legend([r"$\log(m)$"], loc=0)
+    xlabel(r"Money, $m$", fontsize = 16)
+    ylabel(r"$\log(m)$", fontsize = 16)  
+    tick_params(labelsize=14)
+    fig2.set_tight_layout(True)
+    savefig("plots/logOfomega_m.png")
+    show()
 
-# log(omega_m)
-fig2 = figure(2)
-semilogy(m, omega_m)
-art = []
-lgd = legend([r"$\log(m)$"], loc="upper left", bbox_to_anchor=(1, 1))
-xlabel(r"Money, $m$", fontsize = 16)
-ylabel(r"$\log(m)$", fontsize = 16)  
-tick_params(labelsize=14)
-fig2.set_tight_layout(True)
-savefig("plots/logOfomega_m.png", additional_artists=art, bbox_inches="tight")
-show()
-
-
-# omega_m
-fig3 = figure(3)
-plot(m, omega_m, "-b")#, m, m**(-2), "-r")
-art = []
-lgd = legend([r"$\lambda = 0$"], loc="upper left", bbox_to_anchor=(1, 1))
-xlabel(r"Money, $m$", fontsize = 16)
-ylabel(r"$\omega_m$", fontsize = 16)  
-tick_params(labelsize=14)
-fig3.set_tight_layout(True)
-savefig("plots/omega_m.png", additional_artists=art, bbox_inches="tight")
-show()
