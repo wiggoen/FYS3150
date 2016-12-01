@@ -4,8 +4,8 @@ import time
 # System setup
 N = [500, 1000]
 m0 = 1.0
-transactions = 1e5
-runs = 1e2
+transactions = 1e7
+runs = 1e4
 Alpha = [0.5, 1.0, 1.5, 2.0]
 A = ["a0d5", "a1", "a1d5", "a2"]
 Lambda = [0.25, 0.5, 0.9]
@@ -20,7 +20,7 @@ for k in range(len(N)):
     for j in range(len(Alpha)):
         for i in range(len(Lambda)):
             print "---"
-            print "Starting to run the program for N = %g, L = %1.2f and a = %1.2f." %(N[k], Lambda[i], Alpha[j])
+            print "Starting to run the program for N = %g, L = %1.2f and A = %1.2f." %(N[k], Lambda[i], Alpha[j])
             billOfAbundance = "noEqualityForFatCats_N"+str(N[k])+"_"+L[i]+"_"+A[j]+".txt"
             # Command line argument
             systemStr = "./main.x %s %d %f %d %d %f %f" % (billOfAbundance, N[k], m0, transactions, runs, Alpha[j], Lambda[i])
