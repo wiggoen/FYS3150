@@ -16,10 +16,10 @@ G = ["g0", "g1", "g2", "g3", "g4"]
 # Compile C++ code first (all cpp-files)
 system("g++ *.cpp -o main.x -O3 -std=c++11")
 
-for m in range(len(Gamma)):
-    for k in range(len(N)):
-        for j in range(len(Alpha)):
-            for i in range(len(Lambda)):
+for k in range(len(N)):
+    for j in range(len(Alpha)):
+        for i in range(len(Lambda)):
+            for m in range(len(Gamma)):
                 print "---"
                 print "Starting to run the program for N = %g, L = %g, A = %g and G = %g." %(N[k], Lambda[i], Alpha[j], Gamma[m])
                 billOfAbundance = "noEqualityForFatCats_N"+str(N[k])+"_"+L[i]+"_"+A[j]+"_"+G[m]+".txt"
