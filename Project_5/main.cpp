@@ -21,7 +21,6 @@ void shareTheMoney(vector<double> &agents, int N, double m0);
 void stackTheMoney(vector<double> &agents, vector<double> &m, int N);
 void showMeTheMoney(vector<double> &money, int N);
 void printTheMoney(vector<double> &m, int N, int runs);
-bool compareTheMoney(double i, double j);
 
 
 int main(int numArguments, char **arguments)
