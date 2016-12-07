@@ -10,11 +10,7 @@ normalized = 1          # 0: not normalized, 1: normalized
 
 # Load output file
 m = loadtxt("outputs/"+billOfAbundance)
-#print max(m)
 omega_m = beta * exp(-beta * m)
-#delta_m = 0.01
-#print sum(m)#/agents #= m0
-
 
 # Histogram with Gibbs distribution
 fig1 = figure(1)
@@ -37,8 +33,8 @@ if normalized == 1:
     savefig("plots/histogram_normed.png") # When normed
 show()
 
+# Plot of log(omega_m)
 if normalized == 1:
-    # log(omega_m)
     fig2 = figure(2)
     semilogy(m, omega_m)
     legend([r"$\log(m)$"], loc=0)
@@ -48,4 +44,3 @@ if normalized == 1:
     fig2.set_tight_layout(True)
     savefig("plots/logOfomega_m.png")
     show()
-
