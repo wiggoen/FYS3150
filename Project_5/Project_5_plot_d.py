@@ -1,42 +1,62 @@
 from pylab import *
 from scipy.special import *
+import matplotlib.pyplot as plt
 
 N = [500, 1000]
 Lambda = [0, 0.25]
 L = ["L0", "L025"]
 Alpha = [0.5, 1.0, 1.5, 2.0]
 A = ["a05", "a1", "a15", "a2"]
-m0 = 1.0
-beta = 1.0/m0
+#m0 = 1.0
+#beta = 1.0/m0
 
 def dist():
-    fig = figure()
+    #fig = figure()
     for k in range(len(N)):
+        fig = figure(k+1)
         for i in range(len(Lambda)):
-            for j in range(len(Alpha)): 
+            num = 121+i
+            subplot(num)
+            for j in range(len(Alpha)):
                 m = loadtxt("outputs/noEqualityForFatCats_N"+str(N[k])+"_"+L[i]+"_"+A[j]+".txt")
-                if L[i] == 0:
-                    P = beta * exp(-beta * m) # omega_m
-                else:
-                    n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
-                    a = n**n / gamma(n)
-                    x = m/m0
-                    #x = m/m0/n
-                    P = a*x**(n-1)*exp(-n*x)
-                    #P = x**(n-1)*exp(-x)/gamma(n)
-                loglog(m, P)
+                M = sum(m)
+                #print "M = ", M
+                T = M/N[k]
+                #print "T = ", T
+                #P = (1.0/T) * exp(-m/T) # same as omega_m
+                #else:
+                #    n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
+                #    a = n**n / gamma(n)
+                #    x = m/m0
+                #    P = a*x**(n-1)*exp(-n*x)
+                #loglog(m, P, label=r"$N = %g, \lambda = %g, \alpha = %g$" %(N[k], Lambda[i], Alpha[j]))
+                x = arange(len(m))
+                #hist(m, bins = 10 ** np.linspace(np.log10(min(m)), np.log10(max(m)), 20), log=True)
+                #gca().set_xscale("log")
+                
+                vals = plt.hist(m, bins=logspace(log10(min(m)), log10(max(m)), 30))
+                bins = vals[1][:-1]
+                vals = vals[0]
+                plt.figure(10)
+                plt.loglog(bins, vals)
+                
+                #loglog(m, x, label=r"$N = %g, \lambda = %g, \alpha = %g$" %(N[k], Lambda[i], Alpha[j]))
                 #semilogx(m, P)
                 #semilogy(m, P)
                 #plot(m, P)
                 #legend([r"$\lambda = 0$", r"$\lambda = 0.25$", r"$\lambda = 0.5$", r"$\lambda = 0.9$"], loc=3)
-                
-                legend([r"$N = %g, \lambda = %g, \alpha = %g$" %(N[k], Lambda[i], Alpha[j])])#, loc=3)    
                 hold("on")
-    xlabel(r"Money, $m$", fontsize = 16)
-    ylabel(r"$P(m)$", fontsize = 16) 
-    tick_params(labelsize=14)
-    fig.set_tight_layout(True)
-    #savefig("plots/logplot_orwhat.png")
+                
+            legend(loc=0)
+            title(r"$N = %g, \lambda = %g$" %(N[k], Lambda[i])) 
+            xlabel(r"$m$", fontsize = 16)
+            ylabel(r"$P_{GB}(m)$", fontsize = 16) 
+            tick_params(labelsize=14)
+            fig.set_tight_layout(True)
+            savefig("plots/test_"+str(k+1)+".png")
+                
+    #legend([r"$N = %g, \lambda = %g, \alpha = %g$" %(N[k], Lambda[i], Alpha[j])])#, loc=3)    
+    
     show()
     return "Done."
 

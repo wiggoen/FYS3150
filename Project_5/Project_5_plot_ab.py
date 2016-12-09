@@ -16,15 +16,16 @@ omega_m = beta * exp(-beta * m)
 fig1 = figure(1)
 grid(True)
 if normalized == 0:
-    hist(m, bins=numbins, normed=False) # Not normed
-    ylabel("Number of agents", fontsize = 16)  # When not normed
+    hist(m, bins=numbins, normed=False, label="Agents") # Not normed
+    legend(loc=0)
+    ylabel("Agents", fontsize = 16)  # When not normed
 if normalized == 1:
     hist(m, bins=numbins, normed=True, label=r"$P(m)$") # Normed
     hold("on")
     plot(m, omega_m, "-r", label=r"$\omega_m$")
     legend(loc=0)
-    ylabel(r"Probability density, $P(m)$", fontsize = 16)  # When normed
-xlabel(r"Money, $m$", fontsize = 16)
+    ylabel(r"Probability distribution, $P(m)$", fontsize = 16)  # When normed
+xlabel(r"$m$", fontsize = 16)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True)
 if normalized == 0:
@@ -37,9 +38,9 @@ show()
 if normalized == 1:
     fig2 = figure(2)
     semilogy(m, omega_m)
-    legend([r"$\log(m)$"], loc=0)
-    xlabel(r"Money, $m$", fontsize = 16)
-    ylabel(r"$\log(m)$", fontsize = 16)  
+    legend([r"$\log(\omega_m)$"], loc=0)
+    xlabel(r"$m$", fontsize = 16)
+    ylabel(r"$\log(\omega_m)$", fontsize = 16)  
     tick_params(labelsize=14)
     fig2.set_tight_layout(True)
     savefig("plots/logOfomega_m.png")

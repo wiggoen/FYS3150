@@ -8,6 +8,7 @@
 
 using namespace std;
 ofstream ofile;
+ofstream ofile2;
 
 // By using long double we get less transaction error, but the program runs slower
 #define double long double
@@ -27,14 +28,14 @@ int main(int numArguments, char **arguments)
 {
     // Default if there is no command line arguments
     //string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats_onerun.txt";  // Output file
-    string billOfAbundance = "noEqualityForFatCats_run.txt";  // Output file
-    int N = 500;             // Number of agents
+    string billOfAbundance = "noEqualityForFatCats_run_ab.txt";  // Output file
+    int N = 1000;//500;             // Number of agents
     double m0 = 1.0;         // Amount of money at start
-    int transactions = 1e7;  // Number of transactions
-    int runs = 1e4;          // Monte Carlo cycles ([1e3, 1e4] runs)
-    double alpha = 0.0;      // {0.0, 0.5, 1.0, 1.5, 2.0}
+    int transactions = 1e5;//1e5;//1e7;  // Number of transactions
+    int runs = 1e3;//1e4;          // Monte Carlo cycles ([1e3, 1e4] runs)
+    double alpha = 2.0;      // {0.0, 0.5, 1.0, 1.5, 2.0}
     double lambda = 0.0;     // {0.0, 0.25, 0.5, 0.9}
-    double gamma = 0.0;      // {0.0, 1.0, 2.0, 3.0, 4.0}
+    double gamma = 1.0;      // {0.0, 1.0, 2.0, 3.0, 4.0}
 
     // If command line arguments are defined
     //if (numArguments >= 2) billOfAbundance = "../Project_5/outputs/"+string(arguments[1]);
@@ -82,41 +83,76 @@ void MonteCarloSimulation(vector<double> &m, vector< vector<int> > &exchangeTrac
     random_device rd;                                                   // Initialize the seed
     mt19937_64 gen(rd());                                               // Call the Mersenne twister random number engine
     uniform_real_distribution<double> RandomNumberGenerator(0.0, 1.0);  // Set up the uniform distribution for x in [0, 1]
-    for (int i = 0; i < runs; i++) {
+
+    double c = 0;
+    double p = 0;
+
+
+
+    for (int run = 1; run <= runs; run++) {
         vector<double> agents;                                          // Vector that keep track of the agents money before sorting and stacking
         shareTheMoney(agents, N, m0);                                   // Initialize / restart agents vector
+        //cout << agents.at(run) << endl;
+
+        if (run == 1) ofile2.open("variance.txt");
+
+
         for (int cycles = 1; cycles <= transactions; cycles++) {
             double epsilon = RandomNumberGenerator(gen);                // Random number
             int i = RandomNumberGenerator(gen)*N;                       // Find a random pair of agents (i, j) to exchange money
             int j = RandomNumberGenerator(gen)*N;
             double r = RandomNumberGenerator(gen);
-            double c;
+            //double c;
             // Only using the upper triangle of the exchangeTracker matrix ij = ji
             if (i > j) {
                 c = exchangeTracker.at(j).at(i) + 1;
             } else {
                 c = exchangeTracker.at(i).at(j) + 1;
             }
-            double p = pow(fabs(agents.at(i)-agents.at(j)), -alpha)*pow(c, gamma);
+            if ((agents.at(i) - agents.at(j)) == 0) {
+                p = 1.0;
+            } else {
+                p = pow(fabs(agents.at(i)-agents.at(j)), -alpha)*pow(c, gamma);
+            }
+            cout << c << setw(15) << agents.at(i) << setw(15) << agents.at(j) << setw(15) << p << endl;
+
+            //double p = pow(fabs(agents.at(i)-agents.at(j)), -alpha)*pow(c, gamma);
             if (i != j && r < p) moneyExchange(agents, exchangeTracker, i, j, epsilon, lambda, exchangeCounter);  // If i different from j; exchange money
+
+
+            if (run == 1) {
+            double var = 0;
+            for (int k = 0; k < N; k++) {
+                var += (agents.at(k) - m0)*(agents.at(k) - m0);
+            }
+            double variance = var/N;
+            ofile2 << variance << endl;
+            //cout << variance << endl; // << cycles << setw(15)
+            }
         }
+        if (run == 1) ofile2.close();
+
         stackTheMoney(agents, m, N); // Sort and stack the money in vector m
+
+        //averageMoney
+
+        //printTheMoney(agents, N, run); // Printing mean values per run
     }
 }
 
 void moneyExchange(vector<double> &agents, vector< vector<int> > &exchangeTracker, int &i, int &j, double &epsilon, double &lambda, int &exchangeCounter) {
     //double agents_i = agents.at(i);
     ////double agents_j = agents.at(j); // No need
-    //agents.at(i) = epsilon*(agents.at(i) + agents.at(j));
-    //agents.at(j) = (1 - epsilon)*(agents_i + agents.at(j));
 
     double dm = (1.0 - lambda)*(epsilon*agents.at(j) - (1.0 - epsilon)*agents.at(i));
     agents.at(i) = agents.at(i) + dm;
     agents.at(j) = agents.at(j) - dm;
 
-    exchangeTracker.at(i).at(j) += 1;
+    // Registrating transaction, only using the upper triangle of the exchangeTracker matrix ij = ji
+    // (condition) ? (if_true) : (if_false)
+    (i > j) ? (exchangeTracker.at(j).at(i) += 1) : (exchangeTracker.at(i).at(j) += 1);
 
-    /*
+/*
     if ( (agents[i] + agents[j]) != (agents_i + agents_j) ) {
         //cout << agents[i] + agents[j] << endl;
         //cout << agents_i + agents_j << endl;
@@ -137,5 +173,8 @@ void showMeTheMoney(vector<double> &money, int N) {
 
 void printTheMoney(vector<double> &m, int N, int runs) {
     double normalize = 1.0/runs; // Normalize the money when writing to file
-    for (int i = 0; i < N; i++) ofile << setw(15) << setprecision(8) << m.at(i) * normalize;
+    for (int i = 0; i < N; i++) ofile << setw(15) << setprecision(8) << m.at(i) * normalize << endl;
 }
+
+
+

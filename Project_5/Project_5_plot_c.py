@@ -18,13 +18,14 @@ def histdist():
         n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
         a = n**n / gamma(n)
         x = m/m0
-        #x = m_/m0/n
         P = a*x**(n-1)*exp(-n*x)
-        #P = x**(n-1)*exp(-x)/gamma(n)
-        plot(m, P, "-r", label=r"$\omega_m$")
+        if i == 0:
+            plot(m, P, "-r", label=r"$\omega_m$")
+        else:
+            plot(m, P, "-r", label=r"$P_n(x)$")
         legend(loc=0)
-        xlabel(r"Money, $m$", fontsize = 16)
-        ylabel(r"Probability density, $P(m)$", fontsize = 16) 
+        xlabel(r"$m$", fontsize = 16)
+        ylabel(r"$P(m)$", fontsize = 16) 
         tick_params(labelsize=14)
         fig.set_tight_layout(True)
         savefig("plots/histdist"+L[i]+".png")
@@ -47,10 +48,11 @@ def subhist():
         n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
         a = n**n / gamma(n)
         x = m/m0
-        #x = m_/m0/n
         P = a*x**(n-1)*exp(-n*x)
-        #P = x**(n-1)*exp(-x)/gamma(n)
-        plot(m, P, "-r", label=r"$\omega_m$")
+        if i == 0:
+            plot(m, P, "-r", label=r"$\omega_m$")
+        else:
+            plot(m, P, "-r", label=r"$P_n(x)$")
         if i == 0 or i == 2:
             ylabel(r"$P(m)$", fontsize = 16) 
         if i == 2 or i == 3:
@@ -64,25 +66,49 @@ def subhist():
 
 subhist()
 
+def probdist():
+    agents = 500
+    numbins = 500/10
+    fig = figure()
+    for i in range(len(Lambda)):
+        m = loadtxt("outputs/noEqualityForFatCats_c_"+L[i]+".txt")
+        n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
+        a = n**n / gamma(n)
+        x = m/m0
+        P = a*x**(n-1)*exp(-n*x) / 20 
+        if i == 0:
+            plot(m, P, label=r"$\lambda = 0$")
+        else:
+            plot(m, P, label=r"$\lambda = %g$" %Lambda[i])
+        hold("on")
+    legend(loc=0)
+    xlabel(r"$m$", fontsize = 16)
+    ylabel(r"$P_n(x)$", fontsize = 16) 
+    tick_params(labelsize=14)
+    fig.set_tight_layout(True)
+    savefig("plots/probdist.png")
+    show()
+    return "Done."
+
+probdist()
+
 
 def dist():
     fig = figure()
     for i in range(len(Lambda)):
         m = loadtxt("outputs/noEqualityForFatCats_c_"+L[i]+".txt")
         if L[i] == 0:
-            P = beta * exp(-beta * m) # omega_m
+            P = beta * exp(-beta * m) / 20 # omega_m
         else:
             n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
             a = n**n / gamma(n)
             x = m/m0
-            #x = m/m0/n
-            P = a*x**(n-1)*exp(-n*x)
-            #P = x**(n-1)*exp(-x)/gamma(n)
+            P = a*x**(n-1)*exp(-n*x) / 20
         loglog(m, P)
         hold("on")
     legend([r"$\lambda = 0$", r"$\lambda = 0.25$", r"$\lambda = 0.5$", r"$\lambda = 0.9$"], loc=3)
-    xlabel(r"Money, $m$", fontsize = 16)
-    ylabel(r"Probability density, $P(m)$", fontsize = 16) 
+    xlabel(r"$m$", fontsize = 16)
+    ylabel(r"$P_n(x)$", fontsize = 16) 
     tick_params(labelsize=14)
     fig.set_tight_layout(True)
     savefig("plots/logplot.png")
