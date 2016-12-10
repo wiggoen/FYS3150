@@ -24,7 +24,7 @@ if normalized == 1:
     hold("on")
     plot(m, omega_m, "-r", label=r"$\omega_m$")
     legend(loc=0)
-    ylabel(r"Probability distribution, $P(m)$", fontsize = 16)  # When normed
+    ylabel(r"Probability density, $P(m)$", fontsize = 16)  # When normed
 xlabel(r"$m$", fontsize = 16)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True)

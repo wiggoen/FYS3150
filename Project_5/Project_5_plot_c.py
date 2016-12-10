@@ -1,4 +1,5 @@
 from pylab import *
+import numpy as np
 from scipy.special import *
 
 Lambda = [0, 0.25, 0.5, 0.9]
@@ -32,7 +33,7 @@ def histdist():
         show()
     return "Done."
 
-histdist()
+#histdist()
 
 # 4 subplots of histograms
 def subhist():
@@ -64,7 +65,7 @@ def subhist():
     show()
     return "Done."
 
-subhist()
+#subhist()
 
 def probdist():
     agents = 500
@@ -81,6 +82,7 @@ def probdist():
         else:
             plot(m, P, label=r"$\lambda = %g$" %Lambda[i])
         hold("on")
+
     legend(loc=0)
     xlabel(r"$m$", fontsize = 16)
     ylabel(r"$P_n(x)$", fontsize = 16) 
@@ -90,7 +92,7 @@ def probdist():
     show()
     return "Done."
 
-probdist()
+#probdist()
 
 
 def dist():
@@ -115,4 +117,73 @@ def dist():
     show()
     return "Done."
 
-dist()
+#dist()
+
+binsize = 20
+#N1=int(max(m1)/binsize)
+#N2=int(max(m2)/binsize)
+#N3=int(max(m3)/binsize)
+#N4=int(max(m4)/binsize)
+
+def tails():
+    N = 500
+    fig = figure()
+    #d = loadtxt("outputs/noEqualityForFatCats_N1000_L0_a2_g1.txt")
+    m = loadtxt("outputs/noEqualityForFatCats_c_"+L[3]+".txt")
+    #numbins = int(max(m)*50/binsize)
+    numbins = 20
+    #print numbins
+    #K = int(max(m)/binsize)
+    #print K
+    #print max(m)
+    #print mean(m)
+    data, bin_edges = np.histogram(m, bins=numbins, normed=True)
+    print bin_edges
+    """
+    data, binEdges = np.histogram(m, bins=binsize)
+    bincenters = 0.5*(binEdges[1:]+binEdges[:-1]) #Center bin data
+    dbins = bincenters[1]-bincenters[0] #Width of bins
+    loglog(bincenters, data/(float(N)),label=r'$ \gamma = 0.0$')
+    loglog(m)
+    """
+    plot(data)
+    hold("on")
+    hist(m, bins=50)
+    #loglog(m, label=r"$m$")
+    #tail = m[480:]
+    #loglog(m, label=r"$m$")
+    #hold("on")
+    #a = 1
+    #b = 1
+    #loglog(300000000*m**(3), label=r"$Param$")
+    #legend(loc=0)
+
+    #savefig("plots/tails.png")
+    show()
+    return "Done."
+
+tails()
+"""
+n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
+a = n**n / gamma(n)
+x = m/m0
+P = a*x**(n-1)*exp(-n*x) / 20 
+if i == 0:
+    plot(m, P, label=r"$\lambda = 0$")
+else:
+    plot(m, P, label=r"$\lambda = %g$" %Lambda[i])
+hold("on")
+"""
+"""
+legend(loc=0)
+xlabel(r"$m$", fontsize = 16)
+ylabel(r"$P_n(x)$", fontsize = 16) 
+tick_params(labelsize=14)
+fig.set_tight_layout(True)
+#savefig("plots/tails.png")
+"""
+
+
+
+
+

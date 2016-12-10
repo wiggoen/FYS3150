@@ -24,23 +24,31 @@ def dist():
                 T = M/N[k]
                 #print "T = ", T
                 #P = (1.0/T) * exp(-m/T) # same as omega_m
+                
+                data, binEdges = np.histogram(m, bins=30)
+                bincenters = 0.5*(binEdges[1:]+binEdges[:-1]) #Center bin data
+                #bincenters = bincenters * n / 100. #Rescale bincenters
+                dbins = bincenters[1]-bincenters[0] #Width of bins
+                print dbins
+                loglog(bincenters, data/(float(N[k])), label=r'$i$')
+
                 #else:
                 #    n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
                 #    a = n**n / gamma(n)
                 #    x = m/m0
                 #    P = a*x**(n-1)*exp(-n*x)
                 #loglog(m, P, label=r"$N = %g, \lambda = %g, \alpha = %g$" %(N[k], Lambda[i], Alpha[j]))
-                x = arange(len(m))
+                #x = arange(len(m))
                 #hist(m, bins = 10 ** np.linspace(np.log10(min(m)), np.log10(max(m)), 20), log=True)
                 #gca().set_xscale("log")
-                
+                """
                 vals = plt.hist(m, bins=logspace(log10(min(m)), log10(max(m)), 30))
                 bins = vals[1][:-1]
                 vals = vals[0]
                 plt.figure(10)
                 plt.loglog(bins, vals)
-                
-                #loglog(m, x, label=r"$N = %g, \lambda = %g, \alpha = %g$" %(N[k], Lambda[i], Alpha[j]))
+                """
+                #loglog(m, x, label=r"$\alpha = %g$" %(Alpha[j])) # ($N = %g, \lambda = %g) %(N[k], Lambda[i])
                 #semilogx(m, P)
                 #semilogy(m, P)
                 #plot(m, P)
@@ -50,10 +58,10 @@ def dist():
             legend(loc=0)
             title(r"$N = %g, \lambda = %g$" %(N[k], Lambda[i])) 
             xlabel(r"$m$", fontsize = 16)
-            ylabel(r"$P_{GB}(m)$", fontsize = 16) 
+            ylabel("arange(len(m))", fontsize = 16)  #r"$P_{GB}(m)$"
             tick_params(labelsize=14)
             fig.set_tight_layout(True)
-            savefig("plots/test_"+str(k+1)+".png")
+            #savefig("plots/test_"+str(k+1)+".png")
                 
     #legend([r"$N = %g, \lambda = %g, \alpha = %g$" %(N[k], Lambda[i], Alpha[j])])#, loc=3)    
     
