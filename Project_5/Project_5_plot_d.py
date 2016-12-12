@@ -3,8 +3,8 @@ from scipy.special import *
 import matplotlib.pyplot as plt
 
 N = [500, 1000]
-Lambda = [0, 0.25]
-L = ["L0", "L025"]
+Lambda = [0, 0.9]
+L = ["L0", "L09"]
 Alpha = [0.5, 1.0, 1.5, 2.0]
 A = ["a05", "a1", "a15", "a2"]
 #m0 = 1.0
@@ -18,7 +18,7 @@ def dist():
             num = 121+i
             subplot(num)
             for j in range(len(Alpha)):
-                m = loadtxt("outputs/noEqualityForFatCats_N"+str(N[k])+"_"+L[i]+"_"+A[j]+".txt")
+                m = loadtxt("outputs/data_d_T1e6_R1e3/noEqualityForFatCats_N"+str(N[k])+"_"+L[i]+"_"+A[j]+".txt")
                 M = sum(m)
                 #print "M = ", M
                 T = M/N[k]
@@ -29,8 +29,8 @@ def dist():
                 bincenters = 0.5*(binEdges[1:]+binEdges[:-1]) #Center bin data
                 #bincenters = bincenters * n / 100. #Rescale bincenters
                 dbins = bincenters[1]-bincenters[0] #Width of bins
-                print dbins
-                loglog(bincenters, data/(float(N[k])), label=r'$i$')
+                #print dbins
+                loglog(bincenters, data/(float(N[k])), label=r"$i$")
 
                 #else:
                 #    n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
