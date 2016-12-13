@@ -10,7 +10,7 @@ using namespace std;
 ofstream ofile;
 ofstream ofile2;
 
-// By using long double we get less transaction error, but the program runs slower
+// By using long double we get less transaction error (roundoff error), but the program runs slower
 #define double long double
 
 // Declaration of functions
@@ -29,13 +29,13 @@ int main(int numArguments, char **arguments)
     // Default if there is no command line arguments
     //string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats_onerun.txt";  // Output file
     //string billOfAbundance = "noEqualityForFatCats_test_N1000_L0_a2_g1.txt";  // Output file
-    string billOfAbundance = "test_c_L0.txt";
+    string billOfAbundance = "test_d_L0_a05.txt";
     int N = 500;//500;             // Number of agents
     double m0 = 1.0;         // Amount of money at start
-    int transactions = 1e6;//1e7;  // Number of transactions
+    int transactions = 1e5;//1e7;  // Number of transactions
     int runs = 1e3;//1e4;          // Monte Carlo cycles ([1e3, 1e4] runs)
     double lambda = 0.0;     // {0.0, 0.25, 0.5, 0.9}
-    double alpha = 0.0;      // {0.0, 0.5, 1.0, 1.5, 2.0}
+    double alpha = 0.5;      // {0.0, 0.5, 1.0, 1.5, 2.0}
     double gamma = 0.0;      // {0.0, 1.0, 2.0, 3.0, 4.0}
 
     // If command line arguments are defined
@@ -54,7 +54,7 @@ int main(int numArguments, char **arguments)
     double binEnd = 2.0*m0/(sqrt(lambda + 0.1)) + m0;
     int bins = binEnd/binSize;
 
-    cout << binSize << setw(15) << binEnd << setw(15) << bins << endl;
+    //cout << binSize << setw(15) << binEnd << setw(15) << bins << endl;
 
     vector<double> m;                       // Vector of money
     giveMeTheMoney(m, bins);                // Initialize vector
@@ -90,8 +90,8 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
     double c = 0;
     double p = 0;
 
-    for (int run = 1; run <= runs; run++) {
-        if (run == 1) ofile2.open("variance.txt");                      // Open variance file for writing
+    for (int run = 0; run < runs; run++) {
+        if (run == 0) ofile2.open("variance.txt");                      // Open variance file for writing
         vector<double> agents;                                          // Vector that keep track of the agents money before sorting and stacking
         shareTheMoney(agents, N, m0);                                   // Initialize / restart agents vector
         vector< vector<int> > exchangeTracker;                          // Matrix that keep track of exchanges
@@ -99,7 +99,7 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
 
         //double maxInteraction = 1;
 
-        for (int interaction = 1; interaction <= transactions; interaction++) {
+        for (int interaction = 0; interaction <transactions; interaction++) {
             double epsilon = RandomNumberGenerator(gen);                // Random number
             int i = RandomNumberGenerator(gen)*N;                       // Find a random pair of agents (i, j) to exchange money
             int j = RandomNumberGenerator(gen)*N;
@@ -122,7 +122,7 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
                 if (r < p) moneyExchange(agents, exchangeTracker, i, j, epsilon, lambda);  // If i different from j; exchange money
             }
 
-            if (run == 1) {
+            if (run == 0) {
                 double var = 0;
                 for (int k = 0; k < N; k++) {
                     var += (agents.at(k) - m0)*(agents.at(k) - m0);
@@ -132,7 +132,7 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
                 //cout << variance << endl; // << interaction << setw(15)
             }
         }
-        if (run == 1) ofile2.close();
+        if (run == 0) ofile2.close();
 
         for (int i = 0; i < agents.size(); i++) {
             for (int j = 0; j < m.size(); j++) {
