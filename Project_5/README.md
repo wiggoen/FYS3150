@@ -13,8 +13,9 @@ of the program are:
 * m0: Amount of money given to each agent before a run.
 * transactions: Number of transactions you want for each run. 
 * runs: Number of runs you want an average over. 
-* lambda: The fraction of saving. Let this be 0 or 0 < lambda < 1. 
+* lambda: The fraction of saving. Let this be 0 or 0 < lambda < 1. We have used lambda 
+= {0, 0.25 0.5, 0.9}.
 * alpha: The exponent of the likelyhood of agents with similar amount of money will 
-interact. 
+interact. We have used alpha = {0, 0.5, 1, 1.5, 2}.
 * gamma: The exponent of the likelyhood of agents that have interacted before will do so 
-again. 
+again. We have used gamma = {0, 1, 2, 3, 4}.
