@@ -29,11 +29,12 @@ def histdist():
         ylabel(r"$P(m)$", fontsize = 16) 
         tick_params(labelsize=14)
         fig.set_tight_layout(True)
-        savefig("plots/histdist"+L[i]+".png")
+        savefig("plots/c_histdist"+L[i]+".png")
         show()
     return "Done."
 
-#histdist()
+histdist()
+
 
 # 4 subplots of histograms
 def subhist():
@@ -61,11 +62,12 @@ def subhist():
         legend(loc=0)
         tick_params(labelsize=14)
     fig.set_tight_layout(True)
-    savefig("plots/subhist.png")
+    savefig("plots/c_subhist.png")
     show()
     return "Done."
 
-#subhist()
+subhist()
+
 
 def probdist():
     agents = 500
@@ -88,11 +90,11 @@ def probdist():
     ylabel(r"$P_n(x)$", fontsize = 16) 
     tick_params(labelsize=14)
     fig.set_tight_layout(True)
-    savefig("plots/probdist.png")
+    savefig("plots/c_probdist.png")
     show()
     return "Done."
 
-#probdist()
+probdist()
 
 
 def dist():
@@ -113,77 +115,43 @@ def dist():
     ylabel(r"$P_n(x)$", fontsize = 16) 
     tick_params(labelsize=14)
     fig.set_tight_layout(True)
-    savefig("plots/logplot.png")
+    savefig("plots/c_logplot.png")
     show()
     return "Done."
 
-#dist()
+dist()
 
-binsize = 20
-#N1=int(max(m1)/binsize)
-#N2=int(max(m2)/binsize)
-#N3=int(max(m3)/binsize)
-#N4=int(max(m4)/binsize)
 
-def tails():
-    N = 500
+def Pareto():
     fig = figure()
-    #d = loadtxt("outputs/noEqualityForFatCats_N1000_L0_a2_g1.txt")
-    m = loadtxt("outputs/noEqualityForFatCats_c_"+L[3]+".txt")
-    #numbins = int(max(m)*50/binsize)
-    numbins = 20
-    #print numbins
-    #K = int(max(m)/binsize)
-    #print K
-    #print max(m)
-    #print mean(m)
-    data, bin_edges = np.histogram(m, bins=numbins, normed=True)
-    print bin_edges
-    """
-    data, binEdges = np.histogram(m, bins=binsize)
-    bincenters = 0.5*(binEdges[1:]+binEdges[:-1]) #Center bin data
-    dbins = bincenters[1]-bincenters[0] #Width of bins
-    loglog(bincenters, data/(float(N)),label=r'$ \gamma = 0.0$')
-    loglog(m)
-    """
-    plot(data)
-    hold("on")
-    hist(m, bins=50)
-    #loglog(m, label=r"$m$")
-    #tail = m[480:]
-    #loglog(m, label=r"$m$")
-    #hold("on")
-    #a = 1
-    #b = 1
-    #loglog(300000000*m**(3), label=r"$Param$")
-    #legend(loc=0)
-
-    #savefig("plots/tails.png")
+    for i in range(len(Lambda)):
+        m = loadtxt("outputs/noEqualityForFatCats_c_"+L[i]+".txt")
+        x = arange(len(m))
+        if L[i] == 0:
+            P = beta * exp(-beta * m)
+        else:
+            n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
+            a = n**n / gamma(n)
+            x = m/m0
+            P = a*x**(n-1)*exp(-n*x)
+        loglog(m, P, label=r"$\lambda = %g$" %(Lambda[i]))
+        hold("on")
+        if i == 0:
+            start = 20
+            fract = 0.5
+            loglog(1.25*m[50:len(m)*fract], (m**(-1-13))[50:len(m)*fract], "--", label=r"$P_\alpha = 13$")
+            loglog(1.6*m[start:len(m)*fract], (m**(-1-7))[start:len(m)*fract], "--", label=r"$P_\alpha = 7$")
+            loglog(1.85*m[start:len(m)*fract], (m**(-1-5.75))[start:len(m)*fract], "--", label=r"$P_\alpha = 5.75$")
+            loglog(2*m[0:len(m)*fract], (m**(-1-4.5))[0:len(m)*fract], "--", label=r"$P_\alpha = 4.5$")
+        art = []
+        lgd = legend(bbox_to_anchor=(0.0, 1.01, 1., 0.102), loc=3, ncol=4, mode="expand", borderaxespad=0.0)
+        xlabel(r"$m$", fontsize = 16)
+        ylabel(r"$P_n(x)$", fontsize = 16) 
+        tick_params(labelsize=14)
+        fig.set_tight_layout(True)
+        savefig("plots/c_Pareto.png", additional_artists=art, bbox_inches="tight")
     show()
     return "Done."
 
-tails()
-"""
-n = 1.0 + ((3.0*Lambda[i])/(1.0-Lambda[i]))
-a = n**n / gamma(n)
-x = m/m0
-P = a*x**(n-1)*exp(-n*x) / 20 
-if i == 0:
-    plot(m, P, label=r"$\lambda = 0$")
-else:
-    plot(m, P, label=r"$\lambda = %g$" %Lambda[i])
-hold("on")
-"""
-"""
-legend(loc=0)
-xlabel(r"$m$", fontsize = 16)
-ylabel(r"$P_n(x)$", fontsize = 16) 
-tick_params(labelsize=14)
-fig.set_tight_layout(True)
-#savefig("plots/tails.png")
-"""
-
-
-
-
+Pareto()
 

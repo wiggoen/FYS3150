@@ -27,20 +27,17 @@ void printTheMoney(vector<double> &m, int N, int runs);
 int main(int numArguments, char **arguments)
 {
     // Default if there is no command line arguments
-    //string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats_onerun.txt";  // Output file
-    //string billOfAbundance = "noEqualityForFatCats_test_N1000_L0_a2_g1.txt";  // Output file
-    string billOfAbundance = "test_d_L0_a05.txt";
-    int N = 500;//500;             // Number of agents
+    string billOfAbundance = "../Project_5/outputs/noEqualityForFatCats.txt";  // Output file
+    int N = 500;             // Number of agents
     double m0 = 1.0;         // Amount of money at start
-    int transactions = 1e5;//1e7;  // Number of transactions
-    int runs = 1e3;//1e4;          // Monte Carlo cycles ([1e3, 1e4] runs)
+    int transactions = 1e7;  // Number of transactions
+    int runs = 1e4;          // Monte Carlo cycles ([1e3, 1e4] runs)
     double lambda = 0.0;     // {0.0, 0.25, 0.5, 0.9}
     double alpha = 0.5;      // {0.0, 0.5, 1.0, 1.5, 2.0}
     double gamma = 0.0;      // {0.0, 1.0, 2.0, 3.0, 4.0}
 
     // If command line arguments are defined
-    //if (numArguments >= 2) billOfAbundance = "../Project_5/outputs/"+string(arguments[1]);
-    if (numArguments >= 2) billOfAbundance = string(arguments[1]);
+    if (numArguments >= 2) billOfAbundance = "../Project_5/outputs/"+string(arguments[1]);
     if (numArguments >= 3) N = atoi(arguments[2]);
     if (numArguments >= 4) m0 = atof(arguments[3]);
     if (numArguments >= 5) transactions = atoi(arguments[4]);
@@ -49,20 +46,22 @@ int main(int numArguments, char **arguments)
     if (numArguments >= 8) alpha = atof(arguments[7]);
     if (numArguments >= 9) gamma = atof(arguments[8]);
 
-
+    // Setting up bins for histogram
     double binSize = 0.01*m0;
     double binEnd = 2.0*m0/(sqrt(lambda + 0.1)) + m0;
     int bins = binEnd/binSize;
 
-    //cout << binSize << setw(15) << binEnd << setw(15) << bins << endl;
+    //vector<double> m;                       // Vector of money
+    //giveMeTheMoney(m, N);                   // Initialize money vector
 
-    vector<double> m;                       // Vector of money
-    giveMeTheMoney(m, bins);                // Initialize vector
+    vector<double> m;                       // Vector of bins
+    giveMeTheMoney(m, bins);                // Initialize bin vector
 
     ofile.open(billOfAbundance);            // Open data file for writing
 
     MonteCarloSimulation(m, N, m0, runs, transactions, lambda, alpha, gamma, binSize);
 
+    //printTheMoney(m, N, runs);              // Writes m to file
     printTheMoney(m, bins, runs);           // Writes m to file
     ofile.close();                          // Close file
 
@@ -97,31 +96,22 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
         vector< vector<int> > exchangeTracker;                          // Matrix that keep track of exchanges
         noExchange(exchangeTracker, N);                                 // Initialize / restart exchangeTracker
 
-        //double maxInteraction = 1;
-
-        for (int interaction = 0; interaction <transactions; interaction++) {
-            double epsilon = RandomNumberGenerator(gen);                // Random number
+        for (int interaction = 0; interaction < transactions; interaction++) {
             int i = RandomNumberGenerator(gen)*N;                       // Find a random pair of agents (i, j) to exchange money
             int j = RandomNumberGenerator(gen)*N;
-            double r = RandomNumberGenerator(gen);
-
             if (i != j) {
+                double epsilon = RandomNumberGenerator(gen);            // Random numbers
+                double r = RandomNumberGenerator(gen);
                 // Only using the upper triangle of the exchangeTracker matrix ij = ji
                 // (condition) ? (if_true) : (if_false)
                 (i > j) ? c = exchangeTracker.at(j).at(i) : c = exchangeTracker.at(i).at(j);
-
-                //cout << maxInteraction << endl;
                 if ((agents.at(i) - agents.at(j)) == 0) {
                     p = 1.0;
                 } else {
                     p = pow(fabs(agents.at(i)-agents.at(j)), -alpha)*pow((c+1), gamma);
                 }
-                //cout << "c_ij = " << c << setw(15) << "i = " << agents.at(i) << setw(15) << "j = " << agents.at(j) << setw(15) << "r = " << r << setw(15) << "p = " << p << endl;
-
-                //double p = pow(fabs(agents.at(i)-agents.at(j)), -alpha)*pow(c, gamma);
                 if (r < p) moneyExchange(agents, exchangeTracker, i, j, epsilon, lambda);  // If i different from j; exchange money
             }
-
             if (run == 0) {
                 double var = 0;
                 for (int k = 0; k < N; k++) {
@@ -129,11 +119,13 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
                 }
                 double variance = var/N;
                 ofile2 << variance << endl;
-                //cout << variance << endl; // << interaction << setw(15)
             }
         }
         if (run == 0) ofile2.close();
 
+        //stackTheMoney(agents, m, N); // Sort and stack the money in vector m
+
+        // Adding results to bins
         for (int i = 0; i < agents.size(); i++) {
             for (int j = 0; j < m.size(); j++) {
                 if (agents.at(i) > (j-1)*binSize && agents.at(i) < j*binSize) {
@@ -141,20 +133,10 @@ void MonteCarloSimulation(vector<double> &m, int N, double m0, int runs, int tra
                 }
             }
         }
-
-
-        //          stackTheMoney(agents, m, N); // Sort and stack the money in vector m
-
-        //averageMoney
-
-        //printTheMoney(agents, N, run); // Printing mean values per run
     }
 }
 
 void moneyExchange(vector<double> &agents, vector< vector<int> > &exchangeTracker, int &i, int &j, double &epsilon, double &lambda) {
-    //double agents_i = agents.at(i);
-    ////double agents_j = agents.at(j); // No need
-
     double dm = (1.0 - lambda)*(epsilon*agents.at(j) - (1.0 - epsilon)*agents.at(i));
     agents.at(i) = agents.at(i) + dm;
     agents.at(j) = agents.at(j) - dm;
@@ -162,14 +144,6 @@ void moneyExchange(vector<double> &agents, vector< vector<int> > &exchangeTracke
     // Registrating transaction, only using the upper triangle of the exchangeTracker matrix ij = ji
     // (condition) ? (if_true) : (if_false)
     (i > j) ? (exchangeTracker.at(j).at(i) += 1) : (exchangeTracker.at(i).at(j) += 1);
-
-    /*
-    if ( (agents[i] + agents[j]) != (agents_i + agents_j) ) {
-        //cout << agents[i] + agents[j] << endl;
-        //cout << agents_i + agents_j << endl;
-        cout << "Someone is draining the bank." << endl;
-        cout << (agents[i] + agents[j])-(agents_i + agents_j) << endl;
-    }*/
 }
 
 void stackTheMoney(vector<double> &agents, vector<double> &m, int N) {
@@ -186,6 +160,4 @@ void printTheMoney(vector<double> &m, int N, int runs) {
     double normalize = 1.0/runs; // Normalize the money when writing to file
     for (int i = 0; i < N; i++) ofile << setw(15) << setprecision(8) << m.at(i) * normalize << endl;
 }
-
-
 

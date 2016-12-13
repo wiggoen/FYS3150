@@ -2,7 +2,6 @@ from os import *
 import time
 
 # System setup
-"""
 N = [500, 1000]
 m0 = 1.0
 transactions = 1e7
@@ -13,37 +12,10 @@ Alpha = [0.0, 0.5, 1.0, 1.5, 2.0]
 A = ["a0", "a05", "a1", "a15", "a2"]
 Gamma = [0.0, 1.0, 2.0, 3.0, 4.0]
 G = ["g0", "g1", "g2", "g3", "g4"]
-"""
-N = [500, 1000]
-m0 = 1.0
-transactions = 1e6
-runs = 1e3
-Lambda = [0]#0.25, 0.9]
-L = ["L0"]#"L025", "L09"]
-Alpha = [0.5, 1.0, 1.5, 2.0]
-A = ["a05", "a1", "a15", "a2"]
-#Gamma = [0.0, 1.0, 2.0, 3.0, 4.0]
-#G = ["g0", "g1", "g2", "g3", "g4"]
 
 # Compile C++ code first (all cpp-files)
-#system("g++ *.cpp -o main.x -O3 -std=c++11")
-system("g++ main.cpp -o main.x -O3 -std=c++11")
+system("g++ *.cpp -o main.x -O3 -std=c++11")
 
-for k in range(len(N)):
-    for i in range(len(Lambda)):
-        for j in range(len(Alpha)):
-            print "---"
-            print "Starting to run the program for N = %g, L = %g and A = %g." %(N[k], Lambda[i], Alpha[j])
-            billOfAbundance = "noEqualityForFatCats_N"+str(N[k])+"_"+L[i]+"_"+A[j]+".txt"
-            # Command line arguments
-            Arguments = "./main.x %s %d %f %d %d %f %f" % (billOfAbundance, N[k], m0, transactions, runs, Lambda[i], Alpha[j])
-            start = time.time()         # Start clock
-            system(Arguments)           # Run program
-            finish = time.time()        # End clock
-            runtime = finish - start 
-            print "The python runtime of the program for N = %g, L = %g and A = %g was %f s." %(N[k], Lambda[i], Alpha[j], runtime)
-
-"""
 for k in range(len(N)):
     for i in range(len(Lambda)):
         for j in range(len(Alpha)):
@@ -58,6 +30,4 @@ for k in range(len(N)):
                 finish = time.time()        # End clock
                 runtime = finish - start 
                 print "The python runtime of the program for N = %g, L = %g, A = %g and G = %g was %f s." %(N[k], Lambda[i], Alpha[j], Gamma[s], runtime)
-
-"""
 

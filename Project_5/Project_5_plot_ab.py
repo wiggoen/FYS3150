@@ -29,9 +29,9 @@ xlabel(r"$m$", fontsize = 16)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True)
 if normalized == 0:
-    savefig("plots/histogram_not_normed.png") # When not normed
+    savefig("plots/a_histogram_not_normed.png") # When not normed
 if normalized == 1:
-    savefig("plots/histogram_normed.png") # When normed
+    savefig("plots/a_histogram_normed.png") # When normed
 show()
 
 # Plot of log(omega_m)
@@ -43,5 +43,5 @@ if normalized == 1:
     ylabel(r"$\log(\omega_m)$", fontsize = 16)  
     tick_params(labelsize=14)
     fig2.set_tight_layout(True)
-    savefig("plots/logOfomega_m.png")
+    savefig("plots/b_logOfomega_m.png")
     show()
