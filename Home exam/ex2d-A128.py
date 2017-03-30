@@ -83,7 +83,7 @@ annotate('', xy=(56, 127.911065318), xycoords="data", xytext=(57, 127.917747210)
 title("A = %g" %A, fontsize=20)
 xlabel("Proton number, Z", fontsize=16)
 ylabel("Mass [u]", fontsize=16)
-legend(["even Z (and N)", "odd Z (and N)", r"$\beta^-$-decay", r"$\beta^+$-decay", r"$\beta\beta^+$-decay"], loc=0)
+legend(["even Z (and N)", "odd Z (and N)", r"$\beta^-$-decay", r"$\beta^+$-decay", r"$\beta\beta^-$-decay"], loc=0)
 tick_params(labelsize=14)
 ax = gca()
 ax.get_yaxis().get_major_formatter().set_useOffset(False) # Preventing offset of y-axis
