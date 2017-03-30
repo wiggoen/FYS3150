@@ -54,9 +54,8 @@ for element, Z, M, hoffsetts, voffsetts in zip(element, z, m, hoffsetts, voffset
     annotate(element, xy=(Z, M), xytext=(hoffsetts, voffsetts), ha='center', va='bottom', 
              textcoords='offset points', fontsize=14)
 
-for u in range(len(z)):
-  print("%g, %.9f" % (z[u], m[u]))
-
+# Uncomment if you want Beta-decay arrows
+"""
 # Beta-decay arrows
 plot([49, 50], [127.931437115, 127.921332747], "b-") # Beta^-
 plot([56, 57], [127.911065318, 127.917747210], "g-") # Beta^+
@@ -79,6 +78,7 @@ annotate('', xy=(55, 127.910069986), xycoords="data", xytext=(56, 127.911065318)
          textcoords="data", arrowprops=dict(arrowstyle="->", color="green"))
 annotate('', xy=(56, 127.911065318), xycoords="data", xytext=(57, 127.917747210), 
          textcoords="data", arrowprops=dict(arrowstyle="->", color="green"))
+"""
 
 title("A = %g" %A, fontsize=20)
 xlabel("Proton number, Z", fontsize=16)
