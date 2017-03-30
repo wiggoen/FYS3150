@@ -38,7 +38,7 @@ mass = [M(i, A) for i in z]
 m = array(mass) 
 
 fig = figure(1)
-plot(z, m, "o-")
+plot(z, m, "ko-")
 title("A = %g" %A, fontsize=20)
 xlabel("Proton number, Z", fontsize=16)
 ylabel("Mass [u]", fontsize=16)
@@ -60,12 +60,12 @@ for element, Z, M, hoffsetts, voffsetts in zip(element, z, m, hoffsetts, voffset
              textcoords='offset points', fontsize=14)
 # Left arrow and text
 annotate('', xy=(53, 134.933), xycoords="data", xytext=(51, 134.953), 
-         textcoords="data", arrowprops=dict(arrowstyle="->", color="red"))
+         textcoords="data", arrowprops=dict(arrowstyle="->", color="green"))
 text(52.2, 134.945, r'$\beta^-$-decay', fontsize=14)
 
 # Right arrow and text
 annotate('', xy=(60, 134.933), xycoords="data", xytext=(62, 134.953), 
-         textcoords="data", arrowprops=dict(arrowstyle="->", color="red"))
+         textcoords="data", arrowprops=dict(arrowstyle="->", color="blue"))
 text(58.3, 134.945, r'$\beta^+$-decay', fontsize=14)
 
 fig.set_tight_layout(True)

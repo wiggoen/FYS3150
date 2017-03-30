@@ -39,14 +39,7 @@ mass = [M(i, A) for i in z]
 m = array(mass) 
 
 fig = figure(1)
-plot(z[::2], m[::2], "bo-", z[1::2], m[1::2], "ro-")
-title("A = %g" %A, fontsize=20)
-xlabel("Proton number, Z", fontsize=16)
-ylabel("Mass [u]", fontsize=16)
-legend(["even Z (and N)", "odd Z (and N)"])
-tick_params(labelsize=14)
-ax = gca()
-ax.get_yaxis().get_major_formatter().set_useOffset(False) # Preventing offset of y-axis
+plot(z[::2], m[::2], "ko--", z[1::2], m[1::2], "ro--")
 
 # Writing labels on each point
 element = [r'$_{46}$Pd', r'$_{47}$Ag', r'$_{48}$Cd', r'$_{49}$In', r'$_{50}$Sn', 
@@ -61,6 +54,39 @@ for element, Z, M, hoffsetts, voffsetts in zip(element, z, m, hoffsetts, voffset
     annotate(element, xy=(Z, M), xytext=(hoffsetts, voffsetts), ha='center', va='bottom', 
              textcoords='offset points', fontsize=14)
 
+for u in range(len(z)):
+  print("%g, %.9f" % (z[u], m[u]))
+
+# Beta-decay arrows
+plot([49, 50], [127.931437115, 127.921332747], "b-") # Beta^-
+plot([56, 57], [127.911065318, 127.917747210], "g-") # Beta^+
+plot([52, 53], [127.910510470, 127.909792562], "m-") # BetaBeta^-
+annotate('', xy=(49, 127.931437115), xycoords="data", xytext=(50, 127.921332747), 
+         textcoords="data", arrowprops=dict(arrowstyle="<-", color="blue"))
+annotate('', xy=(50, 127.921332747), xycoords="data", xytext=(51, 127.916914939), 
+         textcoords="data", arrowprops=dict(arrowstyle="<-", color="blue"))
+annotate('', xy=(51, 127.916914939), xycoords="data", xytext=(52, 127.910510470), 
+         textcoords="data", arrowprops=dict(arrowstyle="<-", color="blue"))
+annotate('', xy=(52, 127.910510470), xycoords="data", xytext=(53, 127.909792562), 
+         textcoords="data", arrowprops=dict(arrowstyle="->", color="green"))
+annotate('', xy=(52, 127.910510470), xycoords="data", xytext=(54, 127.907087994), 
+         textcoords="data", arrowprops=dict(arrowstyle="<-", color="magenta"))
+annotate('', xy=(53, 127.909792562), xycoords="data", xytext=(54, 127.907087994), 
+         textcoords="data", arrowprops=dict(arrowstyle="<-", color="blue"))
+annotate('', xy=(54, 127.907087994), xycoords="data", xytext=(55, 127.910069986), 
+         textcoords="data", arrowprops=dict(arrowstyle="->", color="green"))
+annotate('', xy=(55, 127.910069986), xycoords="data", xytext=(56, 127.911065318), 
+         textcoords="data", arrowprops=dict(arrowstyle="->", color="green"))
+annotate('', xy=(56, 127.911065318), xycoords="data", xytext=(57, 127.917747210), 
+         textcoords="data", arrowprops=dict(arrowstyle="->", color="green"))
+
+title("A = %g" %A, fontsize=20)
+xlabel("Proton number, Z", fontsize=16)
+ylabel("Mass [u]", fontsize=16)
+legend(["even Z (and N)", "odd Z (and N)", r"$\beta^-$-decay", r"$\beta^+$-decay", r"$\beta\beta^+$-decay"], loc=0)
+tick_params(labelsize=14)
+ax = gca()
+ax.get_yaxis().get_major_formatter().set_useOffset(False) # Preventing offset of y-axis
 fig.set_tight_layout(True)
 axis((44.8, 61.7, 127.9, 127.97))
 savefig("2d-A%g.png" %A)
