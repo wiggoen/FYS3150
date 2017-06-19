@@ -13,10 +13,10 @@ Zmin = 46
 Zmax = 61
 
 # Constants	[unit]
-a_v = 15.76#15.5          # Volume [MeV]
-a_s = 17.81#16.8          # Surface [MeV]
-a_c = 0.711#0.72          # Coulomb [MeV]
-a_sym = 23.702#23.0        # Symmetry [MeV]
+a_v = 15.5 			# Volume [MeV]
+a_s = 16.8 			# Surface [MeV]
+a_c = 0.72 			# Coulomb [MeV]
+a_sym = 23.0 		# Symmetry [MeV]
 a_p = 34.0          # Pairing [MeV]
 c2 = 931.494        # c^2 [MeV/u] 
 m_H = 1.007825      # Mass of Hydrogen [u]
@@ -67,6 +67,6 @@ ax = gca()
 ax.get_yaxis().get_major_formatter().set_useOffset(False) # Preventing offset of y-axis
 fig.set_tight_layout(True) # Minimizing overlap of labels
 axis((Zmin-0.5, Zmax+0.5, min(m)-0.005, max(m)+0.005)) # Setting axis ranges
-savefig("ex331%g.png" %A) # Saving png
+savefig("ex331A%g.png" %A) # Saving png
 show()
 
