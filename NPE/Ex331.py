@@ -1,4 +1,5 @@
 # Proposed solution is written in Python 3.6.1.
+# Mass parabola
 
 from matplotlib.pyplot import *
 from numpy import *
@@ -38,11 +39,11 @@ def delta(Z, A):
 	else: 
 		return 0
 
-# Complete binding energy
+# Complete binding energy (equation 3.28)
 def B(Z, A):
 	return a_v*A - a_s*A**(2.0/3.0) - a_c*(Z*(Z-1))/A**(1.0/3.0) - a_sym*((A-2*Z)**2)/A + delta(Z, A)*a_p/A**(3.0/4.0)
 
-# Semi-empirical mass formula (SEMF)
+# Semi-empirical mass formula (SEMF) (equation 3.29)
 def M(Z, A):
 	return Z*m_H + N(Z, A)*m_n - B(Z, A)/c2
 
@@ -67,6 +68,6 @@ ax = gca()
 ax.get_yaxis().get_major_formatter().set_useOffset(False) # Preventing offset of y-axis
 fig.set_tight_layout(True) # Minimizing overlap of labels
 axis((Zmin-0.5, Zmax+0.5, min(m)-0.005, max(m)+0.005)) # Setting axis ranges
-savefig("ex331A%g.png" %A) # Saving png
+savefig("ex331_A%g.png" %A) # Saving png
 show()
 
