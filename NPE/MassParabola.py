@@ -68,6 +68,6 @@ ax = gca()
 ax.get_yaxis().get_major_formatter().set_useOffset(False) # Preventing offset of y-axis
 fig.set_tight_layout(True) # Minimizing overlap of labels
 axis((Zmin-0.5, Zmax+0.5, min(m)-0.005, max(m)+0.005)) # Setting axis ranges
-savefig("ex331_A%g.png" %A) # Saving png
+savefig("MP_A%g.png" %A) # Saving png
 show()
 
