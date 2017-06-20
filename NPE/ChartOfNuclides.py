@@ -17,6 +17,7 @@ with open(data, "r") as datafile:
 	# Do analysis for the rest of the lines in datafile
 	j = 0
 	for line in datafile:
+		# Using slicing to get the right "area" of the file
 		A[j] = float(line[16:19].strip())
 		Z[j] = float(line[11:14].strip())
 		j += 1
@@ -32,6 +33,6 @@ ylabel("Porton number, Z", fontsize=16)
 legend(["Nuclides", "Z = N"], loc=0)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True) # Minimizing overlap of labels
-savefig("CoN.png") # Saving png
+savefig("CoN.png") # Saving figure to .png
 show()
 

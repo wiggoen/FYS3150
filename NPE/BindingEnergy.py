@@ -53,9 +53,7 @@ savefig("BE1.png") # Saving png
 show()
 
 
-
 # Binding energy per nucleon with real data
-
 data = "mass16.txt" # Datafile: https://www-nds.iaea.org/amdc/ame2016/mass16.txt
 
 num = 3475-39	# Number of nuclides in datafile
@@ -69,6 +67,7 @@ with open(data, "r") as datafile:
 	# Do analysis for the rest of the lines in datafile
 	j = 0
 	for line in datafile:
+		# Using slicing to get the right "area" of the file
 		a[j] = float(line[16:19].strip())
 		b[j] = float(line[54:63].replace('#', ' ').strip())/1e3 	# keV to MeV
 		j += 1
@@ -86,6 +85,6 @@ ylabel(r"B(Z$_{min}$, A)/A", fontsize=16)
 legend(["Data", "Volume", "Volume + Surface", "Volume + Surface + Coulomb", "Volume + Surface + Coulomb + Symmetry"], loc=0)
 tick_params(labelsize=14)
 fig2.set_tight_layout(True) # Minimizing overlap of labels
-savefig("BE2.png") # Saving png
+savefig("BE2.png") # Saving figure to .png
 show()
 
