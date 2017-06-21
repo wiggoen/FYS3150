@@ -24,13 +24,34 @@ with open(data, "r") as datafile:
  
 N = A-Z 	 	# Neutron number
 
+MagicNumbers = array([2, 8, 20, 28, 50, 82, 126])
+MagicPairs = array([[2, 2],
+					[8, 8],
+					[20, 8],
+					[20, 20],
+					[20, 28],
+					[28, 20],
+					[28, 28],
+					[50, 28],
+					[50, 50],
+					[82, 50],
+					[126, 82]])
+
+Nmagic = MagicPairs[:, 0]
+Zmagic = MagicPairs[:, 1]
+
 # Plot of Chart of nuclides
 fig1 = figure(1)
-plot(N, Z, "x", [0, 120], [0, 120], "k-")
+plot(N, Z, "x", [0, 120], [0, 120], "k-") 	# Nuclides and Z = N line
+plot(Nmagic, Zmagic, "ro") 					# Magic numbers
+plot([1, 24], [8, 8], "m-", [20, 20], [4, 32], "m-", [10, 42], [20, 20], "m-", 
+	 [28, 28], [10, 36], "m-", [16, 55], [28, 28], "m-", [50, 50], [24, 54], "m-",
+	 [45, 92], [50, 50], "m-", [82, 82], [42, 76], "m-", [90, 145], [82, 82], "m-",
+	 [126, 126], [72, 97], "m-") 			# Lines for magic numbers
 title("Chart of Nuclides", fontsize=20)
 xlabel("Neutron number, N", fontsize=16)
 ylabel("Porton number, Z", fontsize=16)
-legend(["Nuclides", "Z = N"], loc=0)
+legend(["Nuclides", "Z = N", "Magic numbers"], loc=0)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True) # Minimizing overlap of labels
 savefig("CoN.png") # Saving figure to .png
