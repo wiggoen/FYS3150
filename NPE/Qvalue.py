@@ -42,7 +42,7 @@ def M(Z, A):
 # Calculate Q-value (equation 8.8)
 def Qalpha(Z, A): 
 	return (M(Z, A) - M(Z-2, A-4) - M(2, 4))*c2
-	#return B(2, 4) - B(Z-2, A-4) - B(Z, A)
+	#return B(2, 4) + B(Z-2, A-4) - B(Z, A)
 
 def Qelectron(Z, A):
 	return (M(Z, A) - M(Z+1, A))*c2
@@ -51,7 +51,7 @@ def Qpositron(Z, A):
 	return (M(Z, A) - M(Z-1, A) - 2*m_e)*c2
 
 def QelectronCapture(Z, A):
-	return 0
+	return (M(Z, A) - M(Z-1, A))*c2 - BE(n) 	# BE(n) is the binding energy of the captured n-shell electron
 
 # Alpha-decay
 print("Th-218: calculated = %g, book-value = ?.?? MeV, measured = %g MeV" % (Qalpha(90, 218), 9.85)) # Th-218
@@ -63,5 +63,4 @@ print("Th-232: calculated = %g, book-value = %g MeV, measured = %g MeV" % (Qalph
 print("Bi-210 (b-): calculated = %g, book-value = %g MeV" % (Qelectron(83, 210), 1.161)) 	# Bi-210
 print(" I-124 (b+): calculated = %g, book-value = %g MeV" % (Qpositron(53, 124), 2.14)) 	# I-124
 #print("Ca-41 (ec): calculated = %g, book-value = %g MeV, measured = ? MeV" % (QelectronCapture(20, 41), 0.43)) # Ca-41
-
 

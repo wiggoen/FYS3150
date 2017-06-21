@@ -5,13 +5,13 @@ from matplotlib.pyplot import *
 from numpy import *
 
 # Choose A, Zmin and Zmax
-#A = 125
-#Zmin = 45
-#Zmax = 60
 
-A = 128
-Zmin = 46
-Zmax = 61
+# Test 1: Odd A
+#A = 125; Zmin = 45; Zmax = 60
+
+# Test 2: Even A
+A = 128; Zmin = 46; Zmax = 61
+
 
 # Constants	[unit]
 a_v = 15.5 			# Volume [MeV]
