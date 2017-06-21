@@ -26,7 +26,7 @@ N = A-Z 	 	# Neutron number
 
 # Plot of Chart of nuclides
 fig1 = figure(1)
-plot(A, N, "x", [0, 120], [0, 120], "k-")
+plot(N, Z, "x", [0, 120], [0, 120], "k-")
 title("Chart of Nuclides", fontsize=20)
 xlabel("Neutron number, N", fontsize=16)
 ylabel("Porton number, Z", fontsize=16)
