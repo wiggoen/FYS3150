@@ -53,6 +53,11 @@ def Qpositron(Z, A):
 def QelectronCapture(Z, A):
 	return (M(Z, A) - M(Z-1, A))*c2 - BE(n) 	# BE(n) is the binding energy of the captured n-shell electron
 
+
+# Geiger-Nuttall rule
+# log(t_halflife) \propto 1/sqrt(Qalpha)
+
+
 # Alpha-decay
 print("Th-218: calculated = %g, book-value = ?.?? MeV, measured = %g MeV" % (Qalpha(90, 218), 9.85)) # Th-218
 print("Th-220: calculated = %g, book-value = %g MeV, measured = %g MeV" % (Qalpha(90, 220), 7.77, 8.95)) # Th-220
@@ -63,4 +68,3 @@ print("Th-232: calculated = %g, book-value = %g MeV, measured = %g MeV" % (Qalph
 print("Bi-210 (b-): calculated = %g, book-value = %g MeV" % (Qelectron(83, 210), 1.161)) 	# Bi-210
 print(" I-124 (b+): calculated = %g, book-value = %g MeV" % (Qpositron(53, 124), 2.14)) 	# I-124
 #print("Ca-41 (ec): calculated = %g, book-value = %g MeV, measured = ? MeV" % (QelectronCapture(20, 41), 0.43)) # Ca-41
-

@@ -44,7 +44,7 @@ legend(["Cs-137"], loc=0)
 tick_params(labelsize=14)
 
 fig1.set_tight_layout(True) # Minimizing overlap of labels
-savefig("RD.png") # Saving figure to .png
+savefig("plots/RD.png") # Saving figure to .png
 #show()
 
 
@@ -67,6 +67,6 @@ ylabel(r"N$_x$(t)", fontsize=16)
 legend([r"N$_1$(t) Parent", r"N$_2$(t) Daughter", r"N$_3$(t) Stable"], loc=0)
 tick_params(labelsize=14)
 fig2.set_tight_layout(True) # Minimizing overlap of labels
-savefig("RDC.png") # Saving figure to .png
+savefig("plots/RDC.png") # Saving figure to .png
 show()
 

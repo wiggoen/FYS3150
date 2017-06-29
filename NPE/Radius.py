@@ -22,6 +22,6 @@ xlabel("Neutron number, N", fontsize=16)
 ylabel("Radius [fm]", fontsize=16)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True) # Minimizing overlap of labels
-savefig("Radius.png") # Saving figure to .png
+savefig("plots/Radius.png") # Saving figure to .png
 show()
 

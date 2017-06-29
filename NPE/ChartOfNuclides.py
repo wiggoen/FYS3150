@@ -4,7 +4,7 @@
 from matplotlib.pyplot import *
 from numpy import *
 
-data = "mass16.txt" # Datafile: https://www-nds.iaea.org/amdc/ame2016/mass16.txt
+data = "data/mass16.txt" # Datafile: https://www-nds.iaea.org/amdc/ame2016/mass16.txt
 
 n = 3475-39		# Number of nuclides in datafile
 A = zeros(n) 	# Mass number
@@ -54,7 +54,7 @@ ylabel("Porton number, Z", fontsize=16)
 legend(["Nuclides", "Z = N", "Magic numbers"], loc=0)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True) # Minimizing overlap of labels
-savefig("CoN.png") # Saving figure to .png
+savefig("plots/CoN1.png") # Saving figure to .png
 #show()
 
 
@@ -67,7 +67,7 @@ ylabel("Proton number, Z", fontsize=16)
 legend(["Nuclides", "Z = A/2"], loc=0)
 tick_params(labelsize=14)
 fig2.set_tight_layout(True) # Minimizing overlap of labels
-savefig("CoN2.png") # Saving figure to .png
+savefig("plots/CoN2.png") # Saving figure to .png
 #show()
 
 
@@ -80,6 +80,6 @@ ylabel("Z/A", fontsize=16)
 legend(["Nuclides", "Z/A = 1/2"], loc=0)
 tick_params(labelsize=14)
 fig3.set_tight_layout(True) # Minimizing overlap of labels
-savefig("CoN3.png") # Saving figure to .png
+savefig("plots/CoN3.png") # Saving figure to .png
 show()
 

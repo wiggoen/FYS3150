@@ -12,6 +12,12 @@ from numpy import *
 # Test 2: Even A
 A = 128; Zmin = 46; Zmax = 61
 
+# Test3: Odd A
+#A = 135; Zmin = 49; Zmax = 65
+
+# Test 2: Even A
+#A = 102; Zmin = 37; Zmax = 50
+
 
 # Constants	[unit]
 a_v = 15.5 			# Volume [MeV]
@@ -68,6 +74,5 @@ ax = gca()
 ax.get_yaxis().get_major_formatter().set_useOffset(False) # Preventing offset of y-axis
 fig.set_tight_layout(True) # Minimizing overlap of labels
 axis((Zmin-0.5, Zmax+0.5, min(m)-0.005, max(m)+0.005)) # Setting axis ranges
-savefig("MP_A%g.png" %A) # Saving figure to .png
+savefig("plots/MP_A%g.png" %A) # Saving figure to .png
 show()
-

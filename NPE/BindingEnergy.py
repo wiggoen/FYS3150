@@ -8,7 +8,7 @@ from numpy import *
 A = arange(1, 294, 1)
 
 # Constants	[unit]
-a_v = 15.5 			# Volume [MeV]
+a_v = 15.5 			# Volume [MeV] 
 a_s = 16.8 			# Surface [MeV]
 a_c = 0.72 			# Coulomb [MeV]
 a_sym = 23.0 		# Symmetry [MeV]
@@ -49,7 +49,7 @@ ylabel(r"B(Z$_{min}$, A)/A", fontsize=16)
 legend(["Volume", "Volume + Surface", "Volume + Surface + Coulomb", "Volume + Surface + Coulomb + Symmetry"], loc=0)
 tick_params(labelsize=14)
 fig1.set_tight_layout(True) # Minimizing overlap of labels
-savefig("BE1.png") # Saving png
+savefig("plots/BE1.png") # Saving png
 show()
 
 
@@ -85,6 +85,5 @@ ylabel(r"B(Z$_{min}$, A)/A", fontsize=16)
 legend(["Data", "Volume", "Volume + Surface", "Volume + Surface + Coulomb", "Volume + Surface + Coulomb + Symmetry"], loc=0)
 tick_params(labelsize=14)
 fig2.set_tight_layout(True) # Minimizing overlap of labels
-savefig("BE2.png") # Saving figure to .png
+savefig("plots/BE2.png") # Saving figure to .png
 show()
-
