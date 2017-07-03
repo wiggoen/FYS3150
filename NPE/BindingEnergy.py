@@ -54,7 +54,7 @@ show()
 
 
 # Binding energy per nucleon with real data
-data = "mass16.txt" # Datafile: https://www-nds.iaea.org/amdc/ame2016/mass16.txt
+data = "data/mass16.txt" # Datafile: https://www-nds.iaea.org/amdc/ame2016/mass16.txt
 
 num = 3475-39	# Number of nuclides in datafile
 a = zeros(num) 	# Mass number
